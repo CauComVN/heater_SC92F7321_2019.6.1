@@ -1,52 +1,187 @@
-# Prerequisites
-*.d
 
-# Object files
-*.o
-*.ko
-*.obj
+# reference to https://blog.csdn.net/u010160335/article/details/80068175
+
+# reference to https://www.cnblogs.com/zzb-Dream-90Time/p/9052130.html
+
+# Change by Lake.hu@outlook.com
+
+# reference to Keil->help->µVision User's Guide->Appendix->B. File Types
+
+# !开头文件为Git纳入版本控制的文件类型 
+
+# Project Files
+
+!*.OPT
+
+*.UVGUI.*
+
+*.UVGUIX.*
+
+!*.UVMPW
+
+!*.UVPROJ
+
+!*.UVPROJX
+
+!*.UVOPT
+
+!*.UVOPTX
+
+!*.UV2
+
+ 
+
+# Source Files
+
+!*.A51
+
+!*.A66
+
+!*.C
+
+!*.CPP
+
+!*.H
+
+!*.INC
+
+!*.S
+
+!*.SRC
+
+ 
+
+# Listing Files
+
+*.COD
+
+*.HTM
+
+*.I
+
+*.LST
+
+*.MAP
+
+*.M51
+
+*.M66
+
+*.SCR
+
+ 
+
+# Object and HEX Files
+
+# *.
+
 *.elf
 
-# Linker output
-*.ilk
-*.map
-*.exp
+*.AXF
 
-# Precompiled Headers
-*.gch
-*.pch
+*.B[00-31]
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+*.D
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+*.CRF
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+*.ELF
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+*.HEX
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+*.H86
+
+*.LIB
+
+*.OBJ
+
+*.O
+
+*.SBR
+
+*.12
+
+ 
+
+# Build Files
+
+*.BAT
+
+*._IA
+
+*.__I
+
+*._II
+
+*.SCR
+
+
+
+# Generated output files
+/Listings/*
+/Objects/*
+/Output/*
+
+ 
+
+# Debugger Files
+
+*.INI
+
+ 
+
+# Other Files
+
+*.BUILD_LOG.HTM
+
+*.CDB
+
+*.DEP
+
+*.IC
+
+*.LIN
+
+*.LNP
+
+*.ORC
+
+*.PACK
+
+*.PDSC
+
+*.PLG 
+
+*.SCT
+
+*.UVL
+
+*.UVLA
+
+*.UVTSK
+
+*.SFD
+
+*.SFR
+
+*.SVD.XML
+
+*.SVD
+
+*.XML
+
+
+
+# Astyle备份文件
+.orig
+
+
+
+# Miscellaneous
+*.tra
+*.bin
+*.fed
+*.l1p
+*.l2p
+*.iex
+
