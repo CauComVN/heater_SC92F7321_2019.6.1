@@ -45,21 +45,21 @@ typedef enum Heater_Exception
 } Enum_Ex_Flag;
 
 //下位机热水器通信协议接收到的命令协议数据
-extern uchar Protocol_Heater_Receive_Data;
+extern uchar heater_receive_data;
 
 //当前热水器运行或停止状态 继电器动作 0：停止 1：运行
 extern bit heater_relay_on;
 
 //热水器内部异常状态
-extern Enum_Ex_Flag Ex_Flag;
+extern Enum_Ex_Flag ex_flag;
 
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
 extern int water_flow_flag;
 
 //最佳出水温度低值
-extern uint good_temperature_out_low;
+extern uint good_temp_out_low;
 //最佳出水温度高值
-extern uint good_temperature_out_high;
+extern uint good_temp_out_high;
 
 extern void IO_Init(void);
 extern void BTM_Test(void);
@@ -72,6 +72,9 @@ extern void ADC_Test(void);
 extern void IAP_Test(uint Address,uchar IAPArea);
 
 extern void PWM_Init(void);
-extern int get_temperature_table(uint nADValue, int* temperature);
+extern int get_temp_table(uint nADValue, int* temp);
+
+void Serial_Key_Init(void);
+void Serial_Key_Test(void);
 
 #endif

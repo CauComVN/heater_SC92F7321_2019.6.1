@@ -32,7 +32,7 @@ int ADC_Convert(void);
 void ADC_channel(unsigned char channel);
 void ADC_Interrupt_Handle(void);
 
-int get_temperature_table(uint nADValue, int* temperature);
+int get_temp_table(uint nADValue, int* temp);
 
 
 ////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ void ADC_Test(void)
 {
     int t8=0,t9=0;
     int ret =0;
-    int temperature=26;
+    int temp=26;
     int flag=0;
 
     while(1)
@@ -61,12 +61,12 @@ void ADC_Test(void)
         //进水温度
         //ADC_Init(AIN9);
         //t9=ADC_Convert(); //启动ADC转换，获得转换值
-        //ret = get_temperature_table(t9,&temperature);
+        //ret = get_temp_table(t9,&temp);
 
         //出水温度
         ADC_Init(AIN8);
         t8=ADC_Convert(); //启动ADC转换，获得转换值
-        ret = get_temperature_table(t8,&temperature);
+        ret = get_temp_table(t8,&temp);
 
         flag=1;
     }
@@ -122,7 +122,7 @@ int search(uint arry[],uint n,uint key)
     return 0;
 }
 
-int get_temperature_table(uint nADValue, int* temperature)
+int get_temp_table(uint nADValue, int* temp)
 {
     uint Rntc=50;//常温
 
@@ -145,9 +145,10 @@ int get_temperature_table(uint nADValue, int* temperature)
     }
     else
     {
-        *temperature =search(bufTable_NTC_R, sizeof(bufTable_NTC_R)/2,	Rntc);
-        return 0;
+        *temp =search(bufTable_NTC_R, sizeof(bufTable_NTC_R)/2,	Rntc);        
     }
+		
+		return 0;
 }
 
 

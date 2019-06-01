@@ -54,6 +54,6 @@ void Leakage_EX0_Handle(void)
 	if(P10 == 1)
 	{
 		//设置漏电检测异常标志
-		Ex_Flag = Ex_Leakage;
+		ex_flag = Ex_Leakage;
 	}
 }

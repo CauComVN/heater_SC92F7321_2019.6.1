@@ -151,12 +151,12 @@ void Water_Detection_Timer0_Handle()
 		if(numberPulse == 0){
 			water_flow_flag=0; ////水流状态标记 0：无水流 1：少水流 2：多水流，正常
 			
-			Ex_Flag = Ex_Water_No_Flow;			
+			ex_flag = Ex_Water_No_Flow;			
 		}
 		else if(numberPulse>0 && numberPulse <= waterThreshold){
 			water_flow_flag=1;
 			
-			Ex_Flag = Ex_Water_Little_Flow;
+			ex_flag = Ex_Water_Little_Flow;
 		}
 		else{
 			water_flow_flag=2;
