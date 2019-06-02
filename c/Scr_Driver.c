@@ -25,7 +25,6 @@ Enum_Ex_Flag Ex_Flag;
 int good_temp_out_low=40;
 int good_temp_out_high=50;
 int current_out_temp=26; //当前出水温度
-uint current_PWMDTY1=15; //当前功率调节PWM占空比
 
 void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
@@ -91,37 +90,6 @@ void Zero_Crossing_EX2_Handle()
     }
 	*/
 }
-
-
-//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
-void Scr_Driver_PWM_Adjust(uint flag)
-{
-	if(flag==1 || flag==2)
-	{
-		EA=0;
-		IE1 &= 0xfd;        //关闭PWM中断		
-		
-		if(flag==1){ //增加功率
-			PWMDTY1=PWMDTY1+3;
-			if(PWMDTY1>59)
-			{
-				PWMDTY1=59;
-			}
-		}
-		else if(flag==2)
-		{
-			PWMDTY1=PWMDTY1-3;
-			if(PWMDTY1<1)
-			{				
-				PWMDTY1=1;
-			}
-		}			
-		
-		IE1 |= 0x02;        //开启PWM中断
-		EA=1;
-	}
-}
-
 
 //检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
 int Scr_Driver_Check_Insurance()

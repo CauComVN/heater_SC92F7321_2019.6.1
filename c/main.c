@@ -70,6 +70,9 @@ void AppHandle()
 	//水流检测
   Water_Detection_EX_Init(); 
 	
+	//初始化按键，调节功率
+	Serial_Key_Init();
+	
 	//=====================主循环
 	while(1)
 	{

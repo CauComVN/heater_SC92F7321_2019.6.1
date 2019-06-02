@@ -109,6 +109,9 @@ extern void Water_Detection_EX_Init(void);
 extern void Water_Detection_Timer_Init(void);
 extern void Leakage_EXTI_Test(void);
 
+//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
+void Scr_Driver_PWM_Adjust(uint flag);
+
 //中断
 extern void ADC_Interrupt_Handle(void);
 extern void Water_Detection_EX2_Handle();

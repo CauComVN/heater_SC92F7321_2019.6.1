@@ -35,12 +35,19 @@ void Serial_Key_Init(void)
 
 void Serial_Key_EX0_Handle()
 {	
+	uint flag=0;
+	
 	P00 = ~P00;
+	
+	//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 	if(P12==0) //增加功率
 	{
-		
+		flag=1;
+		Scr_Driver_PWM_Adjust(flag);		
 	}
 	if(P13==0) //降低功率
 	{
+		flag=2;
+		Scr_Driver_PWM_Adjust(flag);
 	}
 }

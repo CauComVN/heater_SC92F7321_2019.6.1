@@ -1,5 +1,10 @@
 #include "H/Function_Init.H"
 
+uint current_PWMDTY1=6;//15; //当前功率调节PWM占空比
+
+//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
+void Scr_Driver_PWM_Adjust(uint flag);
+
 void Scr_Driver_PWM_Init(void);
 void Scr_Driver_PWMInt_Handle();
 /*****************************************************
@@ -29,11 +34,40 @@ void Scr_Driver_PWM_Init(void)
 	PWMCON  = 0x16;		//PWM输出到IO，PWM时钟为Fsys/128 HEAT TRA PWM1
 	PWMPRD  = 186;		//PWM周期=(186+1)*(1*128/24us)=997.33≈=1ms;
 	PWMCFG  = 0x10;		//PWM1输出反向,输出至P01
-	PWMDTY1 = 15;     //PWM1的Duty = 15/60 =1/4
+	PWMDTY1 = current_PWMDTY1;//15;     //PWM1的Duty = 15/60 =1/4
 	PWMDTYA = 0x00;		//PWM占空比微调寄存器，这里不微调
 	PWMCON |= 0x80;     //开启PWM
 	IE1 |= 0x02;        //开启PWM中断
 	EA = 1;
+}
+
+//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
+void Scr_Driver_PWM_Adjust(uint flag)
+{
+	if(flag==1 || flag==2)
+	{
+		EA=0;
+		IE1 &= 0xfd;        //关闭PWM中断		
+		
+		if(flag==1){ //增加功率
+			PWMDTY1=current_PWMDTY1+3;
+			if(PWMDTY1>59)
+			{
+				PWMDTY1=59;
+			}
+		}
+		else if(flag==2)
+		{
+			PWMDTY1=current_PWMDTY1-3;
+			if(PWMDTY1<1)
+			{				
+				PWMDTY1=1;
+			}
+		}			
+		
+		IE1 |= 0x02;        //开启PWM中断
+		EA=1;
+	}
 }
 
 //中断处理
