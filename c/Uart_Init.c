@@ -1,6 +1,8 @@
 #include "H/Function_Init.H" 
 
 void Uart0_Init(void);
+void UartInt_Handle();
+
 bit UartSendFlag = 0; //发送中断标志位
 bit UartReceiveFlag = 0; //接收中断标志位
 /*****************************************************
@@ -70,7 +72,7 @@ void Uart0_Init(void)    //选择Timer2作为波特率信号发生器
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void UartInt(void) interrupt 4
+void UartInt_Handle()
 {
 	if(TI)
 	{

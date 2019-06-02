@@ -8,24 +8,6 @@ void ADC_Init(uint Channel);
 uint ADCValue = 0x0000;
 bit AdcFlag = 0;
 
-/***********ADC采样口选择*************/
-#if (IC_MODEL == SC92F7323)
-	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
-#endif
-
-#if (IC_MODEL == SC92F7322)
-	enum Channel {AIN0=0,AIN1,AIN4=4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
-#endif
-	
-#if (IC_MODEL == SC92F7321)
-	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN8=8,AIN9,VDD4=15};
-#endif
-	
-#if (IC_MODEL == SC92F7320)
-	enum Channel {AIN0=0,AIN1,AIN6=6,AIN7,VDD4=15};
-#endif
-	
-
 void ADC_Init(uint Channel);
 void ADC_Test(void);
 int ADC_Convert(void);

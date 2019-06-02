@@ -68,20 +68,25 @@ void Timer_Init(void)
 *入口参数：void
 *出口参数：void
 **************************************************/
-void timer0() interrupt 1
-{
-    TL0 = (65536 - 24000)%256;
-	TH0 = (65536 - 24000)/256;
-	P20 = ~P20;	
-}
+//void timer0() interrupt 1
+//{
+//    TL0 = (65536 - 24000)%256;
+//	TH0 = (65536 - 24000)/256;
+//	P20 = ~P20;	
+//}
 
-void timer1() interrupt 3
-{
-	P21 = ~P21;
-}
+//void timer1() interrupt 3
+//{
+//	P21 = ~P21;
+//}
 
-void Timer2Int(void) interrupt 5
-{		
+//void Timer2Int(void) interrupt 5
+//{		
+//	TF2 = 0;   //溢出清零
+//    P26 = ~P26;
+//}
+
+void Timer2Int_Handle()
+{
 	TF2 = 0;   //溢出清零
-    P26 = ~P26;
 }

@@ -7,9 +7,15 @@ void ADC_Interrupt(void) interrupt 6
 
 void EX0_Interrupt() interrupt	0
 {
-//    Leakage_EX0_Handle();
+	if(P10 == 1)
+	{
+		Leakage_EX0_Handle();
+	}
 	
-	Serial_Key_EX0_Handle();
+	if(P12==0 || P13==0)
+	{
+		Serial_Key_EX0_Handle();
+	}
 }
 
 void EX1_Interrupt() interrupt	2
@@ -34,8 +40,22 @@ void Timer0_Interrupt() interrupt 1
     Water_Detection_Timer0_Handle();
 }
 
+void timer1_Interrupt() interrupt 3
+{
+}
+
+void Timer2Int(void) interrupt 5
+{
+	Timer2Int_Handle();
+}
+
 void PWMInt(void) interrupt 8
 {
     Scr_Driver_PWMInt_Handle();
+}
+
+void UartInt(void) interrupt 4
+{
+	UartInt_Handle();
 }
 

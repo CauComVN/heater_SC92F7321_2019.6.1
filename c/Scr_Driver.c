@@ -21,16 +21,18 @@ bit heater_relay_on=0;
 ////热水器内部异常状态
 Enum_Ex_Flag Ex_Flag;
 
-//35度~60度 自动调节  最佳：40 - 55
-uint good_temperature_out_low=40;
-uint good_temperature_out_high=50;
+//35度~60度 自动调节  最佳：40 - 50
+int good_temp_out_low=40;
+int good_temp_out_high=50;
+int current_out_temp=26; //当前出水温度
+uint current_PWMDTY1=15; //当前功率调节PWM占空比
 
 void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
 void Zero_Crossing_EX2_Handle();
 
 
-int Scr_Driver_Check_Heat_Error();//检测温度保险
+int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
 
 //HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
@@ -122,7 +124,7 @@ void Scr_Driver_PWM_Adjust(uint flag)
 
 
 //检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
-int Scr_Driver_Check_Heat_Error()
+int Scr_Driver_Check_Insurance()
 {	
 	if(P03==0)
 	{

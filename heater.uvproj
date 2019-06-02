@@ -479,14 +479,19 @@
               <FilePath>.\c\Leakage_Check.c</FilePath>
             </File>
             <File>
+              <FileName>Serial_Key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\c\Serial_Key.c</FilePath>
+            </File>
+            <File>
               <FileName>STARTUP.A51</FileName>
               <FileType>2</FileType>
               <FilePath>.\STARTUP.A51</FilePath>
             </File>
             <File>
-              <FileName>Serial_Key.c</FileName>
+              <FileName>interrupt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\c\Serial_Key.c</FilePath>
+              <FilePath>.\c\interrupt.c</FilePath>
             </File>
           </Files>
         </Group>

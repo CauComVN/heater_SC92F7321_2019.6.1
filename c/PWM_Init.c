@@ -3,12 +3,12 @@
 void Scr_Driver_PWM_Init(void);
 void Scr_Driver_PWMInt_Handle();
 /*****************************************************
-*函数名称：void PWM_Test(void)
+*函数名称：void Scr_Driver_PWM_Test(void)
 *函数功能：PWM测试
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void PWM_Test(void)
+void Scr_Driver_PWM_Test(void)
 {
 	Scr_Driver_PWM_Init();
 	while(1)

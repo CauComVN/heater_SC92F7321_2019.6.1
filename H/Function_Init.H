@@ -20,6 +20,24 @@
 #define IC_MODEL  SC92F7321
 
 
+/***********ADC采样口选择*************/
+#if (IC_MODEL == SC92F7323)
+	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
+#endif
+
+#if (IC_MODEL == SC92F7322)
+	enum Channel {AIN0=0,AIN1,AIN4=4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
+#endif
+	
+#if (IC_MODEL == SC92F7321)
+	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN8=8,AIN9,VDD4=15};
+#endif
+	
+#if (IC_MODEL == SC92F7320)
+	enum Channel {AIN0=0,AIN1,AIN6=6,AIN7,VDD4=15};
+#endif
+
+
 //下位机热水器通信协议
 enum Protocol_Heater 
 {
@@ -57,21 +75,39 @@ extern Enum_Ex_Flag ex_flag;
 extern int water_flow_flag;
 
 //最佳出水温度低值
-extern uint good_temp_out_low;
+extern int good_temp_out_low;
 //最佳出水温度高值
-extern uint good_temp_out_high;
+extern int good_temp_out_high;
+
+extern int current_out_temp; //当前出水温度
+extern uint current_PWMDTY1; //当前功率调节PWM占空比
 
 extern void IO_Init(void);
 extern void BTM_Test(void);
 extern void EXTI_Test(void);
 extern void Timer_Test(void);
 extern void LCD_Test(void);
-extern void PWM_Test(void);
+
 extern void Uart0_Test(void);
 extern void ADC_Test(void);
 extern void IAP_Test(uint Address,uchar IAPArea);
 
+extern void ADC_Init(uint Channel);
+extern int ADC_Convert(void);
+extern void ADC_channel(unsigned char channel);
+extern int get_temp_table(uint nADValue, int* temp);
+
+extern void Scr_Driver_PWM_Test(void);
 extern void Scr_Driver_PWM_Init(void);
+extern int  Scr_Driver_Check_Insurance();//检测温度保险
+extern void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
+extern void Zero_Crossing_EXTI_Test(void);
+extern void Zero_Crossing_EX_Init(void);
+extern void Water_Detection_EXTI_Test(void);
+extern void Water_Detection_Timer_Test(void);
+extern void Water_Detection_EX_Init(void);
+extern void Water_Detection_Timer_Init(void);
+extern void Leakage_EXTI_Test(void);
 
 //中断
 extern void ADC_Interrupt_Handle(void);
@@ -81,8 +117,9 @@ extern void Zero_Crossing_EX2_Handle();
 extern void Scr_Driver_PWMInt_Handle();
 extern void Serial_Key_EX0_Handle();
 extern void EX1_Handle();
-
-extern int get_temp_table(uint nADValue, int* temp);
+extern void UartInt_Handle();
+extern void Timer2Int_Handle();
+extern void Leakage_EX0_Handle(void);
 
 extern void Serial_Key_Init(void);
 extern void Serial_Key_Test(void);
