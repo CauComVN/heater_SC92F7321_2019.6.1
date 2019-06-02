@@ -6,7 +6,10 @@
 2、改变TEST的定义，可以分别测试对应的功能；
 3、注意：先在Function.H里面选择测试型号（SC92F7320无LCD/LED和PWM功能）
 ***************************************************************/
-#define Test  9    //BTM:0 EXTI:1 Timer:2 LCD:3 PWM:4 Uart0:5 ADC:7 IAP:8 SerialKey:9
+#define Test  9    //Normal:100 BTM:0 EXTI:1 Timer:2 LCD:3 PWM:4 Uart0:5 ADC:7 IAP:8 SerialKey:9
+
+//正常运行函数
+void AppHandle();
 
 void main(void)
 {
@@ -15,6 +18,11 @@ void main(void)
 	
 	switch(Test)
 	{
+		//正常运行
+		case 100:
+			AppHandle();
+			break;
+		
 		case 0: BTM_Test();
 		break;
 		case 1: EXTI_Test();
@@ -30,11 +38,20 @@ void main(void)
 		case 7: ADC_Test();
 		break;
 		case 8: IAP_Test(0x1fff,IapROM);   //操作ROM，对地址0x1fff进行读写测试
-//		        IAP_Test(0x7f,IapEPPROM);   //操作EPPROM，对地址0x7f进行读写测试
+//						IAP_Test(0x7f,IapEPPROM);   //操作EPPROM，对地址0x7f进行读写测试
 		break;
 		case 9: Serial_Key_Test();
 		break;
 		default:
 		break;
 	}
+}
+
+//正常运行函数
+void AppHandle()
+{
+	//初始化
+	
+	//主循环
+		
 }

@@ -1,6 +1,7 @@
 #include "H/Function_Init.H"
 
-void PWM_Init(void);
+void Scr_Driver_PWM_Init(void);
+void Scr_Driver_PWMInt_Handle();
 /*****************************************************
 *函数名称：void PWM_Test(void)
 *函数功能：PWM测试
@@ -9,7 +10,7 @@ void PWM_Init(void);
 *****************************************************/
 void PWM_Test(void)
 {
-	PWM_Init();
+	Scr_Driver_PWM_Init();
 	while(1)
 	{
 	}
@@ -20,7 +21,7 @@ void PWM_Test(void)
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void PWM_Init(void)
+void Scr_Driver_PWM_Init(void)
 {
 	//HEAT TRA PWM1
 	
@@ -35,15 +36,9 @@ void PWM_Init(void)
 	EA = 1;
 }
 
-/*****************************************************
-*函数名称：void PWMInt(void) interrupt 8
-*函数功能：PWM中断服务函数
-*入口参数：void
-*出口参数：void
-*****************************************************/
-void PWMInt(void) interrupt 8
-{	
-	int i=0; 
-
-	//根据出水/进水温度自动调节PWM1的Duty	
+//中断处理
+void Scr_Driver_PWMInt_Handle()
+{
+    //根据出水/进水温度自动调节PWM1的Duty
+	int i=0;
 }

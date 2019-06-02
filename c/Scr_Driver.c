@@ -81,7 +81,7 @@ void Zero_Crossing_EX2_Handle()
     //if(P20 == 1) //INT24 P20 过零检测到零点
     {
         //PWM计数值重置
-        PWM_Init();
+        Scr_Driver_PWM_Init();
     }
  /*   if(P21 == 1) //INT25 P21 水流检测计数
     {

@@ -2,6 +2,7 @@
 
 void Serial_Key_Init(void);
 void Serial_Key_Test(void);
+void Serial_Key_EX0_Handle();
 
 void Serial_Key_Test(void)
 {
@@ -32,8 +33,14 @@ void Serial_Key_Init(void)
 		//////////////////////////////////////////////////////////		
 }
 
-void EX0_Interrupt() interrupt	0
-{
-//    Leakage_EX0_Handle();
+void Serial_Key_EX0_Handle()
+{	
 	P00 = ~P00;
+	if(P12==0) //增加功率
+	{
+		
+	}
+	if(P13==0) //降低功率
+	{
+	}
 }

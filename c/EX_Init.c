@@ -1,6 +1,7 @@
 #include "H/Function_Init.H"
 
 void EX_Init(void);
+void EX1_Handle();
 uchar INT1_flag = 0x00;
 /*****************************************************
 *函数名称：void EXTI_Test(void)
@@ -47,20 +48,9 @@ void EX_Init(void)
 	EA = 1;
 }
 
-/*****************************************************
-*函数名称：void EX0/1/2() interrupt	0/2/10
-*函数功能：中断服务函数
-*入口参数：void
-*出口参数：void
-*****************************************************/
-void EX0() interrupt	0
-{
-    P26 = ~P26;
-}
 
-void EX1() interrupt	2
-{
-    P27 = ~P27;
+void EX1_Handle()
+{    
 	if(P16 == 0)
 	{
 		INT1_flag = 0x10; //INT12产生中断
@@ -71,7 +61,3 @@ void EX1() interrupt	2
 	}
 }
 
-void EX2() interrupt	10
-{
-    P26 = ~P26;
-}

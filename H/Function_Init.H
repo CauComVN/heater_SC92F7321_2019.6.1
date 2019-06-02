@@ -71,10 +71,20 @@ extern void Uart0_Test(void);
 extern void ADC_Test(void);
 extern void IAP_Test(uint Address,uchar IAPArea);
 
-extern void PWM_Init(void);
+extern void Scr_Driver_PWM_Init(void);
+
+//ÖÐ¶Ï
+extern void ADC_Interrupt_Handle(void);
+extern void Water_Detection_EX2_Handle();
+extern void Water_Detection_Timer0_Handle();
+extern void Zero_Crossing_EX2_Handle();
+extern void Scr_Driver_PWMInt_Handle();
+extern void Serial_Key_EX0_Handle();
+extern void EX1_Handle();
+
 extern int get_temp_table(uint nADValue, int* temp);
 
-void Serial_Key_Init(void);
-void Serial_Key_Test(void);
+extern void Serial_Key_Init(void);
+extern void Serial_Key_Test(void);
 
 #endif
