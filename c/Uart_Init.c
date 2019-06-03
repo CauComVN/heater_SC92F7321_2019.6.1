@@ -16,9 +16,34 @@ void Uart0_Test(void)
 	Uart0_Init();
 	while(1)
 	{
-		SBUF = 0x55;
-		while(!UartSendFlag);
-		UartSendFlag = 0;
+//		SBUF = 0x55;
+//		while(!UartSendFlag);
+//		UartSendFlag = 0;
+		
+		if(UartReceiveFlag)
+		{
+			UartReceiveFlag=0;
+			
+			P00 = ~P00;
+		
+			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
+			if(SBUF == 0x01)
+			{
+				Scr_Driver_PWM_Adjust(1);		
+				
+				SBUF = 0x55+SBUF;
+				while(!UartSendFlag);
+				UartSendFlag = 0;
+			}
+			if(SBUF == 0x02)
+			{
+				Scr_Driver_PWM_Adjust(2);
+				
+				SBUF = 0x55+SBUF;
+				while(!UartSendFlag);
+				UartSendFlag = 0;
+			}	
+		}
 	}
 }
 /*****************************************************
@@ -82,6 +107,6 @@ void UartInt_Handle()
 	if(RI)
 	{
 		RI = 0;	
-		UartReceiveFlag = 1;
+		UartReceiveFlag = 1;		
 	}	
 }
