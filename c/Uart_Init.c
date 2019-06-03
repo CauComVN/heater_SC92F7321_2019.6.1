@@ -2,6 +2,7 @@
 
 void Uart0_Init(void);
 void UartInt_Handle();
+void Uart_Process();
 
 bit UartSendFlag = 0; //发送中断标志位
 bit UartReceiveFlag = 0; //接收中断标志位
@@ -46,6 +47,35 @@ void Uart0_Test(void)
 		}
 	}
 }
+
+void Uart_Process()
+{
+	if(UartReceiveFlag)
+		{
+			UartReceiveFlag=0;
+			
+			P00 = ~P00;
+		
+			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
+			if(SBUF == 0x01)
+			{
+				Scr_Driver_PWM_Adjust(1);		
+				
+				SBUF = 0x55+SBUF;
+				while(!UartSendFlag);
+				UartSendFlag = 0;
+			}
+			if(SBUF == 0x02)
+			{
+				Scr_Driver_PWM_Adjust(2);
+				
+				SBUF = 0x55+SBUF;
+				while(!UartSendFlag);
+				UartSendFlag = 0;
+			}	
+		}
+}
+
 /*****************************************************
 *函数名称：void Uart0_Init(void)
 *函数功能：Uart0中断初始化

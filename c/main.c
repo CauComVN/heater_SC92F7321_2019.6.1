@@ -89,48 +89,53 @@ void AppHandle()
 	//初始化按键，用串口Rx Tx做中断来调节功率 需要做防抖动处理（未处理）
 	//Serial_Key_Init();
 	
-	//test ......
-	Scr_Driver_PWM_Init();
-	Uart0_Test();
+	Uart0_Init();
 	
-//	//=====================主循环
-//	/**/
-//	while(1)
-//	{
-//		
-//			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-//			if(water_flow_flag == 2 && heater_relay_on==0)
-//			{
-//				heater_relay_on=1;
-//				Scr_Driver_Control_Heat_RLY(heater_relay_on);
-//				
-//				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
-//				Scr_Driver_Check_Insurance();
-//				
-//				//启动可控硅控制
-//				Zero_Crossing_EX_Init();
-//			}
-//		
-//			if(water_flow_flag < 2 && heater_relay_on==1)
-//			{
-//					heater_relay_on=0;
-//					Scr_Driver_Control_Heat_RLY(heater_relay_on);
-//			}		
-//			
-//			//出水温度
-//			ADC_Init(AIN8);
-//			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
-//			ret = get_temp_table(ADCTempValue,&current_out_temp);
-//			
-//			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
-//					ex_flag=Ex_Out_Water_Temp_Low;
-//			}
-//			else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
-//					ex_flag=Ex_Out_Water_Temp_High;
-//			}
-//			else {
-//			}
-//			
-//	}	
-//	
+	//test ......
+	//Scr_Driver_PWM_Init();
+	//Uart0_Test();
+	
+	//=====================主循环
+	/**/
+	while(1)
+	{
+		
+			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
+			if(water_flow_flag == 2 && heater_relay_on==0)
+			{
+				heater_relay_on=1;
+				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+				
+				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
+				Scr_Driver_Check_Insurance();
+				
+				//启动可控硅控制
+				Zero_Crossing_EX_Init();
+			}
+		
+			if(water_flow_flag < 2 && heater_relay_on==1)
+			{
+					heater_relay_on=0;
+					Scr_Driver_Control_Heat_RLY(heater_relay_on);
+			}		
+			
+			//出水温度
+			ADC_Init(AIN8);
+			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
+			ret = get_temp_table(ADCTempValue,&current_out_temp);
+			
+			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
+					ex_flag=Ex_Out_Water_Temp_Low;
+			}
+			else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
+					ex_flag=Ex_Out_Water_Temp_High;
+			}
+			else {
+			}
+			
+			//串口接收到数据，处理
+			Uart_Process();
+			
+	}
+	
 }
