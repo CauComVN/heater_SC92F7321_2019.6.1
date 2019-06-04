@@ -82,6 +82,14 @@ extern int good_temp_out_high;
 extern int current_out_temp; //当前出水温度
 extern uint current_PWMDTY1; //当前功率调节PWM占空比
 
+extern uint duty_app_time; //9ms
+extern uint max_pwm_duty; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目
+extern uint step_app_duty; //0 -- 180 调节步长
+extern uint curr_app_duty; //0 -- 180
+extern uint max_app_duty; //0 -- 180
+extern uint low_pwm_duty_cout; //low_pwm_duty_cout个PWM周期数目为低电平
+extern uint curr_low_pwm_duty_count;
+
 extern void IO_Init(void);
 extern void BTM_Test(void);
 extern void EXTI_Test(void);
