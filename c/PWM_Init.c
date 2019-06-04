@@ -3,9 +3,9 @@
 uint current_PWMDTY1=0;//6;//15; //当前功率调节PWM占空比 x/186
 
 uint duty_app_time=9000; //9ms
-uint max_pwm_duty=9; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目 duty_app_time*24/128/180=9000*24/128/180=9.375
+uint max_pwm_duty=10; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目 duty_app_time*24/128/168=9000*24/128/168=10.04
 uint step_app_duty=2; //0 -- 180 调节步长
-uint curr_app_duty=30; //0 -- 180
+uint curr_app_duty=0; //0 -- 180
 uint max_app_duty=180; //0 -- 180
 uint low_pwm_duty_cout=0; //m_duty个PWM周期数目为低电平
 uint curr_low_pwm_duty_count=0;
@@ -38,17 +38,17 @@ void Scr_Driver_PWM_Init(void)
 {
 	//HEAT TRA PWM1
 	
-	current_PWMDTY1=0;
+	current_PWMDTY1=187;//0;  186+1
 	
 	curr_low_pwm_duty_count=0;
-	low_pwm_duty_cout=(duty_app_time-50*curr_app_duty)*24/10240; // 128*180=10240
+	low_pwm_duty_cout=(duty_app_time-50*curr_app_duty)*24/128/168; 
 	
 	//=========================================================================================
 	
 	//50hz 20ms 半个周期10ms 10ms/10=1ms PWM时钟为Fsys/128 187*128/24=997.33 187-1=186
 	PWMCON  = 0x16;		//PWM输出到IO，PWM时钟为Fsys/128 HEAT TRA PWM1
-	PWMPRD  = 180;		//PWM周期=(186+1)*(1*128/24us)=997.33≈=1ms;
-	PWMCFG  = 0x10;//0x10;//0x00;		//PWM1输出正向,输出至P01  INV 1:输出反向 0：输出不反向 000x
+	PWMPRD  = 186;		//PWM周期=(186+1)*(1*128/24us)=997.33≈=1ms;
+	PWMCFG  = 0x00;//0x10;//0x00;		//PWM1输出正向,输出至P01  INV 1:输出反向 0：输出不反向 000x
 	PWMDTY1 = current_PWMDTY1;//15;     //PWM1的Duty = 15/60 =1/4
 	PWMDTYA = 0x00;		//PWM占空比微调寄存器，这里不微调
 	PWMCON |= 0x80;     //开启PWM
@@ -110,7 +110,8 @@ void Scr_Driver_PWM_Adjust(uint flag)
 				curr_app_duty=max_app_duty;
 			}
 			
-			low_pwm_duty_cout=(duty_app_time-50*curr_app_duty)*24/10240; // 128*180=10240
+			low_pwm_duty_cout=(duty_app_time-50*curr_app_duty)*24/128/168; 
+			
 		}
 		else if(flag==2)
 		{
@@ -120,7 +121,7 @@ void Scr_Driver_PWM_Adjust(uint flag)
 				curr_app_duty=0;
 			}
 			
-			low_pwm_duty_cout=(duty_app_time-50*curr_app_duty)*24/10240; // 128*180=10240
+			low_pwm_duty_cout=(duty_app_time-50*curr_app_duty)*24/128/168; 
 		}			
 		
 		IE1 |= 0x02;        //开启PWM中断
@@ -139,12 +140,14 @@ void Scr_Driver_PWMInt_Handle()
 	}
 	else
 	{
-		//pwm占空比为180，高电平
-		current_PWMDTY1=180;
+		//pwm占空比为186，高电平
+		current_PWMDTY1=187;
 	}
 	
 	if(current_PWMDTY1>max_pwm_duty)
 	{
+		current_PWMDTY1=0;
+		
 		//关闭pwm中断，等待下一次过零检测到来
 		IE1 &= 0xfd;        //关闭PWM中断	
 	}	

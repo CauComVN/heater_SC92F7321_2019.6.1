@@ -48,6 +48,11 @@ void IO_Init(void)
 	P0VO = P0VO&0xfe; //P00端口设置成普通I/O口  1111 1110
 	P00=1;
 	
+	//p01做为IO口控制可控硅，用定时器2计时
+	P0CON= P0CON|0x02;
+	P0VO = P0VO&0xfd; //P00端口设置成普通I/O口  1111 1101
+	P01=0;
+	
 	
 //	//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
 //	P0CON = P0CON&0xf7; //设置P03为输入模式

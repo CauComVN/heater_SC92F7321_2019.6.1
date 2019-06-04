@@ -1,5 +1,9 @@
 #include "H/Function_Init.H"
 
+uint time2_count=0; //9ms/1ms=9
+uint time2_count_max=9;
+uint time2_curr =0;
+
 void Timer_Init(void);
 /*****************************************************
 *函数名称：void Timer_Test(void);
@@ -22,27 +26,31 @@ void Timer_Test(void)
 *****************************************************/
 void Timer_Init(void)
 { 
-	TMCON = 0X07;    //------111 ;Timer0、Tiemr1和Tiemr2选择时钟Fsys
+	TMCON = TMCON|0X04;    //------100 ;Tiemr2选择时钟Fsys
 	
-	//T0设置
-	TMOD |= 0x01;                 //0000 0001;Timer0设置工作方式1
-	TL0 = (65536 - 24000)%256;    //溢出时间：时钟为Fsys，则24000*（1/Fsys）=1ms;
-	TH0 = (65536 - 24000)/256;
-	TR0 = 0;
-	ET0 = 1;//定时器0允许
-	TR0 = 1;//打开定时器0
-	//T1设置
-	TMOD |= 0x20;            //0010 0000;Timer1设置工作方式2
-	TL1 = 256 - 240;   //溢出时间：时钟为Fsys，则240*（1/Fsys）=10us;
-	TH1 = 256 - 240;
-	TR1 = 0;
-	ET1 = 1;//定时器1允许
-	TR1 = 1;//打开定时器1
+//	//T0设置
+//	TMOD |= 0x01;                 //0000 0001;Timer0设置工作方式1
+//	TL0 = (65536 - 24000)%256;    //溢出时间：时钟为Fsys，则24000*（1/Fsys）=1ms;
+//	TH0 = (65536 - 24000)/256;
+//	TR0 = 0;
+//	ET0 = 1;//定时器0允许
+//	TR0 = 1;//打开定时器0
+//	//T1设置
+//	TMOD |= 0x20;            //0010 0000;Timer1设置工作方式2
+//	TL1 = 256 - 240;   //溢出时间：时钟为Fsys，则240*（1/Fsys）=10us;
+//	TH1 = 256 - 240;
+//	TR1 = 0;
+//	ET1 = 1;//定时器1允许
+//	TR1 = 1;//打开定时器1
 	//T2设置
 	T2MOD = 0x00;
 	T2CON = 0x00;	 //设置为16位重载寄存器
-	RCAP2H = (65536-48000)/256;     //溢出时间：时钟为Fsys，则48000*（1/Fsys）=2ms;
-	RCAP2L = (65536-48000)%256;
+	
+//	RCAP2H = (65536-48000)/256;     //溢出时间：时钟为Fsys，则48000*（1/Fsys）=2ms;
+//	RCAP2L = (65536-48000)%256;
+	RCAP2H = (65536-24000)/256;     //溢出时间：时钟为Fsys，则24000*（1/Fsys）=1ms;
+	RCAP2L = (65536-24000)%256;
+	
 	TR2 = 0;
 	ET2 = 1;//定时器2允许
 	TR2 = 1;//打开定时器2		
@@ -89,4 +97,20 @@ void Timer_Init(void)
 void Timer2Int_Handle()
 {
 	TF2 = 0;   //溢出清零
+	
+	time2_count++;
+	if(time2_count<time2_curr)
+	{
+		P01=0;
+	}
+	else
+	{
+		P01=1;
+	}
+	
+	if(time2_count>time2_count_max)
+	{
+		TR2 = 0;
+		P01=0;
+	}
 }

@@ -109,7 +109,7 @@ void Water_Detection_Timer_Test(void)
 *****************************************************/
 void Water_Detection_Timer_Init(void)
 {
-    TMCON = 0X01;    //------001 ;Timer0选择时钟Fsys
+    TMCON = TMCON|0X01;    //------001 ;Timer0选择时钟Fsys
 
     //T0设置
     TMOD |= 0x01;                 //0000 0001;Timer0设置工作方式1

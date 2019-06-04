@@ -30,7 +30,7 @@ void Uart0_Test(void)
 			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 			if(SBUF == 0x01)
 			{
-				Scr_Driver_PWM_Adjust(1);		
+//				Scr_Driver_PWM_Adjust(1);		
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);
@@ -38,7 +38,7 @@ void Uart0_Test(void)
 			}
 			if(SBUF == 0x02)
 			{
-				Scr_Driver_PWM_Adjust(2);
+//				Scr_Driver_PWM_Adjust(2);
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);
@@ -59,7 +59,13 @@ void Uart_Process()
 			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 			if(SBUF == 0x01)
 			{
-				Scr_Driver_PWM_Adjust(1);		
+				//Scr_Driver_PWM_Adjust(1);	
+
+				time2_curr++;
+				if(time2_curr>time2_count_max)
+				{
+					time2_curr=time2_count_max;
+				}
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);
@@ -67,7 +73,13 @@ void Uart_Process()
 			}
 			if(SBUF == 0x02)
 			{
-				Scr_Driver_PWM_Adjust(2);
+				//Scr_Driver_PWM_Adjust(2);
+				
+				time2_curr--;
+				if(time2_curr<0)
+				{
+					time2_curr=0;
+				}
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);
