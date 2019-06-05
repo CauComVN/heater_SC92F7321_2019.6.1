@@ -2,7 +2,7 @@
 
 uint time2_count=0; //9ms/1ms=9
 uint time2_count_max=9;
-uint time2_curr =0;
+uint time2_curr =4;//0;
 
 void Timer_Init(void);
 /*****************************************************

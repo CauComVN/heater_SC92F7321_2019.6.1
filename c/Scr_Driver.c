@@ -61,14 +61,13 @@ void Zero_Crossing_EXTI_Test(void)
 *出口参数：void
 *****************************************************/
 void Zero_Crossing_EX_Init(void)
-{
-    //配置中断口INT24
+{    
     P2CON &= 0XFE;     //中断IO口设置为高阻输入
     P2PH  |= 0x01;     //中断IO口设置为高阻带上拉
 
-    //INT24上升中断
+    //配置中断口INT24  上升沿和下降沿都支持
     //下降沿设置
-    INT2F &= 0x2F; //= 0X00 ;    //0000 xxxx  0关闭 1使能
+    INT2F |= 0x10;//INT2F &= 0x2F; //= 0X00 ;    //0000 xxxx  0关闭 1使能
     //上升沿设置
     INT2R |= 0X10 ;    //0000 xxxx  0关闭 1使能
 
@@ -135,19 +134,19 @@ void Scr_Driver_Time2_Adjust(uint flag)
 		IE1 &= 0xfd;        //关闭PWM中断		
 		
 		if(flag==1){ //增加功率
-				time2_curr++;
-				if(time2_curr>time2_count_max)
-				{
-					time2_curr=time2_count_max;
-				}		
+			time2_curr--;
+			if(time2_curr<1)
+			{
+				time2_curr=1;
+			}
 		}
 		else if(flag==2) ////减少功率
 		{
-				time2_curr--;
-				if(time2_curr<0)
-				{
-					time2_curr=0;
-				}
+			time2_curr++;
+			if(time2_curr>time2_count_max)
+			{
+				time2_curr=time2_count_max;
+			}					
 		}			
 		
 		IE1 |= 0x02;        //开启PWM中断

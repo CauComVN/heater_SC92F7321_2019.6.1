@@ -25,12 +25,14 @@ void EX1_Interrupt() interrupt	2
 
 void EX2_Interrupt() interrupt	10
 {
+		//需要判断和区分
     if(!(P2CON&0x02) && (P21==1) ) {
         //INT25 端口P21 上升沿中断 P21=1
         Water_Detection_EX2_Handle();
     }
-    if(!(P2CON&0x01) && (P20==1)) {
-        //INT24 端口P20 上升沿中断 P20=1
+    else if(!(P2CON&0x01)) 
+		{
+        //INT24 端口P20 上升沿和下降沿中断都支持 
         Zero_Crossing_EX2_Handle();
     }
 }
