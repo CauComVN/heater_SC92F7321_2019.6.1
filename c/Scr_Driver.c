@@ -106,6 +106,11 @@ int Scr_Driver_Check_Insurance()
 	else if(P03==1)
 	{
 		//温度异常范围内，温度保险已跳闸
+		if(heater_relay_on==1)
+		{
+				heater_relay_on=0;
+				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+		}		
 		return -1;
 	}
 	return -1;

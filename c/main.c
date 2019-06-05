@@ -81,6 +81,9 @@ void AppHandle()
 	uint ADCTempValue=0;
 	int ret=0;
 	
+	//漏电保护
+	Leakage_EX_Init();
+	
 	//水流检测定时器
   Water_Detection_Timer_Init();
 	//水流检测

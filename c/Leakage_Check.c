@@ -55,5 +55,12 @@ void Leakage_EX0_Handle(void)
 	{
 		//设置漏电检测异常标志
 		ex_flag = Ex_Leakage;
+		
+		//检测有漏电，立刻处理
+		if(heater_relay_on==1)
+		{
+				heater_relay_on=0;
+				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+		}		
 	}
 }
