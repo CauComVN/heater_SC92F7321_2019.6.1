@@ -60,12 +60,14 @@ void Uart_Process()
 			if(SBUF == 0x01)
 			{
 				//Scr_Driver_PWM_Adjust(1);	
+				
+				time2_curr=1;
 
-				time2_curr++;
-				if(time2_curr>time2_count_max)
-				{
-					time2_curr=time2_count_max;
-				}
+//				time2_curr++;
+//				if(time2_curr>time2_count_max)
+//				{
+//					time2_curr=time2_count_max;
+//				}
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);
@@ -75,11 +77,13 @@ void Uart_Process()
 			{
 				//Scr_Driver_PWM_Adjust(2);
 				
-				time2_curr--;
-				if(time2_curr<0)
-				{
-					time2_curr=0;
-				}
+				time2_curr=0;
+				
+//				time2_curr--;
+//				if(time2_curr<0)
+//				{
+//					time2_curr=0;
+//				}
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);
