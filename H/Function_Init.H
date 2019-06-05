@@ -123,6 +123,9 @@ extern void Leakage_EXTI_Test(void);
 //HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
 extern void Scr_Driver_PWM_Adjust(uint flag);
 
+//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
+extern void Scr_Driver_Time2_Adjust(uint flag);
+
 extern void Timer_Init(void);
 
 extern void Uart0_Init(void);

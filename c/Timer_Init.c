@@ -56,16 +56,11 @@ void Timer_Init(void)
 	TR2 = 1;//打开定时器2		
 	
 	//P01=0;
+	time2_count=0;
 	if(time2_curr==0)
-		{
-			P01=0;
-		}
-		else
-		{
-			P01=1;
-		}
-		
-	
+	{
+		P01=0;
+	}	
 	
 	/*
 	//Timer2捕获功能
@@ -109,26 +104,25 @@ void Timer_Init(void)
 
 void Timer2Int_Handle()
 {
-	TF2 = 0;   //溢出清零
+	TF2 = 0;   //溢出清零	
 	
+	time2_count++;
 	
+	if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
+	{
+		P01=0;
+	}
+	else
+	{
+		P01=1;
+	}
 	
-//	time2_count++;
-//	if(time2_count<time2_curr)
-//	{
-//		P01=0;
-//	}
-//	else
-//	{
-//		P01=1;
-//	}
-//	
-//	if(time2_count>time2_count_max)
-//	{
-//		//TR2 = 0;
-//		//P01=0;
-//		
-//		time2_count=0;
-//	}
+	if(time2_count>time2_count_max)
+	{
+		TR2 = 0;
+		P01=0;
+		
+		time2_count=0;
+	}
 	
 }

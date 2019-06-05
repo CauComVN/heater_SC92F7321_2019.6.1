@@ -90,11 +90,7 @@ void AppHandle()
 	//Serial_Key_Init();
 	
 	Uart0_Init();
-	
-	//test ......
-	//Scr_Driver_PWM_Init();
-	//Uart0_Test();
-	
+		
 	//=====================Ö÷Ñ­»·
 	/**/
 	while(1)

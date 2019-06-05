@@ -30,6 +30,9 @@ void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
 void Zero_Crossing_EX2_Handle();
 
+//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
+void Scr_Driver_Time2_Adjust(uint flag);
+
 
 int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
@@ -82,7 +85,7 @@ void Zero_Crossing_EX2_Handle()
     //if(P20 == 1) //INT24 P20 过零检测到零点
     {
         //PWM计数值重置
-//Scr_Driver_PWM_Init();
+//		Scr_Driver_PWM_Init();
 			
 			Timer_Init();
     }
@@ -122,3 +125,33 @@ void Scr_Driver_Control_Heat_RLY(int on)
 		P02=0;
 	}
 }
+
+//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
+void Scr_Driver_Time2_Adjust(uint flag)
+{
+	if(flag==1 || flag==2)
+	{
+		EA=0;
+		IE1 &= 0xfd;        //关闭PWM中断		
+		
+		if(flag==1){ //增加功率
+				time2_curr++;
+				if(time2_curr>time2_count_max)
+				{
+					time2_curr=time2_count_max;
+				}		
+		}
+		else if(flag==2) ////减少功率
+		{
+				time2_curr--;
+				if(time2_curr<0)
+				{
+					time2_curr=0;
+				}
+		}			
+		
+		IE1 |= 0x02;        //开启PWM中断
+		EA=1;
+	}
+}
+
