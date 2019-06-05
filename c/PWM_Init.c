@@ -5,7 +5,7 @@ uint current_PWMDTY1=0;//6;//15; //当前功率调节PWM占空比 x/186
 uint duty_app_time=9000; //9ms
 uint max_pwm_duty=10; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目 duty_app_time*24/128/168=9000*24/128/168=10.04
 uint step_app_duty=2; //0 -- 180 调节步长
-uint curr_app_duty=0; //0 -- 180
+uint curr_app_duty=50; //0 -- 180
 uint max_app_duty=180; //0 -- 180
 uint low_pwm_duty_cout=0; //m_duty个PWM周期数目为低电平
 uint curr_low_pwm_duty_count=0;
