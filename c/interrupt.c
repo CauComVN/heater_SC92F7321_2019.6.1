@@ -20,7 +20,7 @@ void EX0_Interrupt() interrupt	0
 
 void EX1_Interrupt() interrupt	2
 {
-	EX1_Handle();
+//	EX1_Handle();
 }
 
 void EX2_Interrupt() interrupt	10

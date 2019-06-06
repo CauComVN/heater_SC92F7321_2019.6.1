@@ -32,17 +32,18 @@ void main(void)
 //		break;
 		case 1: 
 		{
-			//用P16 P17口做调功率按键中断，出水温度 进水温度替换
-			Scr_Driver_PWM_Init();
-			
-			// 需要做防抖动处理（未处理）
-			EXTI_Test();
+//			//用P16 P17口做调功率按键中断，出水温度 进水温度替换
+//			Scr_Driver_PWM_Init();
+//			
+//			// 需要做防抖动处理（未处理）
+//			EXTI_Test();
 		}			
 		break;
 		case 2: Timer_Test();
 		break;
-//		case 3: LCD_Test();
-//		break;
+		case 3: 
+//			LCD_Test();
+		break;
 		case 4: 
 		{
 			Scr_Driver_PWM_Test();
@@ -68,9 +69,11 @@ void main(void)
 		break;
 		case 12: Water_Detection_Timer_Test();
 		break;
-		case 13: Leakage_EXTI_Test();
-		default:
+		case 13: 
+			Leakage_EXTI_Test();
 		break;
+		default:	
+		;			
 	}
 }
 

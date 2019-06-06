@@ -1,5 +1,5 @@
 #include "H/Function_Init.H"
-
+#if  0
 void EX_Init(void);
 void EX1_Handle();
 uchar INT1_flag = 0x00;
@@ -88,3 +88,5 @@ void EX1_Handle()
 		Scr_Driver_PWM_Adjust(2);
 	}
 }
+
+#endif

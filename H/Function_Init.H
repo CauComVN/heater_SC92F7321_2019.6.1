@@ -95,10 +95,11 @@ extern uint time2_curr;
 extern uint time2_count_max;
 
 extern void IO_Init(void);
-extern void BTM_Test(void);
-extern void EXTI_Test(void);
+//extern void BTM_Test(void);
+//extern void EXTI_Test(void);
 extern void Timer_Test(void);
-extern void LCD_Test(void);
+//extern void LCD_Test(void);
+//extern void EX_Init(void);
 
 extern void Uart0_Test(void);
 extern void ADC_Test(void);
@@ -108,6 +109,9 @@ extern void ADC_Init(uint Channel);
 extern int ADC_Convert(void);
 extern void ADC_channel(unsigned char channel);
 extern int get_temp_table(uint nADValue, int* temp);
+
+//»Ìº˛—” ±
+extern void soft_delay(uint n);
 
 extern void Scr_Driver_PWM_Test(void);
 extern void Scr_Driver_PWM_Init(void);

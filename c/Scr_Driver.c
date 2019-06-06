@@ -34,6 +34,8 @@ void Zero_Crossing_EX2_Handle();
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 void Scr_Driver_Time2_Adjust(uint flag);
 
+//软件延时
+void soft_delay(uint n);
 
 int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
@@ -56,7 +58,7 @@ void Zero_Crossing_EXTI_Test(void)
     }
 }
 /*****************************************************
-*函数名称：void EX_Init(void)
+*函数名称：void Zero_Crossing_EX_Init(void)
 *函数功能：外部中断初始化
 *入口参数：void
 *出口参数：void
@@ -129,6 +131,9 @@ void Scr_Driver_Control_Heat_RLY(int on)
 	{
 		P02=0;
 	}
+	
+	//软件延时，保证heater_relay_on变量更新完成，避免主循环逻辑错误或者混乱
+	soft_delay(48000); //48000/24=2000=2ms
 }
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
@@ -157,6 +162,16 @@ void Scr_Driver_Time2_Adjust(uint flag)
 		
 		IE1 |= 0x02;        //开启PWM中断
 		EA=1;
+	}
+}
+
+//软件延时
+void soft_delay(uint n)
+{
+	uint k;
+	for(k=0;k<n;k++)
+	{
+		_nop_();
 	}
 }
 
