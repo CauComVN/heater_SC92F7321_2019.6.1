@@ -61,11 +61,14 @@ void Uart_Process()
 			
 			//Scr_Driver_Time2_Adjust(1);
 			
-			best_temp_out++;
+			best_temp_out=best_temp_out+1;
 			if(best_temp_out>good_temp_out_high)
 			{
 				best_temp_out=good_temp_out_high;
 			}
+			
+			//软件延时，保证变量更新完成，避免主循环逻辑错误或者混乱
+			soft_delay(48000); //48000/24=2000=2ms
 			
 			SBUF = 0x55+SBUF;
 			while(!UartSendFlag);
@@ -79,11 +82,14 @@ void Uart_Process()
 
 			//Scr_Driver_Time2_Adjust(2);
 			
-			best_temp_out--;
+			best_temp_out=best_temp_out-1;
 			if(best_temp_out<good_temp_out_low)
 			{
 				best_temp_out=good_temp_out_low;
 			}
+			
+			//软件延时，保证变量更新完成，避免主循环逻辑错误或者混乱
+			soft_delay(48000); //48000/24=2000=2ms
 			
 			SBUF = 0x55+SBUF;
 			while(!UartSendFlag);

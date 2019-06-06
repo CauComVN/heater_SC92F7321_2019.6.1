@@ -110,7 +110,7 @@ void Timer2Int_Handle()
 {
 	TF2 = 0;   //Òç³öÇåÁã	
 	
-	time2_count++;
+	time2_count=time2_count+1;
 	
 	if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
 	{

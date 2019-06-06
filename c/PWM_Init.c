@@ -132,7 +132,7 @@ void Scr_Driver_PWM_Adjust(uint flag)
 //中断处理
 void Scr_Driver_PWMInt_Handle()
 {
-	curr_low_pwm_duty_count++;
+	curr_low_pwm_duty_count=curr_low_pwm_duty_count+1;
 	if(curr_low_pwm_duty_count<=low_pwm_duty_cout)
 	{	
 		//pwm占空比0，低电平

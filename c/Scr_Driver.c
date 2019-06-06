@@ -145,7 +145,7 @@ void Scr_Driver_Time2_Adjust(uint flag)
 		IE1 &= 0xfd;        //关闭PWM中断		
 		
 		if(flag==1){ //增加功率
-			time2_curr--;
+			time2_curr=time2_curr-1;
 			if(time2_curr<1)
 			{
 				time2_curr=1;
@@ -153,7 +153,7 @@ void Scr_Driver_Time2_Adjust(uint flag)
 		}
 		else if(flag==2) ////减少功率
 		{
-			time2_curr++;
+			time2_curr=time2_curr+1;
 			if(time2_curr>time2_count_max)
 			{
 				time2_curr=time2_count_max;

@@ -72,7 +72,7 @@ void Water_Detection_EX2_Handle()
     //IE1 &= 0xf7;	//0000 x000  INT2使关闭 关闭霍尔水流传感器->外部中断
 
     //中断2有两路输入，需要区分 ？？？
-    numberPulse++; //霍尔水流传感器->外部中断计数
+    numberPulse=numberPulse+1; //霍尔水流传感器->外部中断计数
 
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，这里是下降沿
 //    if(P20 == 1)
@@ -136,7 +136,7 @@ void Water_Detection_Timer0_Handle()
 	
 	if(timer_run_cout<20) //2*20ms
 	{
-		timer_run_cout++;
+		timer_run_cout=timer_run_cout+1;
 	}
 	else{
 		//定时器重新开始计算时间
