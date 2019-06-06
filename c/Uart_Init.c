@@ -106,8 +106,11 @@ void Uart_Process()
 		//关闭加热开关
 		if(SBUF == 0x04)
 		{
-			heater_relay_on=0;
-			Scr_Driver_Control_Heat_RLY(heater_relay_on);
+			if(heater_relay_on==1)
+			{
+				heater_relay_on=0;
+				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+			}
 		}
 	}
 }
