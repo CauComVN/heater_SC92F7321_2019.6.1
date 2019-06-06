@@ -1,7 +1,7 @@
 #include "H/Function_Init.H"
 
 uint time2_count=0; //9ms/1ms=9
-uint time2_count_max=90; // 9000/100=90 每等分100us 定时100us中断一次
+uint time2_count_max=45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
 uint time2_curr =0;//4;//0; //初始化不启动
 
 void Timer_Init(void);
@@ -50,8 +50,10 @@ void Timer_Init(void)
 //	RCAP2L = (65536-48000)%256;
 //	RCAP2H = (65536-24000)/256;     //溢出时间：时钟为Fsys，则24000*（1/Fsys）=1ms;
 //	RCAP2L = (65536-24000)%256;
-	RCAP2H = (65536-2400)/256;     //溢出时间：时钟为Fsys，则2400*（1/Fsys）=100us;
-	RCAP2L = (65536-2400)%256;    
+//	RCAP2H = (65536-2400)/256;     //溢出时间：时钟为Fsys，则2400*（1/Fsys）=100us;
+//	RCAP2L = (65536-2400)%256;    
+	RCAP2H = (65536-4800)/256;     //溢出时间：时钟为Fsys，则4800*（1/Fsys）=200us;
+	RCAP2L = (65536-4800)%256;    
 	
 	TR2 = 0;
 	ET2 = 1;//定时器2允许
