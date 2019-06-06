@@ -123,8 +123,8 @@ void Timer2Int_Handle()
 	
 	if(time2_count>time2_count_max)
 	{
-		TR2 = 0;
-		P01=0;
+		//TR2 = 0;
+		//P01=0;
 		
 		time2_count=0;
 	}
