@@ -78,6 +78,7 @@ extern int water_flow_flag;
 extern int good_temp_out_low;
 //最佳出水温度高值
 extern int good_temp_out_high;
+extern int best_temp_out;
 
 extern int current_out_temp; //当前出水温度
 extern uint current_PWMDTY1; //当前功率调节PWM占空比

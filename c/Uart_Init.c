@@ -59,7 +59,13 @@ void Uart_Process()
 				
 //				time2_curr=1;
 				
-				Scr_Driver_Time2_Adjust(1);
+				//Scr_Driver_Time2_Adjust(1);
+				
+				best_temp_out++;
+				if(best_temp_out>good_temp_out_high)
+				{
+					best_temp_out=good_temp_out_high;
+				}
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);
@@ -71,7 +77,13 @@ void Uart_Process()
 				
 				//time2_curr=0;			
 
-				Scr_Driver_Time2_Adjust(2);
+				//Scr_Driver_Time2_Adjust(2);
+				
+				best_temp_out--;
+				if(best_temp_out<good_temp_out_low)
+				{
+					best_temp_out=good_temp_out_low;
+				}
 				
 				SBUF = 0x55+SBUF;
 				while(!UartSendFlag);

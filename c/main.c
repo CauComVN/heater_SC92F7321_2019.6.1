@@ -132,14 +132,14 @@ void AppHandle()
 			else {
 				//调节温度到一个合适的范围内
 				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-//				if(current_out_temp<good_temp_out_low)
-//				{
-//					Scr_Driver_Time2_Adjust(1);
-//				}
-//				if(current_out_temp>good_temp_out_high)
-//				{
-//					Scr_Driver_Time2_Adjust(2);
-//				}
+				if(current_out_temp<best_temp_out)
+				{
+					Scr_Driver_Time2_Adjust(1);
+				}
+				if(current_out_temp>best_temp_out)
+				{
+					Scr_Driver_Time2_Adjust(2);
+				}
 			}
 			
 			//串口接收到数据，处理

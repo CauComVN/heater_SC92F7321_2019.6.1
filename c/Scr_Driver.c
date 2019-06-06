@@ -22,8 +22,9 @@ bit heater_relay_on=0;
 Enum_Ex_Flag Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int good_temp_out_low=40;
-int good_temp_out_high=50;
+int good_temp_out_low=35;
+int good_temp_out_high=55;
+int best_temp_out=39;
 int current_out_temp=26; //当前出水温度
 
 void Zero_Crossing_EXTI_Test(void);
