@@ -102,17 +102,20 @@ void AppHandle()
 	while(1)
 	{
 		
-			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-			if(water_flow_flag == 2 && heater_relay_on==0)
+//			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
+//			if(water_flow_flag == 2 && heater_relay_on==0)
+//			{
+//				heater_relay_on=1;
+//				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+//				
+//				//启动可控硅控制
+//				Zero_Crossing_EX_Init();
+//			}
+		
+			if(heater_relay_on==1)
 			{
-				heater_relay_on=1;
-				Scr_Driver_Control_Heat_RLY(heater_relay_on);
-				
 				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
 				Scr_Driver_Check_Insurance();
-				
-				//启动可控硅控制
-				Zero_Crossing_EX_Init();
 			}
 		
 			if(water_flow_flag < 2 && heater_relay_on==1)

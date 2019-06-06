@@ -47,49 +47,69 @@ void Uart0_Test(void)
 void Uart_Process()
 {
 	if(UartReceiveFlag)
-		{
-			UartReceiveFlag=0;
-			
-			P00 = ~P00;
+	{
+		UartReceiveFlag=0;
 		
-			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
-			if(SBUF == 0x01)
-			{
-				//Scr_Driver_PWM_Adjust(1);	
-				
+		P00 = ~P00;
+	
+		//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
+		if(SBUF == 0x01)
+		{
+			//Scr_Driver_PWM_Adjust(1);	
+			
 //				time2_curr=1;
-				
-				//Scr_Driver_Time2_Adjust(1);
-				
-				best_temp_out++;
-				if(best_temp_out>good_temp_out_high)
-				{
-					best_temp_out=good_temp_out_high;
-				}
-				
-				SBUF = 0x55+SBUF;
-				while(!UartSendFlag);
-				UartSendFlag = 0;
-			}
-			if(SBUF == 0x02)
+			
+			//Scr_Driver_Time2_Adjust(1);
+			
+			best_temp_out++;
+			if(best_temp_out>good_temp_out_high)
 			{
-				//Scr_Driver_PWM_Adjust(2);
-				
-				//time2_curr=0;			
-
-				//Scr_Driver_Time2_Adjust(2);
-				
-				best_temp_out--;
-				if(best_temp_out<good_temp_out_low)
-				{
-					best_temp_out=good_temp_out_low;
-				}
-				
-				SBUF = 0x55+SBUF;
-				while(!UartSendFlag);
-				UartSendFlag = 0;
-			}	
+				best_temp_out=good_temp_out_high;
+			}
+			
+			SBUF = 0x55+SBUF;
+			while(!UartSendFlag);
+			UartSendFlag = 0;
 		}
+		if(SBUF == 0x02)
+		{
+			//Scr_Driver_PWM_Adjust(2);
+			
+			//time2_curr=0;			
+
+			//Scr_Driver_Time2_Adjust(2);
+			
+			best_temp_out--;
+			if(best_temp_out<good_temp_out_low)
+			{
+				best_temp_out=good_temp_out_low;
+			}
+			
+			SBUF = 0x55+SBUF;
+			while(!UartSendFlag);
+			UartSendFlag = 0;
+		}	
+		
+		//启动加热开关
+		if(SBUF == 0x03)
+		{
+			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
+			if(water_flow_flag == 2 && heater_relay_on==0)
+			{
+				heater_relay_on=1;
+				Scr_Driver_Control_Heat_RLY(heater_relay_on);				
+				
+				//启动可控硅控制
+				Zero_Crossing_EX_Init();
+			}
+		}
+		//关闭加热开关
+		if(SBUF == 0x04)
+		{
+			heater_relay_on=0;
+			Scr_Driver_Control_Heat_RLY(heater_relay_on);
+		}
+	}
 }
 
 /*****************************************************
