@@ -137,9 +137,9 @@ void Scr_Driver_Time2_Adjust(uint flag)
 	{		
 		if(flag==1){ //增加功率
 			time2_curr=time2_curr-1;
-			if(time2_curr<1)
+			if(time2_curr<1) //不能为0，0则停止加热了
 			{
-				time2_curr=0;
+				time2_curr=1;
 			}
 		}
 		else if(flag==2) //减少功率
