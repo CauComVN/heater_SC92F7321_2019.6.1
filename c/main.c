@@ -6,7 +6,7 @@
 2、改变TEST的定义，可以分别测试对应的功能；
 3、注意：先在Function.H里面选择测试型号（SC92F7320无LCD/LED和PWM功能）
 ***************************************************************/
-// Normal:100 	BTM:0 EXTI:1 		Timer:2 	LCD:3 	ScrDriverPWM:4 	Uart0:5 	ADC:7 	IAP:8 
+// Normal:100 	BTM:0 EXTI:1 		Timer:2 	LCD:3 	PWM:4 	Uart0:5 	ADC:7 	IAP:8 
 // SerialKey:9 	ZeroCrossing:10 	WaterCheckEXTI:11 	WaterCheckTimer:12
 // Leakage: 13
 
@@ -32,9 +32,6 @@ void main(void)
 //		break;
 		case 1: 
 		{
-//			//用P16 P17口做调功率按键中断，出水温度 进水温度替换
-//			Scr_Driver_PWM_Init();
-//			
 //			// 需要做防抖动处理（未处理）
 //			EXTI_Test();
 		}			
@@ -46,12 +43,10 @@ void main(void)
 		break;
 		case 4: 
 		{
-			Scr_Driver_PWM_Test();
 		}
 		break;
 		case 5: 
 		{
-			Scr_Driver_PWM_Init();
 			Uart0_Test();
 		}
 		break;

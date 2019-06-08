@@ -68,24 +68,17 @@ void EX_Init(void)
 
 void EX1_Handle()
 {    
-	//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
+	//HEAT TRA 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 	
-
 	P00 = ~P00;
 	
 	if(P16 == 0)
 	{
-		INT1_flag = 0x10; //INT12产生中断
-		
-		//增加功率
-		Scr_Driver_PWM_Adjust(1);
+		INT1_flag = 0x10; //INT12产生中断		
 	}
 	if(P17 == 0)
 	{		
 		INT1_flag = 0x20; //INT13产生中断
-		
-		//降低功率
-		Scr_Driver_PWM_Adjust(2);
 	}
 }
 

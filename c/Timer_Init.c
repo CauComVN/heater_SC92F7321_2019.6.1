@@ -1,8 +1,8 @@
 #include "H/Function_Init.H"
 
-uint time2_count=0; //9ms/1ms=9
-uint time2_count_max=45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
-uint time2_curr =0;//4;//0; //初始化不启动
+uint time2_count=0; 
+uint time2_count_max=48; // 200us*48=9600us=9.6ms < 1/50/2=10ms
+uint time2_curr =0;//初始化不启动
 
 void Timer_Init(void);
 /*****************************************************
