@@ -1,10 +1,9 @@
 #include "H/Function_Init.H"
 
-#define scr_time2_count_max 48
 
 uint time2_count=0; 
-uint time2_count_max=scr_time2_count_max; // 200us*48=9600us=9.6ms < 1/50/2=10ms
-uint time2_curr=scr_time2_count_max;//初始化不启动
+uint time2_count_max=45; // 200us*45=9000us=9ms < 1/50/2=10ms
+uint time2_curr=20;//初始化不启动
 
 void Timer_Init(void);
 /*****************************************************
@@ -77,16 +76,16 @@ void Timer_Init(void)
 	EA = 1;	
 	
 	
-	P01=1;
-//	time2_count=0;
-//	if(time2_curr==0)
-//	{
-//		P01=1;
-//	}	
-//	else
-//	{
-//		P01=0;
-//	}
+//	P01=1;
+	time2_count=0;
+	if(time2_curr==0)
+	{
+		P01=1;
+	}	
+	else
+	{
+		P01=0;
+	}
 }
 
 /**************************************************
@@ -117,28 +116,29 @@ void Timer2Int_Handle()
 {
 	TF2 = 0;   //溢出清零	
 	
-//	time2_count=time2_count+1;
-//	
-//	//if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
-//	if(time2_count<time2_curr) 
-//	{
-//		if(P01!=0)
-//		{
-//			P01=0;
-//		}
-//	}
-//	else
-//	{
-//		if(P01!=1)
-//		{
-//			P01=1;
-//		}
-//	}
-//	
-//	if(time2_count>time2_count_max)
-//	{
-////		TR2 = 0; //半个周期内已处理完，停止定时器，等待下一个过零检测
-//		
-//		time2_count=0;
-//	}	
+	time2_count=time2_count+1;
+	
+	//if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
+	if(time2_count<time2_curr) 
+	{
+		if(P01!=0)
+		{
+			P01=0;
+		}
+	}
+	else
+	{
+		if(P01!=1)
+		{
+			P01=1;
+		}
+	}
+	
+	if(time2_count>time2_count_max)
+	{
+//		TR2 = 0; //半个周期内已处理完，停止定时器，等待下一个过零检测
+//		P01=0;
+		
+		time2_count=0;
+	}	
 }
