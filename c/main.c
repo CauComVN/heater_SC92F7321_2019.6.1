@@ -6,7 +6,7 @@
 2、改变TEST的定义，可以分别测试对应的功能；
 3、注意：先在Function.H里面选择测试型号（SC92F7320无LCD/LED和PWM功能）
 ***************************************************************/
-// Normal:100 	BTM:0 EXTI:1 		Timer:2 	LCD:3 	ScrDriverPWM:4 	Uart0:5 	ADC:7 	IAP:8 
+// Normal:100 	BTM:0 EXTI:1 		Timer:2 	LCD:3 	PWM:4 	Uart0:5 	ADC:7 	IAP:8 
 // SerialKey:9 	ZeroCrossing:10 	WaterCheckEXTI:11 	WaterCheckTimer:12
 // Leakage: 13
 
@@ -32,9 +32,6 @@ void main(void)
 //		break;
 		case 1: 
 		{
-//			//用P16 P17口做调功率按键中断，出水温度 进水温度替换
-//			Scr_Driver_PWM_Init();
-//			
 //			// 需要做防抖动处理（未处理）
 //			EXTI_Test();
 		}			
@@ -46,12 +43,10 @@ void main(void)
 		break;
 		case 4: 
 		{
-			Scr_Driver_PWM_Test();
 		}
 		break;
 		case 5: 
 		{
-			Scr_Driver_PWM_Init();
 			Uart0_Test();
 		}
 		break;
@@ -102,15 +97,16 @@ void AppHandle()
 	while(1)
 	{
 		
+		// test.................... 串口有问题？？？？
 //			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-//			if(water_flow_flag == 2 && heater_relay_on==0)
-//			{
-//				heater_relay_on=1;
-//				Scr_Driver_Control_Heat_RLY(heater_relay_on);
-//				
-//				//启动可控硅控制
-//				Zero_Crossing_EX_Init();
-//			}
+			if(water_flow_flag == 2 && heater_relay_on==0)
+			{
+				heater_relay_on=1;
+				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+				
+				//启动可控硅控制
+				Zero_Crossing_EX_Init();
+			}
 		
 			if(heater_relay_on==1)
 			{
@@ -136,6 +132,13 @@ void AppHandle()
 					ex_flag=Ex_Out_Water_Temp_High;
 			}
 			else {
+				//调试用，查看当前输出温度
+				static last_curr_temp=0;
+				if(last_curr_temp != current_out_temp)
+				{
+					UART_SentChar(current_out_temp);
+				}
+				
 				//调节温度到一个合适的范围内
 				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 				if(current_out_temp<best_temp_out)
@@ -149,8 +152,6 @@ void AppHandle()
 			}
 			
 			//串口接收到数据，处理
-			Uart_Process();
-			
-	}
-	
+			Uart_Process();			
+	}	
 }

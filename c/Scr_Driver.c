@@ -24,8 +24,8 @@ Enum_Ex_Flag Ex_Flag;
 //35度~60度 自动调节  最佳：40 - 50
 int good_temp_out_low=28;
 int good_temp_out_high=60;
-int best_temp_out=34;
-int current_out_temp=26; //当前出水温度
+int best_temp_out=38;
+int current_out_temp=28; //当前出水温度
 
 void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
@@ -39,9 +39,6 @@ void soft_delay(uint n);
 
 int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
-
-//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
-void Scr_Driver_PWM_Adjust(uint flag);
 
 uchar Zero_Crossing_INT1_flag = 0x00;
 /*****************************************************
@@ -85,10 +82,7 @@ void Zero_Crossing_EX2_Handle()
 	
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，上升沿中断，所以端口电平是1
     //if(P20 == 1) //INT24 P20 过零检测到零点
-    {
-        //PWM计数值重置
-//		Scr_Driver_PWM_Init();
-			
+    {			
 			Timer_Init();
     }
  /*   if(P21 == 1) //INT25 P21 水流检测计数
@@ -140,28 +134,22 @@ void Scr_Driver_Control_Heat_RLY(int on)
 void Scr_Driver_Time2_Adjust(uint flag)
 {
 	if(flag==1 || flag==2)
-	{
-		EA=0;
-		IE1 &= 0xfd;        //关闭PWM中断		
-		
+	{	
 		if(flag==1){ //增加功率
 			time2_curr=time2_curr-1;
-			if(time2_curr<1)
+			if(time2_curr<0) //0:全功率
 			{
-				time2_curr=1;
+				time2_curr=0;
 			}
 		}
-		else if(flag==2) ////减少功率
+		else if(flag==2) //减少功率
 		{
 			time2_curr=time2_curr+1;
 			if(time2_curr>time2_count_max)
 			{
 				time2_curr=time2_count_max;
 			}					
-		}			
-		
-		IE1 |= 0x02;        //开启PWM中断
-		EA=1;
+		}
 	}
 }
 
