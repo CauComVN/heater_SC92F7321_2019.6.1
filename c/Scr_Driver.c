@@ -24,8 +24,8 @@ Enum_Ex_Flag Ex_Flag;
 //35度~60度 自动调节  最佳：40 - 50
 int good_temp_out_low=28;
 int good_temp_out_high=60;
-int best_temp_out=34;
-int current_out_temp=26; //当前出水温度
+int best_temp_out=38;
+int current_out_temp=28; //当前出水温度
 
 void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
@@ -137,9 +137,9 @@ void Scr_Driver_Time2_Adjust(uint flag)
 	{		
 		if(flag==1){ //增加功率
 			time2_curr=time2_curr-1;
-			if(time2_curr<1) //不能为0，0则停止加热了
+			if(time2_curr<0) //0:全功率
 			{
-				time2_curr=1;
+				time2_curr=0;
 			}
 		}
 		else if(flag==2) //减少功率
