@@ -127,5 +127,6 @@ void Timer2Int_Handle()
 		//P01=0;
 		
 		time2_count=0;
-	}	
+	}
+	
 }
