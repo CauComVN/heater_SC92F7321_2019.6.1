@@ -131,6 +131,13 @@ void AppHandle()
 					ex_flag=Ex_Out_Water_Temp_High;
 			}
 			else {
+				//调试用，查看当前输出温度
+				static last_curr_temp=0;
+				if(last_curr_temp != current_out_temp)
+				{
+					UART_SentChar(current_out_temp);
+				}
+				
 				//调节温度到一个合适的范围内
 				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 				if(current_out_temp<best_temp_out)

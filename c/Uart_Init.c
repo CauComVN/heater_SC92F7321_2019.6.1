@@ -3,6 +3,7 @@
 void Uart0_Init(void);
 void UartInt_Handle();
 void Uart_Process();
+void UART_SentChar(uchar chr);
 
 bit UartSendFlag = 0; //发送中断标志位
 bit UartReceiveFlag = 0; //接收中断标志位
@@ -103,6 +104,10 @@ void Uart_Process()
 				
 				//启动可控硅控制
 				Zero_Crossing_EX_Init();
+				
+				SBUF = 0x55+SBUF;
+				while(!UartSendFlag);
+				UartSendFlag = 0;
 			}
 		}
 		//关闭加热开关
@@ -112,6 +117,10 @@ void Uart_Process()
 			{
 				heater_relay_on=0;
 				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+				
+				SBUF = 0x55+SBUF;
+				while(!UartSendFlag);
+				UartSendFlag = 0;
 			}
 		}
 	}
@@ -180,4 +189,12 @@ void UartInt_Handle()
 		RI = 0;	
 		UartReceiveFlag = 1;		
 	}	
+}
+
+void UART_SentChar(uchar chr)
+{
+      //发送一个字节
+  SBUF = chr;
+  while( TI == 0);
+  TI = 0;
 }

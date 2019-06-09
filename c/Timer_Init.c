@@ -119,7 +119,7 @@ void Timer2Int_Handle()
 	time2_count=time2_count+1;
 	
 	//if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
-	if(time2_count<time2_curr) 
+	if(time2_count<time2_curr  && time2_curr!=0) 
 	{
 		if(P01!=0)
 		{
@@ -139,6 +139,6 @@ void Timer2Int_Handle()
 //		TR2 = 0; //半个周期内已处理完，停止定时器，等待下一个过零检测
 //		P01=0;
 		
-		time2_count=0;
+		//time2_count=0;
 	}	
 }

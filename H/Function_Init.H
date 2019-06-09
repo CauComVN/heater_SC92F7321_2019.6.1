@@ -123,6 +123,7 @@ extern void Timer_Init(void);
 
 extern void Uart0_Init(void);
 extern void Uart_Process();
+extern void UART_SentChar(uchar chr);
 
 //ÖÐ¶Ï
 extern void ADC_Interrupt_Handle(void);
