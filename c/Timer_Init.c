@@ -61,17 +61,6 @@ void Timer_Init(void)
 	ET2 = 1;//定时器2允许
 	TR2 = 1;//打开定时器2		
 	
-	//P01=0;
-	time2_count=0;
-	if(time2_curr==0)
-	{
-		P01=1;
-	}	
-	else
-	{
-		P01=0;
-	}
-	
 	/*
 	//Timer2捕获功能
 	T2CON = 0X09; //使能EXT2，16位捕获模式
@@ -86,6 +75,18 @@ void Timer_Init(void)
 	*/
 	
 	EA = 1;	
+	
+	
+	P01=1;
+//	time2_count=0;
+//	if(time2_curr==0)
+//	{
+//		P01=1;
+//	}	
+//	else
+//	{
+//		P01=0;
+//	}
 }
 
 /**************************************************
@@ -116,28 +117,28 @@ void Timer2Int_Handle()
 {
 	TF2 = 0;   //溢出清零	
 	
-	time2_count=time2_count+1;
-	
-	//if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
-	if(time2_count<time2_curr) 
-	{
-		if(P01!=0)
-		{
-			P01=0;
-		}
-	}
-	else
-	{
-		if(P01!=1)
-		{
-			P01=1;
-		}
-	}
-	
-	if(time2_count>time2_count_max)
-	{
-		TR2 = 0; //半个周期内已处理完，停止定时器，等待下一个过零检测
-		
-		time2_count=0;
-	}	
+//	time2_count=time2_count+1;
+//	
+//	//if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
+//	if(time2_count<time2_curr) 
+//	{
+//		if(P01!=0)
+//		{
+//			P01=0;
+//		}
+//	}
+//	else
+//	{
+//		if(P01!=1)
+//		{
+//			P01=1;
+//		}
+//	}
+//	
+//	if(time2_count>time2_count_max)
+//	{
+////		TR2 = 0; //半个周期内已处理完，停止定时器，等待下一个过零检测
+//		
+//		time2_count=0;
+//	}	
 }

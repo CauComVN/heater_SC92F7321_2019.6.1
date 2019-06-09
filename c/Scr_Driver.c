@@ -135,6 +135,7 @@ void Scr_Driver_Time2_Adjust(uint flag)
 {
 	if(flag==1 || flag==2)
 	{		
+		EA=0;
 		if(flag==1){ //增加功率
 			time2_curr=time2_curr-1;
 			if(time2_curr<0) //0:全功率
@@ -150,6 +151,8 @@ void Scr_Driver_Time2_Adjust(uint flag)
 				time2_curr=time2_count_max;
 			}					
 		}
+		
+		EA=1;
 		
 		soft_delay(2400);
 	}
