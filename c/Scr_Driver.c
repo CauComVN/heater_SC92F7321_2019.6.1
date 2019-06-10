@@ -70,8 +70,8 @@ void Zero_Crossing_EX_Init(void)
 
     //配置中断口INT24  上升沿和下降沿都支持
     //下降沿设置
-    //INT2F |= 0x10;  //0000 xxxx  0关闭 1使能打开下降沿
-		INT2F &= 0x2F; //关闭下降沿
+    INT2F |= 0x10;  //0000 xxxx  0关闭 1使能 打开下降沿
+		//INT2F &= 0x2F; //关闭下降沿
     //上升沿设置
     INT2R |= 0X10 ;    //0000 xxxx  0关闭 1使能
 
