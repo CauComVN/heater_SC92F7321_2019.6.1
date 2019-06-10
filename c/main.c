@@ -101,16 +101,16 @@ void AppHandle()
 	/**/
 	while(1)
 	{
-		
-//			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-//			if(water_flow_flag == 2 && heater_relay_on==0)
-//			{
-//				heater_relay_on=1;
-//				Scr_Driver_Control_Heat_RLY(heater_relay_on);
-//				
-//				//启动可控硅控制
-//				Zero_Crossing_EX_Init();
-//			}
+			//test........
+			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
+			if(water_flow_flag == 2 && heater_relay_on==0)
+			{
+				heater_relay_on=1;
+				Scr_Driver_Control_Heat_RLY(heater_relay_on);
+				
+				//启动可控硅控制
+				Zero_Crossing_EX_Init();
+			}
 		
 			if(heater_relay_on==1)
 			{
@@ -138,14 +138,14 @@ void AppHandle()
 			else {
 				//调节温度到一个合适的范围内
 				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-				if(current_out_temp<best_temp_out)
-				{
-					Scr_Driver_Time2_Adjust(1);
-				}
-				if(current_out_temp>best_temp_out)
-				{
-					Scr_Driver_Time2_Adjust(2);
-				}
+//				if(current_out_temp<best_temp_out)
+//				{
+//					Scr_Driver_Time2_Adjust(1);
+//				}
+//				if(current_out_temp>best_temp_out)
+//				{
+//					Scr_Driver_Time2_Adjust(2);
+//				}
 			}
 			
 			//串口接收到数据，处理

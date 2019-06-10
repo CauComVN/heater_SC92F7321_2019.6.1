@@ -1,8 +1,8 @@
 #include "H/Function_Init.H"
 
 uint time2_count=0; //9ms/1ms=9
-uint time2_count_max=45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
-uint time2_curr =0;//4;//0; //初始化不启动
+uint time2_count_max=44;//45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
+uint time2_curr =44;//4;//0; //初始化不启动
 
 void Timer_Init(void);
 /*****************************************************
@@ -59,12 +59,14 @@ void Timer_Init(void)
 	ET2 = 1;//定时器2允许
 	TR2 = 1;//打开定时器2		
 	
-	//P01=0;
+//	P01=1;
 	time2_count=0;
-	if(time2_curr==0)
-	{
-		P01=0;
-	}	
+//	if(time2_curr==0)
+//	{
+//		P01=0;
+//	}	
+	
+	P01=0;
 	
 	/*
 	//Timer2捕获功能
@@ -112,21 +114,63 @@ void Timer2Int_Handle()
 	
 	time2_count=time2_count+1;
 	
-	if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
+//	if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
+//	{
+//		if(P01!=0)
+//		{
+//			P01=0;
+//		}
+//	}
+//	else if(time2_count==time2_curr)
+//	{
+//		if(P01!=1)
+//		{
+//			P01=1;
+//			
+//			TR2 = 0;
+//		}
+//	}
+//	else
+//	{
+//		if(P01!=0)
+//		{
+//			P01=0;
+//		}
+//	}
+//	
+//	if(time2_count>time2_count_max)
+//	{
+//		//TR2 = 0;
+//		//P01=0;
+//		
+//		time2_count=0;
+//	}
+//	
+
+
+	if(time2_count<time2_curr)
 	{
-		P01=0;
+		if(P01!=0)
+		{
+			P01=0;
+		}
+	}
+	else if(time2_count==time2_curr)
+	{
+		if(P01!=1)
+		{
+			P01=1;
+			
+//			TR2 = 0;
+		}
 	}
 	else
 	{
-		P01=1;
+		if(P01!=0)
+		{
+			P01=0;
+			
+			TR2 = 0;
+		}
 	}
-	
-	if(time2_count>time2_count_max)
-	{
-		//TR2 = 0;
-		//P01=0;
-		
-		time2_count=0;
-	}
-	
 }
