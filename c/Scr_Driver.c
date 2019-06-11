@@ -24,8 +24,8 @@ Enum_Ex_Flag Ex_Flag;
 //35度~60度 自动调节  最佳：40 - 50
 int good_temp_out_low=28;
 int good_temp_out_high=60;
-int best_temp_out=31;
-int current_out_temp=26; //当前出水温度
+int best_temp_out=37;
+int current_out_temp=28; //当前出水温度
 
 void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);

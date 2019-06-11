@@ -1,7 +1,7 @@
 #include "H/Function_Init.H"
 
 uint time2_count=0; //9ms/1ms=9
-uint time2_count_max=48;//45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
+uint time2_count_max=40;//45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
 uint time2_curr =20;//4;//0; //初始化不启动
 
 
@@ -62,12 +62,16 @@ void Timer_Init(void)
 	
 //	P01=1;
 	time2_count=0;
-//	if(time2_curr==0)
-//	{
-//		P01=0;
-//	}	
+	if(time2_curr==0)
+	{
+		P01=1;
+	}
+	else
+	{
+		P01=0;
+	}
 	
-	P01=0;
+	
 	
 	/*
 	//Timer2捕获功能
@@ -156,7 +160,11 @@ void Timer2Int_Handle()
 			P01=0;
 		}
 	}
-	else if(time2_count>=time2_curr)		
+	else if((time2_count>=time2_curr)
+		|| (time2_count>=time2_curr+1))	
+//	||(time2_count>=time2_curr+2)	
+//	||(time2_count>=time2_curr+3)	)
+//	||(time2_count>=time2_curr+4)	)		
 	{
 		if(P01!=1)
 		{
@@ -165,13 +173,26 @@ void Timer2Int_Handle()
 //			TR2 = 0;
 		}
 	}
+//	else
+//	{
+//		if(P01!=0)
+//		{
+//			P01=0;
+//		}
+//		if(TR2!=0)
+//		{
+//			TR2 = 0;
+//		}
+//	}
 	
 	if(time2_count>=time2_count_max)
 	{
 		if(P01!=0)
 		{
-			P01=0;
-			
+			P01=0;			
+		}
+		if(TR2!=0)
+		{
 			TR2 = 0;
 		}
 	}
