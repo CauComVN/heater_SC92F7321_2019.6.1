@@ -78,14 +78,14 @@ void EX1_Handle()
 		INT1_flag = 0x10; //INT12产生中断
 		
 		//增加功率
-		Scr_Driver_PWM_Adjust(1);
+//		Scr_Driver_PWM_Adjust(1);
 	}
 	if(P17 == 0)
 	{		
 		INT1_flag = 0x20; //INT13产生中断
 		
 		//降低功率
-		Scr_Driver_PWM_Adjust(2);
+//		Scr_Driver_PWM_Adjust(2);
 	}
 }
 

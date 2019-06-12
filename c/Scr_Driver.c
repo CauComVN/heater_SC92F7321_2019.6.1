@@ -142,14 +142,14 @@ void Scr_Driver_Time2_Adjust(uint flag)
 {
 	if(flag==1 || flag==2)
 	{
-		EA=0;
-		IE1 &= 0xfd;        //关闭PWM中断		
+//		EA=0;
+//		IE1 &= 0xfd;        //关闭PWM中断		
 		
 		if(flag==1){ //增加功率
 			time2_curr=time2_curr-1;
-			if(time2_curr<1)
+			if(time2_curr<0)
 			{
-				time2_curr=1;
+				time2_curr=0;
 			}
 		}
 		else if(flag==2) ////减少功率
@@ -159,10 +159,13 @@ void Scr_Driver_Time2_Adjust(uint flag)
 			{
 				time2_curr=time2_count_max;
 			}					
-		}			
+		}		
+
+		//串口打印log，调试。。。
+		//UART_SentChar(time2_curr);
 		
-		IE1 |= 0x02;        //开启PWM中断
-		EA=1;
+//		IE1 |= 0x02;        //开启PWM中断
+//		EA=1;
 	}
 }
 

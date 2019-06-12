@@ -53,7 +53,7 @@ void Timer2Int(void) interrupt 5
 
 void PWMInt(void) interrupt 8
 {
-    Scr_Driver_PWMInt_Handle();
+//    Scr_Driver_PWMInt_Handle();
 }
 
 void UartInt(void) interrupt 4

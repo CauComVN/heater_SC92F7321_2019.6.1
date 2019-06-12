@@ -11,7 +11,9 @@
 // Leakage: 13
 
 //#define Test  5
-#define Test  100    
+#define Test  100   
+
+void AppInit();
 
 //正常运行函数
 void AppHandle();
@@ -46,12 +48,12 @@ void main(void)
 		break;
 		case 4: 
 		{
-			Scr_Driver_PWM_Test();
+//			Scr_Driver_PWM_Test();
 		}
 		break;
 		case 5: 
 		{
-			Scr_Driver_PWM_Init();
+//			Scr_Driver_PWM_Init();
 			Uart0_Test();
 		}
 		break;
@@ -80,27 +82,35 @@ void main(void)
 //正常运行函数
 void AppHandle()
 {
+		
 	//=====================初始化
 	uint ADCTempValue=0;
 	int ret=0;
 	
-	//漏电保护
-	Leakage_EX_Init();
+	AppInit();
 	
-	//水流检测定时器
-  Water_Detection_Timer_Init();
+	Uart0_Init();
+	
+	//漏电保护
+	//Leakage_EX_Init();
+	
+	
 	//水流检测
   Water_Detection_EX_Init(); 
 	
+	//水流检测定时器
+  Water_Detection_Timer_Init();
+	/*
 	//初始化按键，用串口Rx Tx做中断来调节功率 需要做防抖动处理（未处理）
 	//Serial_Key_Init();
+	*/
 	
-	Uart0_Init();
 		
 	//=====================主循环
 	/**/
 	while(1)
 	{
+		/**/
 			//test........
 			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
 			if(water_flow_flag == 2 && heater_relay_on==0)
@@ -124,13 +134,20 @@ void AppHandle()
 					Scr_Driver_Control_Heat_RLY(heater_relay_on);
 			}		
 			
+			//串口打印log，调试。。。
+			//UART_SentChar(0x55);
+			/**/
 			//出水温度
 			ADC_Init(AIN8);
 			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
 			ret = get_temp_table(ADCTempValue,&current_out_temp);
 			
+			//串口打印log，调试。。。
+			//UART_SentChar(current_out_temp);
+			
 			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
 					ex_flag=Ex_Out_Water_Temp_Low;
+					
 			}
 			else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
 					ex_flag=Ex_Out_Water_Temp_High;
@@ -148,9 +165,48 @@ void AppHandle()
 				}
 			}
 			
+			
 			//串口接收到数据，处理
 			Uart_Process();
 			
 	}
 	
+}
+
+//全局变量初始化，避免部分全局变量值不确定，导致逻辑问题
+void AppInit()
+{
+	//下位机热水器通信协议接收到的命令协议数据
+	//uchar heater_receive_data;
+
+	//当前热水器运行或停止状态 继电器动作 0：停止 1：运行
+	heater_relay_on=0;
+
+	//热水器内部异常状态
+	ex_flag=Ex_Normal;
+
+	//水流状态标记 0：无水流 1：少水流 2：多水流，正常
+	 water_flow_flag=0;
+
+	//最佳出水温度低值
+	good_temp_out_low=34;
+	//最佳出水温度高值
+	good_temp_out_high=55;
+	best_temp_out=37;
+
+	current_out_temp=28; //当前出水温度
+	
+//	uint current_PWMDTY1; //当前功率调节PWM占空比
+//	extern uint duty_app_time; //9ms
+//	extern uint max_pwm_duty; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目
+//	extern uint step_app_duty; //0 -- 180 调节步长
+//	extern uint curr_app_duty; //0 -- 180
+//	extern uint max_app_duty; //0 -- 180
+//	extern uint low_pwm_duty_cout; //low_pwm_duty_cout个PWM周期数目为低电平
+//	extern uint curr_low_pwm_duty_count;
+
+	time2_count=0;
+	time2_count_max=48;
+	time2_curr=25;
+
 }

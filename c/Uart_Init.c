@@ -3,6 +3,7 @@
 void Uart0_Init(void);
 void UartInt_Handle();
 void Uart_Process();
+void UART_SentChar(uchar chr);
 
 bit UartSendFlag = 0; //发送中断标志位
 bit UartReceiveFlag = 0; //接收中断标志位
@@ -134,9 +135,16 @@ void Uart0_Init(void)    //选择Timer1作为波特率信号发生器
 	P13 = 1;		 //TX初始高电平；
 	SCON = 0X50;     //方式1，允许接收数据
 	PCON |= 0X80; 
+	
+	
 	T2CON = 0x00;    //使用定时器1作UART时钟
-	TMOD = 0X20;     //定时器1  8位自动重载
-	TMCON = 0X02;    //定时器1   Fsys；
+	
+	//TMOD = 0X20;     //定时器1  8位自动重载
+	//TMCON = 0X02;    //定时器1   Fsys；
+	TMOD |= 0X20;     //定时器1  8位自动重载
+	TMOD &=0xbf; //////
+	TMCON |= 0X02;    //定时器1   Fsys；
+	
 	TL1 = 217;		
 	TH1 = 217;		 //UART 波特率24M情况下=38400；
 	TR1 = 0;
@@ -184,4 +192,16 @@ void UartInt_Handle()
 		RI = 0;	
 		UartReceiveFlag = 1;		
 	}	
+}
+
+void UART_SentChar(uchar chr)
+{
+  //发送一个字节
+//  SBUF = chr;
+//  while( TI == 0);
+//  TI = 0;
+	
+	SBUF = chr;
+	while(!UartSendFlag);
+	UartSendFlag = 0;
 }

@@ -1,8 +1,8 @@
 #include "H/Function_Init.H"
 
 uint time2_count=0; //9ms/1ms=9
-uint time2_count_max=40;//45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
-uint time2_curr =20;//4;//0; //初始化不启动
+uint time2_count_max=48;//45; // 9000/100=90 每等分100us 定时100us中断一次 9000/200=45
+int time2_curr =25;//4;//0; //初始化不启动
 
 
 void Timer_Init(void);
@@ -45,7 +45,9 @@ void Timer_Init(void)
 //	TR1 = 1;//打开定时器1
 	//T2设置
 	T2MOD = 0x00;
-	T2CON = 0x00;	 //设置为16位重载寄存器
+	
+	//T2CON = 0x00;	 //设置为16位重载寄存器
+	T2CON &= 0x30;	 //设置为16位重载寄存器
 	
 //	RCAP2H = (65536-48000)/256;     //溢出时间：时钟为Fsys，则48000*（1/Fsys）=2ms;
 //	RCAP2L = (65536-48000)%256;
@@ -61,6 +63,7 @@ void Timer_Init(void)
 	TR2 = 1;//打开定时器2		
 	
 //	P01=1;
+
 	time2_count=0;
 	if(time2_curr==0)
 	{
@@ -117,8 +120,16 @@ void Timer2Int_Handle()
 {
 	TF2 = 0;   //溢出清零	
 	
-	time2_count=time2_count+1;
+	//串口打印log，调试。。。 ---->>>>> 绝对不能开启，耗时太长，一定会导致问题
+	//UART_SentChar(time2_curr);
 	
+	time2_count=time2_count+1;
+	if(time2_curr == 0)
+	{
+	}
+	else
+	{
+	/**/
 //	if((time2_count<time2_curr && time2_curr!=0) || time2_curr == 0 )
 //	{
 //		if(P01!=0)
@@ -160,8 +171,8 @@ void Timer2Int_Handle()
 			P01=0;
 		}
 	}
-	else if((time2_count>=time2_curr)
-		|| (time2_count>=time2_curr+1))	
+	else if(time2_count>=time2_curr)
+//		|| (time2_count>=time2_curr+1))	
 //	||(time2_count>=time2_curr+2)	
 //	||(time2_count>=time2_curr+3)	)
 //	||(time2_count>=time2_curr+4)	)		
@@ -185,8 +196,9 @@ void Timer2Int_Handle()
 //		}
 //	}
 	
-	if(time2_count>=time2_count_max)
-	{
+	if(time2_curr>0&&time2_curr<time2_count_max-18){
+		if(time2_count>=time2_count_max)
+		{	
 		if(P01!=0)
 		{
 			P01=0;			
@@ -196,4 +208,25 @@ void Timer2Int_Handle()
 			TR2 = 0;
 		}
 	}
+	}
+	else
+	{
+	if(time2_count>=time2_count_max-18)  
+	{
+		if(time2_count>=time2_count_max-8)//40
+		{	
+		if(P01!=0)
+		{
+			P01=0;			
+		}
+		if(TR2!=0)
+		{
+			TR2 = 0;
+		}
+	}
+	}
 }
+}
+	/**/
+}
+//}

@@ -447,11 +447,6 @@
               <FilePath>.\c\main.c</FilePath>
             </File>
             <File>
-              <FileName>PWM_Init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\c\PWM_Init.c</FilePath>
-            </File>
-            <File>
               <FileName>Timer_Init.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\c\Timer_Init.c</FilePath>
