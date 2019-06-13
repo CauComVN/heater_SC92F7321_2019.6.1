@@ -1,0 +1,27 @@
+1.增量式PID
+
+   Error=Set_Value - Current_Value;
+   result= p * (Error - LastError)
+                 + i * Error 
+                 + d * (Error - 2*LastError + PrevError);
+   PrevError = LastError;
+   LastError = Error;
+   SumError = SumError + result;
+ 
+
+2.位置式PID
+
+   Error=Set_Value - Current_Value;
+   SumError += Error; 
+   dError = LastError - PrevError; 
+   PrevError = LastError;
+   LastError = Error;
+   result= p * Error 
+               + i * SumError
+               + d * dError;
+ 
+--------------------- 
+作者：周
+来源：CSDN 
+原文：https://blog.csdn.net/m0_37827405/article/details/89637689 
+版权声明：本文为博主原创文章，转载请附上博文链接！
