@@ -20,6 +20,22 @@
 #define IC_MODEL  SC92F7321
 
 
+//=============================================
+
+// 可以设置的最大最小值
+#define ref_max  39 //0~39
+#define ref_min  0
+
+//可控硅开通时间  200us
+#define open_max  49  //最大功率
+#define open_min  40; //最小功率
+
+//设置最大值
+//time2_count_max=open_max-time2_curr/4;
+//============================================
+
+
+
 /***********ADC采样口选择*************/
 #if (IC_MODEL == SC92F7323)
 	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};

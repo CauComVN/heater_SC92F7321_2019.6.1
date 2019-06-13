@@ -189,24 +189,15 @@ void AppInit()
 	 water_flow_flag=0;
 
 	//最佳出水温度低值
-	good_temp_out_low=34;
+	good_temp_out_low=36;
 	//最佳出水温度高值
 	good_temp_out_high=55;
 	best_temp_out=37;
 
 	current_out_temp=28; //当前出水温度
-	
-//	uint current_PWMDTY1; //当前功率调节PWM占空比
-//	extern uint duty_app_time; //9ms
-//	extern uint max_pwm_duty; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目
-//	extern uint step_app_duty; //0 -- 180 调节步长
-//	extern uint curr_app_duty; //0 -- 180
-//	extern uint max_app_duty; //0 -- 180
-//	extern uint low_pwm_duty_cout; //low_pwm_duty_cout个PWM周期数目为低电平
-//	extern uint curr_low_pwm_duty_count;
 
 	time2_count=0;
-	time2_count_max=48;
+	time2_count_max=43;
 	time2_curr=25;
 
 }

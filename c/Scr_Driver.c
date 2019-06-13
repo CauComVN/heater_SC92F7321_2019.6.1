@@ -141,31 +141,31 @@ void Scr_Driver_Control_Heat_RLY(int on)
 void Scr_Driver_Time2_Adjust(uint flag)
 {
 	if(flag==1 || flag==2)
-	{
-//		EA=0;
-//		IE1 &= 0xfd;        //关闭PWM中断		
-		
+	{		
 		if(flag==1){ //增加功率
 			time2_curr=time2_curr-1;
 			if(time2_curr<0)
 			{
 				time2_curr=0;
 			}
+			
+			//设置最大值
+			time2_count_max=open_max-time2_curr/4;
 		}
 		else if(flag==2) ////减少功率
 		{
 			time2_curr=time2_curr+1;
-			if(time2_curr>time2_count_max)
+			if(time2_curr>ref_max)
 			{
-				time2_curr=time2_count_max;
-			}					
+				time2_curr=ref_max;
+			}	
+
+			//设置最大值
+			time2_count_max=open_max-time2_curr/4;
 		}		
 
 		//串口打印log，调试。。。
 		//UART_SentChar(time2_curr);
-		
-//		IE1 |= 0x02;        //开启PWM中断
-//		EA=1;
 	}
 }
 
