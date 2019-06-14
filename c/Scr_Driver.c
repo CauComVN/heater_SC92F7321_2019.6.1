@@ -3,7 +3,7 @@
 
 #include "H/Function_Init.H"
 
-//INT24 P20
+//INT24 P20 ZERO
 
 //HEAT TRA PWM1 P01
 
@@ -85,14 +85,17 @@ void Zero_Crossing_EX2_Handle()
 {
 	
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，上升沿中断，所以端口电平是1
-    //if(P20 == 1) //INT24 P20 过零检测到零点
+    //if(ZERO == 1) //INT24 P20 ZERO 过零检测到零点
     {
         //PWM计数值重置
 //		Scr_Driver_PWM_Init();
 			
+			//过零检测中断，可控硅关闭
+			HEAT_TRA=0;
+			
 			Timer_Init();
     }
- /*   if(P21 == 1) //INT25 P21 水流检测计数
+ /*   if(HALL_LLJ == 1) //INT25 P21 水流检测计数
     {
 
     }
@@ -102,12 +105,12 @@ void Zero_Crossing_EX2_Handle()
 //检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
 int Scr_Driver_Check_Insurance()
 {	
-	if(P03==0)
+	if(HEAT_ERROR==0)
 	{
 		//温度正常范围内，温度保险不跳闸
 		return 0;
 	}
-	else if(P03==1)
+	else if(HEAT_ERROR==1)
 	{
 		//温度异常范围内，温度保险已跳闸
 		if(heater_relay_on==1)
@@ -126,11 +129,11 @@ void Scr_Driver_Control_Heat_RLY(int on)
 	P0VO = P0VO&0xfb; //P02端口设置成普通I/O口  1111 1011
 	if(on == 1)
 	{
-		P02=1;
+		HEAT_RLY=1;
 	}
 	else
 	{
-		P02=0;
+		HEAT_RLY=0;
 	}
 	
 	//软件延时，保证heater_relay_on变量更新完成，避免主循环逻辑错误或者混乱

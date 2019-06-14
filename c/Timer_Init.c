@@ -47,7 +47,7 @@ void Timer_Init(void)
     ET2 = 1;//定时器2允许
     TR2 = 1;//打开定时器2
 
-//	P01=1;
+//	HEAT_TRA=1;
 
 		//设置最大值
 		time2_count_max=open_max-time2_curr/4;
@@ -55,11 +55,11 @@ void Timer_Init(void)
     time2_count=0;
     if(time2_curr==0)
     {
-        P01=1;
+        HEAT_TRA=1;
     }
     else
     {
-        P01=0;
+        HEAT_TRA=0;
     }
 
     EA = 1;
@@ -80,24 +80,24 @@ void Timer2Int_Handle()
     {
         if(time2_count<time2_curr)
         {
-            if(P01!=0)
+            if(HEAT_TRA!=0)
             {
-                P01=0;
+                HEAT_TRA=0;
             }
         }
         else if(time2_count>=time2_curr)
         {
-            if(P01!=1)
+            if(HEAT_TRA!=1)
             {
-                P01=1;
+                HEAT_TRA=1;
             }
         }
 								
 				if(time2_count>=time2_count_max)
 				{
-						if(P01!=0)
+						if(HEAT_TRA!=0)
 						{
-								P01=0;
+								HEAT_TRA=0;
 						}
 						if(TR2!=0)
 						{

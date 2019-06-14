@@ -41,7 +41,7 @@ void IO_Init(void)
 	// 初始化 继电器关闭，HEAT RLY P02，热水器停止状态
 	P0CON = P0CON|0x04;  //设置P02为强推挽模式
 	P0VO = P0VO&0xfb; //P02端口设置成普通I/O口  1111 1011
-	P02=0;
+	HEAT_RLY=0;
 	
 	//过零检测端口配置
 	P2CON &= 0XFE;     //中断IO口设置为高阻输入
@@ -57,12 +57,12 @@ void IO_Init(void)
 	//P00 Beep，发光二极管，调试用
 	P0CON= P0CON|0x01;
 	P0VO = P0VO&0xfe; //P00端口设置成普通I/O口  1111 1110
-	P00=1;
+	BEE=1;
 	
-	//p01做为IO口控制可控硅，用定时器2计时
+	//p01 HEAT_TRA做为IO口控制可控硅，用定时器2计时
 	P0CON= P0CON|0x02;
 	P0VO = P0VO&0xfd; //P00端口设置成普通I/O口  1111 1101
-	P01=0;
+	HEAT_TRA=0;
 	
 	
 //	//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式

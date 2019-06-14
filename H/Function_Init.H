@@ -20,6 +20,36 @@
 #define IC_MODEL  SC92F7321
 
 
+
+//定义MCU管脚
+#define 		BEE            P00 
+#define 		HEAT_TRA       P01	
+#define 		HEAT_RLY       P02	
+#define 		HEAT_ERROR     P03	
+
+//INT00
+#define		OS	  P10	
+
+// P12/INT02/T0/RX/TCK
+#define RX1  P12 
+
+// P13/INT03/T1/TX/TDI0
+#define TX1  P13 
+
+//P16/AIN9
+#define AD_IN_WTR  P16 
+
+//P17/AIN8
+#define AD_OUT_WTR  P17 
+
+
+//INT24
+#define 	ZERO  P20		
+//INT25
+#define HALL_LLJ  P21			
+
+#define LED_WORK	P24			
+
 //=============================================
 
 // 可以设置的最大最小值

@@ -26,7 +26,7 @@ void Uart0_Test(void)
 		{
 			UartReceiveFlag=0;
 			
-			P00 = ~P00;
+			BEE = ~BEE;
 		
 			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 			if(SBUF == 0x01)
@@ -51,7 +51,7 @@ void Uart_Process()
 	{
 		UartReceiveFlag=0;
 		
-		P00 = ~P00;
+		BEE = ~BEE;
 	
 		//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 		if(SBUF == 0x01)
@@ -132,7 +132,7 @@ void Uart0_Init(void)    //选择Timer1作为波特率信号发生器
 {
 	P1CON &= 0XF3;
 	P1PH |= 0X0C;	 //TX/RX为带上拉输入；
-	P13 = 1;		 //TX初始高电平；
+	TX1 = 1;		 //TX初始高电平；
 	SCON = 0X50;     //方式1，允许接收数据
 	PCON |= 0X80; 
 	

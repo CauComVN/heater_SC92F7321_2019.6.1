@@ -34,7 +34,7 @@ void main(void)
 //		break;
 		case 1: 
 		{
-//			//用P16 P17口做调功率按键中断，出水温度 进水温度替换
+//			//用AD_IN_WTR P16  AD_OUT_WTR P17口做调功率按键中断，出水温度 进水温度替换
 //			Scr_Driver_PWM_Init();
 //			
 //			// 需要做防抖动处理（未处理）

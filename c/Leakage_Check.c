@@ -51,7 +51,7 @@ void Leakage_EX0_Handle(void)
 {
 	//设置INT00上升沿触发中断，如果进入中断后有漏电脉冲，P10 == 1，
 	//并且大于20ms，则漏电条件成立
-	if(P10 == 1)
+	if(OS == 1)
 	{
 		//设置漏电检测异常标志
 		ex_flag = Ex_Leakage;

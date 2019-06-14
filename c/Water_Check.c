@@ -4,7 +4,7 @@
 //Water Detection
 
 //霍尔水流传感器->外部中断计数，内部计时器定时
-//INT25 P21
+//INT25 P21 HALL_LLJ
 
 uint timer_run_cout=0;//2ms*20=40ms
 
@@ -75,10 +75,10 @@ void Water_Detection_EX2_Handle()
     numberPulse=numberPulse+1; //霍尔水流传感器->外部中断计数
 
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，这里是下降沿
-//    if(P20 == 1)
+//    if(ZERO == 1)
 //    {
 //    }
-    if(P21 == 1) //INT25 P21 水流检测计数
+    if(HALL_LLJ == 1) //INT25 P21 水流检测计数
     {
     }
 
