@@ -141,6 +141,12 @@ extern uint time2_count;
 extern int time2_curr;
 extern uint time2_count_max;
 
+extern uint scr_open_time_max;
+extern uint scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+extern bit scr_open_flag;//可控硅开通标志 用于关断定时器 关断可控硅
+extern uint scr_adjust_step; //1us
+extern uint scr_curr_time;
+
 extern void IO_Init(void);
 //extern void BTM_Test(void);
 //extern void EXTI_Test(void);

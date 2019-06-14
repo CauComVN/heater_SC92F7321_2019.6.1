@@ -143,6 +143,7 @@ void Scr_Driver_Control_Heat_RLY(int on)
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 void Scr_Driver_Time2_Adjust(uint flag)
 {
+	/*
 	if(flag==1 || flag==2)
 	{		
 		if(flag==1){ //增加功率
@@ -170,6 +171,30 @@ void Scr_Driver_Time2_Adjust(uint flag)
 		//串口打印log，调试。。。
 		//UART_SentChar(time2_curr);
 	}
+	*/
+	
+	if(flag==1 || flag==2)
+	{		
+		if(flag==1){ //增加功率
+			scr_curr_time -= scr_adjust_step;
+			if(scr_curr_time<1)
+			{
+				scr_curr_time=0;
+			}
+		}
+		else if(flag==2) //减少功率
+		{
+			scr_curr_time += scr_adjust_step;
+			if(scr_curr_time>=scr_open_time_max)
+			{
+				scr_curr_time=scr_open_time_max;
+			}
+		}		
+
+		//串口打印log，调试。。。
+		//UART_SentChar(scr_curr_time);
+	}
+	
 }
 
 //软件延时
