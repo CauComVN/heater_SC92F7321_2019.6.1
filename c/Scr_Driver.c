@@ -90,7 +90,10 @@ void Zero_Crossing_EX2_Handle()
         //PWM计数值重置
 //		Scr_Driver_PWM_Init();
 			
-			//过零检测中断，可控硅关闭
+			//全功率
+//			HEAT_TRA=1;
+			
+//			//过零检测中断，可控硅关闭
 			HEAT_TRA=0;
 			
 			Timer_Init();
@@ -185,7 +188,7 @@ void Scr_Driver_Time2_Adjust(uint flag)
 		else if(flag==2) //减少功率
 		{
 			scr_curr_time += scr_adjust_step;
-			if(scr_curr_time>=scr_open_time_max)
+			if(scr_curr_time>=scr_open_time_max/scr_adjust_step)
 			{
 				scr_curr_time=scr_open_time_max;
 			}

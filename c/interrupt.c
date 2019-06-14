@@ -44,11 +44,12 @@ void Timer0_Interrupt() interrupt 1
 
 void timer1_Interrupt() interrupt 3
 {
+	Timer1Int_Handle();
 }
 
 void Timer2Int(void) interrupt 5
 {
-	Timer2Int_Handle();
+	//Timer2Int_Handle();
 }
 
 void PWMInt(void) interrupt 8

@@ -128,6 +128,7 @@ void Uart_Process()
 *入口参数：void 
 *出口参数：void
 *****************************************************/
+/*
 void Uart0_Init(void)    //选择Timer1作为波特率信号发生器
 {
 	P1CON &= 0XF3;
@@ -153,8 +154,8 @@ void Uart0_Init(void)    //选择Timer1作为波特率信号发生器
 	EUART = 1;	     //允许UART中断
 	EA = 1;		     //开总中断
 }
+*/
 
-/*
 void Uart0_Init(void)    //选择Timer2作为波特率信号发生器
 {
 	P1CON &= 0XF3;
@@ -172,7 +173,7 @@ void Uart0_Init(void)    //选择Timer2作为波特率信号发生器
 	EUART = 1;     //开启Uart0中断
 	EA = 1;
 }
-*/
+
 
 /*****************************************************
 *函数名称：void UartInt(void) interrupt 4
