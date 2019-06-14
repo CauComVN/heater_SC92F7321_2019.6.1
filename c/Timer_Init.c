@@ -90,44 +90,9 @@ void Timer2Int_Handle()
             if(P01!=1)
             {
                 P01=1;
-//								TR2 = 0;
             }
         }
-
-				/*
-        if(time2_curr>0&&time2_curr<time2_count_max-18) {
-            if(time2_count>=time2_count_max)
-            {
-                if(P01!=0)
-                {
-                    P01=0;
-                }
-                if(TR2!=0)
-                {
-                    TR2 = 0;
-                }
-            }
-        }
-        else
-        {
-            if(time2_count>=time2_count_max-18)
-            {
-                if(time2_count>=time2_count_max-8)//40
-                {
-                    if(P01!=0)
-                    {
-                        P01=0;
-                    }
-                    if(TR2!=0)
-                    {
-                        TR2 = 0;
-                    }
-                }
-            }
-        }
-				
-				*/
-				
+								
 				if(time2_count>=time2_count_max)
 				{
 						if(P01!=0)
