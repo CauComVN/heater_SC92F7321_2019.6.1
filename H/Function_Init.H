@@ -5,6 +5,8 @@
 #include "intrins.H"
 #define uchar unsigned char
 #define uint unsigned int
+#define true 	1
+#define false 0
 
 #define IapROM  0x00	  //0x00：选择ROM区操作  0x02：选择EEPROM区操作
 #define IapEPPROM  0x02	  //0x00：选择ROM区操作  0x02：选择EEPROM区操作
@@ -18,6 +20,7 @@
 #define SC92F7320  3
 
 #define IC_MODEL  SC92F7321
+
 
 
 
@@ -176,6 +179,10 @@ extern void Leakage_EX_Init(void);
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 extern void Scr_Driver_power_Adjust(uint flag);
+
+extern void BTM_Init(void);
+extern void BTM_Test(void);
+extern bit b_btm_int_flag;
 
 extern void Timer_Init(void);
 

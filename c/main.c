@@ -123,6 +123,13 @@ void AppHandle()
 				
 				//启动可控硅控制
 				Zero_Crossing_EX_Init();
+				
+				//延时1s，可控硅全功率
+				BTM_Init();
+			}
+			if(b_btm_int_flag) //延时1s到
+			{
+				break;
 			}
 		
 			if(heater_relay_on==1)
@@ -135,29 +142,26 @@ void AppHandle()
 			{
 					heater_relay_on=0;
 					Scr_Driver_Control_Heat_RLY(heater_relay_on);
-			}		
+			}
+			
+			//出水温度
+			ADC_Init(AIN8);
+			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
+			ret = get_temp_table(ADCTempValue,&current_out_temp);
 			
 			//串口打印log，调试。。。
-			//UART_SentChar(0x55);
-			/**/
-			//出水温度
-//			ADC_Init(AIN8);
-//			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
-//			ret = get_temp_table(ADCTempValue,&current_out_temp);
-//			
-//			//串口打印log，调试。。。
-//			//UART_SentChar(current_out_temp);
-//			
-//			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
-//					ex_flag=Ex_Out_Water_Temp_Low;
-//					
-//			}
-//			else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
-//					ex_flag=Ex_Out_Water_Temp_High;
-//			}
-//			else {
-//				//调节温度到一个合适的范围内
-//				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
+			UART_SentChar(current_out_temp);
+			
+			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
+					ex_flag=Ex_Out_Water_Temp_Low;
+					
+			}
+			else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
+					ex_flag=Ex_Out_Water_Temp_High;
+			}
+			else {
+				//调节温度到一个合适的范围内
+				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 //				if(current_out_temp<best_temp_out)
 //				{
 //					Scr_Driver_power_Adjust(1);
@@ -166,7 +170,7 @@ void AppHandle()
 //				{
 //					Scr_Driver_power_Adjust(2);
 //				}
-//			}
+			}
 			
 			
 			//串口接收到数据，处理
