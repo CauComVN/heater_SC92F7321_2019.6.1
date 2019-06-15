@@ -30,8 +30,9 @@ void main(void)
 			AppHandle();
 			break;
 		
-//		case 0: BTM_Test();
-//		break;
+		case 0: 
+			//BTM_Test();
+		break;
 		case 1: 
 		{
 //			//用AD_IN_WTR P16  AD_OUT_WTR P17口做调功率按键中断，出水温度 进水温度替换

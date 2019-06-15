@@ -486,6 +486,11 @@
               <FileType>1</FileType>
               <FilePath>.\c\interrupt.c</FilePath>
             </File>
+            <File>
+              <FileName>BTM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\c\BTM.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
