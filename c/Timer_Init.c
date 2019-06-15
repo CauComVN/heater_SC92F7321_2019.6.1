@@ -193,6 +193,7 @@ void Timer_Init(void)
 {
 	TMCON &= 0xfd;  
 	TMOD &=0x9f;
+	TMOD |=0x10;
 	
 	if(scr_open_time != scr_curr_time)
 		{
