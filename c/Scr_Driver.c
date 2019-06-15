@@ -32,10 +32,12 @@ void Zero_Crossing_EX_Init(void);
 void Zero_Crossing_EX2_Handle();
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-void Scr_Driver_Time2_Adjust(uint flag);
+void Scr_Driver_power_Adjust(uint flag);
 
 //软件延时
 void soft_delay(uint n);
+void delay_1ms(uint x);
+void delay(uint n);
 
 int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
@@ -87,10 +89,7 @@ void Zero_Crossing_EX2_Handle()
 	
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，上升沿中断，所以端口电平是1
     //if(ZERO == 1) //INT24 P20 ZERO 过零检测到零点
-    {
-        //PWM计数值重置
-//		Scr_Driver_PWM_Init();
-			
+    {			
 			//全功率
 //			HEAT_TRA=1;
 			
@@ -161,38 +160,8 @@ void Scr_Driver_Control_Heat_RLY(int on)
 }
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-void Scr_Driver_Time2_Adjust(uint flag)
-{
-	/*
-	if(flag==1 || flag==2)
-	{		
-		if(flag==1){ //增加功率
-			time2_curr=time2_curr-1;
-			if(time2_curr<0)
-			{
-				time2_curr=0;
-			}
-			
-			//设置最大值
-			time2_count_max=open_max-time2_curr/4;
-		}
-		else if(flag==2) ////减少功率
-		{
-			time2_curr=time2_curr+1;
-			if(time2_curr>ref_max)
-			{
-				time2_curr=ref_max;
-			}	
-
-			//设置最大值
-			time2_count_max=open_max-time2_curr/4;
-		}		
-
-		//串口打印log，调试。。。
-		//UART_SentChar(time2_curr);
-	}
-	*/
-	
+void Scr_Driver_power_Adjust(uint flag)
+{	
 	if(flag==1 || flag==2)
 	{		
 		if(flag==1){ //增加功率

@@ -50,22 +50,6 @@
 
 #define LED_WORK	P24			
 
-//=============================================
-
-// 可以设置的最大最小值
-#define ref_max  39 //0~39
-#define ref_min  0
-
-//可控硅开通时间  200us
-#define open_max  49  //最大功率
-#define open_min  40; //最小功率
-
-//设置最大值
-//time2_count_max=open_max-time2_curr/4;
-//============================================
-
-
-
 /***********ADC采样口选择*************/
 #if (IC_MODEL == SC92F7323)
 	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
@@ -165,6 +149,8 @@ extern int get_temp_table(uint nADValue, int* temp);
 
 //软件延时
 extern void soft_delay(uint n);
+extern void delay_1ms(uint x);
+extern void delay(uint n);
 
 //extern void Scr_Driver_PWM_Test(void);
 //extern void Scr_Driver_PWM_Init(void);
@@ -180,11 +166,8 @@ extern void Leakage_EXTI_Test(void);
 
 extern void Leakage_EX_Init(void);
 
-//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
-extern void Scr_Driver_PWM_Adjust(uint flag);
-
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-extern void Scr_Driver_Time2_Adjust(uint flag);
+extern void Scr_Driver_power_Adjust(uint flag);
 
 extern void Timer_Init(void);
 
@@ -201,7 +184,7 @@ extern void Zero_Crossing_EX2_Handle();
 extern void Serial_Key_EX0_Handle();
 extern void EX1_Handle();
 extern void UartInt_Handle();
-extern void Timer2Int_Handle();
+extern void Timer1Int_Handle();
 extern void Leakage_EX0_Handle(void);
 
 extern void Serial_Key_Init(void);

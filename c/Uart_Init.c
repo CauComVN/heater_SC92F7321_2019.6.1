@@ -22,6 +22,8 @@ void Uart0_Test(void)
 //		while(!UartSendFlag);
 //		UartSendFlag = 0;
 		
+		UART_SentChar(0x55);
+		
 		if(UartReceiveFlag)
 		{
 			UartReceiveFlag=0;
@@ -60,7 +62,7 @@ void Uart_Process()
 			
 //				time2_curr=1;
 			
-			//Scr_Driver_Time2_Adjust(1);
+			//Scr_Driver_power_Adjust(1);
 			
 			best_temp_out=best_temp_out+1;
 			if(best_temp_out>good_temp_out_high)
@@ -81,7 +83,7 @@ void Uart_Process()
 			
 			//time2_curr=0;			
 
-			//Scr_Driver_Time2_Adjust(2);
+			//Scr_Driver_power_Adjust(2);
 			
 			best_temp_out=best_temp_out-1;
 			if(best_temp_out<good_temp_out_low)

@@ -7,7 +7,7 @@
 3、注意：先在Function.H里面选择测试型号（SC92F7320无LCD/LED和PWM功能）
 ***************************************************************/
 // Normal:100 	BTM:0 EXTI:1 		Timer:2 	LCD:3 	ScrDriverPWM:4 	Uart0:5 	ADC:7 	IAP:8 
-// SerialKey:9 	ZeroCrossing:10 	WaterCheckEXTI:11 	WaterCheckTimer:12
+// SerialKey:9 	ZeroCrossing:10 	WaterCheckEXTI:11 	WaterCheckTimer:12 Leakage:13 SoftDelay:14
 // Leakage: 13
 
 //#define Test  5
@@ -35,7 +35,6 @@ void main(void)
 		case 1: 
 		{
 //			//用AD_IN_WTR P16  AD_OUT_WTR P17口做调功率按键中断，出水温度 进水温度替换
-//			Scr_Driver_PWM_Init();
 //			
 //			// 需要做防抖动处理（未处理）
 //			EXTI_Test();
@@ -53,7 +52,6 @@ void main(void)
 		break;
 		case 5: 
 		{
-//			Scr_Driver_PWM_Init();
 			Uart0_Test();
 		}
 		break;
@@ -74,6 +72,10 @@ void main(void)
 		case 13: 
 			Leakage_EXTI_Test();
 		break;
+		case 14:
+			delay_1ms(10);
+			delay(300);
+			break;
 		default:	
 		;			
 	}
@@ -157,11 +159,11 @@ void AppHandle()
 //				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 //				if(current_out_temp<best_temp_out)
 //				{
-//					Scr_Driver_Time2_Adjust(1);
+//					Scr_Driver_power_Adjust(1);
 //				}
 //				if(current_out_temp>best_temp_out)
 //				{
-//					Scr_Driver_Time2_Adjust(2);
+//					Scr_Driver_power_Adjust(2);
 //				}
 //			}
 			
@@ -195,9 +197,4 @@ void AppInit()
 	best_temp_out=37;
 
 	current_out_temp=28; //当前出水温度
-
-	time2_count=0;
-	time2_count_max=43;
-	time2_curr=25;
-
 }

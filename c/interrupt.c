@@ -49,7 +49,6 @@ void timer1_Interrupt() interrupt 3
 
 void Timer2Int(void) interrupt 5
 {
-	//Timer2Int_Handle();
 }
 
 void PWMInt(void) interrupt 8
