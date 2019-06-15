@@ -66,7 +66,8 @@ void Zero_Crossing_EXTI_Test(void)
 void Zero_Crossing_EX_Init(void)
 {    
     P2CON &= 0XFE;     //中断IO口设置为高阻输入
-    P2PH  |= 0x01;     //中断IO口设置为高阻带上拉
+    //P2PH  |= 0x01;     //中断IO口设置为高阻带上拉
+		P2PH &= 0xfe; //不带上拉 外部有上拉电阻
 
     //配置中断口INT24  上升沿和下降沿都支持
     //下降沿设置
@@ -95,6 +96,22 @@ void Zero_Crossing_EX2_Handle()
 			
 //			//过零检测中断，可控硅关闭
 			HEAT_TRA=0;
+			
+			//定时器关闭
+			TR1 = 0;
+			
+			if(ZERO==1)
+			{
+				scr_open_time_max=20000;
+			}
+			else
+			{
+				scr_open_time_max=17200;
+			}			
+			
+		 scr_open_time=scr_open_time_max-4;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+		 scr_curr_time=scr_open_time_max-4;//20000;//6;
+			
 			
 			Timer_Init();
     }

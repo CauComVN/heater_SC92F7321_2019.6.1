@@ -138,23 +138,23 @@ void AppHandle()
 			//UART_SentChar(0x55);
 			/**/
 			//出水温度
-			ADC_Init(AIN8);
-			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
-			ret = get_temp_table(ADCTempValue,&current_out_temp);
-			
-			//串口打印log，调试。。。
-			//UART_SentChar(current_out_temp);
-			
-			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
-					ex_flag=Ex_Out_Water_Temp_Low;
-					
-			}
-			else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
-					ex_flag=Ex_Out_Water_Temp_High;
-			}
-			else {
-				//调节温度到一个合适的范围内
-				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
+//			ADC_Init(AIN8);
+//			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
+//			ret = get_temp_table(ADCTempValue,&current_out_temp);
+//			
+//			//串口打印log，调试。。。
+//			//UART_SentChar(current_out_temp);
+//			
+//			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
+//					ex_flag=Ex_Out_Water_Temp_Low;
+//					
+//			}
+//			else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
+//					ex_flag=Ex_Out_Water_Temp_High;
+//			}
+//			else {
+//				//调节温度到一个合适的范围内
+//				//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 //				if(current_out_temp<best_temp_out)
 //				{
 //					Scr_Driver_Time2_Adjust(1);
@@ -163,7 +163,7 @@ void AppHandle()
 //				{
 //					Scr_Driver_Time2_Adjust(2);
 //				}
-			}
+//			}
 			
 			
 			//串口接收到数据，处理
