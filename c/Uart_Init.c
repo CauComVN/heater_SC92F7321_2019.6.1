@@ -166,7 +166,7 @@ void Uart0_Init(void)    //选择Timer2作为波特率信号发生器
 	T2MOD = 0X00;
 	T2CON = 0X30;
 	RCAP2H = 0xFF;
-	RCAP2L = 0xB2;
+	RCAP2L = 0xec;//0xB2; //38400
 	TR2 = 0;
 	ET2 = 0;
 	TR2 = 1;
