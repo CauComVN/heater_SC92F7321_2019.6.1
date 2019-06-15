@@ -6,7 +6,7 @@
 //霍尔水流传感器->外部中断计数，内部计时器定时
 //INT25 P21 HALL_LLJ
 
-uint timer_run_cout=0;//2ms*20=40ms
+//40ms
 
 //记录水流脉冲触发中断个数
 uint numberPulse = 0;   
@@ -109,20 +109,15 @@ void Water_Detection_Timer_Test(void)
 *****************************************************/
 void Water_Detection_Timer_Init(void)
 {
-    TMCON |= 0X01;    //------001 ;Timer0选择时钟Fsys
+    //TMCON |= 0X01;    //------001 ;Timer0选择时钟Fsys
+		TMCON &=0xfe; //Fsys/12
 
     //T0设置
     TMOD |= 0x01;                 //0000 0001;Timer0设置工作方式1
 		TMOD &=0xfb;
-	
-//    TL0 = (65536 - 24000)%256;    //溢出时间：时钟为Fsys，则24000*（1/Fsys）=1ms;
-//    TH0 = (65536 - 24000)/256;
 
-		TL0 = (65536 - 48000)%256;    //溢出时间：时钟为Fsys，则48000*（1/Fsys）=2ms;
-		TH0 = (65536 - 48000)/256;
-	
-//			TL0 = 0;    //溢出时间：时钟为Fsys，则65536*（1/Fsys）=2.73ms;
-//			TH0 = 0;
+		TL0 = (65536 - 40)%256;    //溢出时间：时钟为Fsys/12，则40*(1/(Fsys/12))=20ms;
+		TH0 = (65536 - 40)/256;
 
     TR0 = 0;
     ET0 = 1;//定时器0允许
@@ -132,32 +127,9 @@ void Water_Detection_Timer_Init(void)
 }
 
 void Water_Detection_Timer0_Handle()
-{/**/
-	int i=numberPulse;
-	
-	
-	//    TL0 = (65536 - 24000)%256;
-//		TH0 = (65536 - 24000)/256;
-	
-//		TL0 = (65536 - 48000)%256;    //溢出时间：时钟为Fsys，则48000*（1/Fsys）=2ms;
-//		TH0 = (65536 - 48000)/256;
-		
-//		TL0 =0;    //溢出时间：时钟为Fsys，则65536*（1/Fsys）=2.73ms;
-//		TH0 = 0;
-	
-	/**/
-	
-	if(timer_run_cout<20) //2*20ms
-	{
-		timer_run_cout=timer_run_cout+1;
-	}
-	else{
-		//定时器重新开始计算时间
-		timer_run_cout=0;
-		
+{		
 		//定时到，关闭中断，统计霍尔水流传感器->外部中断计数，分析水流
-    EA = 0;
-
+    
     IE1 &= 0xf7;	//0000 x000  INT2使关闭 关闭霍尔水流传感器->外部中断
     TR0=0; //关闭定时器0
 
@@ -178,12 +150,7 @@ void Water_Detection_Timer0_Handle()
     //霍尔水流传感器->外部中断计数清零
     numberPulse=0;
 		
-
-		
 		//开启霍尔水流传感器中断，打开定时器
 		IE1 |= 0x08;	//0000 x000  INT2使能
-		TR0 = 1;//打开定时器0
-    EA = 1;
-	}		
-	
+		TR0 = 1;//打开定时器0	
 }
