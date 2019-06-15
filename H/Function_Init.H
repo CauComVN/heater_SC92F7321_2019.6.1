@@ -48,7 +48,15 @@
 //INT25
 #define HALL_LLJ  P21			
 
-#define LED_WORK	P24			
+#define LED_WORK	P24		
+
+//过零检测周期高电平时间和低电平时间不等
+//10ms 时钟Fsys/12
+#define zero_period_high_time 	20000  
+//8.6ms 时钟Fsys/12
+#define zero_period_low_time		17200
+//过零检测周期高低电平的最后部分，软件处理成最低功率
+#define zero_peroid_last_time		200
 
 /***********ADC采样口选择*************/
 #if (IC_MODEL == SC92F7323)

@@ -101,18 +101,20 @@ void Zero_Crossing_EX2_Handle()
 			
 			if(ZERO==1)
 			{
-				scr_open_time_max=20000;
+				scr_open_time_max=zero_period_high_time;
 			}
 			else
 			{
-				scr_open_time_max=17200;
+				scr_open_time_max=zero_period_low_time;
 			}			
 			
-		 scr_open_time=scr_open_time_max-4;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-		 scr_curr_time=scr_open_time_max-4;//20000;//6;
+		 scr_open_time=scr_open_time_max-zero_peroid_last_time;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+		 scr_curr_time=scr_open_time_max-zero_peroid_last_time;//20000;//6;
 			
-			
-			Timer_Init();
+			if(scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
+			{
+				Timer_Init();
+			}
     }
  /*   if(HALL_LLJ == 1) //INT25 P21 水流检测计数
     {
