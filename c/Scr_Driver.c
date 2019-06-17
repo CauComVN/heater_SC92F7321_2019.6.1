@@ -111,8 +111,8 @@ void Zero_Crossing_EX2_Handle()
 //		 scr_open_time=scr_open_time_max-zero_peroid_last_time;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 //		 scr_curr_time=scr_open_time_max-zero_peroid_last_time;//20000;//6;
 			
-			scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-			scr_curr_time=0;//8600;//20000;//6;
+//			scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+//			scr_curr_time=0;//8600;//20000;//6;
 			
 			//开头
 			if(scr_curr_time==0)
