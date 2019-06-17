@@ -128,6 +128,9 @@ void Water_Detection_Timer_Init(void)
 
 void Water_Detection_Timer0_Handle()
 {		
+		TL0 = (65536 - 40)%256;    //溢出时间：时钟为Fsys/12，则40*(1/(Fsys/12))=20ms;
+		TH0 = (65536 - 40)/256;
+	
 		//定时到，关闭中断，统计霍尔水流传感器->外部中断计数，分析水流
     
     IE1 &= 0xf7;	//0000 x000  INT2使关闭 关闭霍尔水流传感器->外部中断
