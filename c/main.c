@@ -116,7 +116,7 @@ void AppHandle()
 		/**/
 			//test........
 			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-			if(water_flow_flag == 2 && heater_relay_on==0)
+			if(water_flow_flag >= 1 && heater_relay_on==0)
 			{
 				heater_relay_on=1;
 				Scr_Driver_Control_Heat_RLY(heater_relay_on);
@@ -127,18 +127,15 @@ void AppHandle()
 				//延时1s，可控硅全功率
 				BTM_Init();
 			}
-			if(b_btm_int_flag) //延时1s到
-			{
-				break;
-			}
+			
 		
-			if(heater_relay_on==1)
-			{
-				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
-				Scr_Driver_Check_Insurance();
-			}
+//			if(heater_relay_on==1)
+//			{
+//				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
+//				Scr_Driver_Check_Insurance();
+//			}
 		
-			if(water_flow_flag < 2 && heater_relay_on==1)
+			if(water_flow_flag < 1 && heater_relay_on==1)
 			{
 					heater_relay_on=0;
 					Scr_Driver_Control_Heat_RLY(heater_relay_on);
@@ -149,8 +146,21 @@ void AppHandle()
 			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
 			ret = get_temp_table(ADCTempValue,&current_out_temp);
 			
+			//UART_SentChar(current_out_temp);
+			
 			//串口打印log，调试。。。
-			UART_SentChar(current_out_temp);
+			if(b_btm_int_flag==false)
+			{
+				UART_SentChar(current_out_temp);
+			}
+			else
+			{
+				 //延时到
+				
+				//IE1 |= 0x04;       //开启BTM中断
+				IE1 &= 0xfb;		//关闭BTM中断
+			}
+			
 			
 			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
 					ex_flag=Ex_Out_Water_Temp_Low;

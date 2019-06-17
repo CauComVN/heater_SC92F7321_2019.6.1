@@ -16,7 +16,7 @@ volatile uint numberPulse = 0;
 uint waterThreshold=2; 
 
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-int water_flow_flag=0;
+volatile int water_flow_flag=0;
 
 void Water_Detection_EX_Init(void);
 void Water_Detection_EXTI_Test(void);

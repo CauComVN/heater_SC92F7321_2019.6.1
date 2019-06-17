@@ -1,6 +1,7 @@
 #include "H/Function_Init.H"
 
 bit b_btm_int_flag=false;
+uint count=0;
 
 void BTM_Init(void);
 void BTM_Test(void);
@@ -33,8 +34,8 @@ void BTM_Init(void)
 //	BTMCON = 0x83;	//每125ms产生一个中断
 //	BTMCON = 0x84;	//每0.25s产生一个中断
 //	BTMCON = 0x85;	//每0.5s产生一个中断
-	BTMCON = 0x86;	//每1s产生一个中断
-//	BTMCON = 0x87;	//每2s产生一个中断
+//	BTMCON = 0x86;	//每1s产生一个中断
+	BTMCON = 0x87;	//每2s产生一个中断
 	EA = 1;           //开启总中断
 	IE1 |= 0x04;       //开启BTM中断
 }
@@ -49,6 +50,8 @@ void BTM_Int(void) interrupt 9
 {
 	if(!(BTMCON&0X40))		//中断标志位判断
 	{
+		count++;
+		if(count>=20)
 		b_btm_int_flag=true;
 	}
 }

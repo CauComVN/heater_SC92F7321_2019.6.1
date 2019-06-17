@@ -113,7 +113,7 @@ extern bit heater_relay_on;
 extern Enum_Ex_Flag ex_flag;
 
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-extern int water_flow_flag;
+extern volatile int water_flow_flag;
 
 //最佳出水温度低值
 extern int good_temp_out_low;
