@@ -67,7 +67,7 @@ void BTM_Int(void) interrupt 9
 			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
 			ret = get_temp_table(ADCTempValue,&current_out_temp);
 			
-			UART_SentChar(current_out_temp);
+			//UART_SentChar(current_out_temp);
 		
 			if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
 					ex_flag=Ex_Out_Water_Temp_Low;

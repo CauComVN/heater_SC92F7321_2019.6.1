@@ -141,14 +141,14 @@ void AppHandle()
 					Scr_Driver_Control_Heat_RLY(heater_relay_on);
 			}
 			
-			/*
+			
 			//出水温度
 			ADC_Init(AIN8);
 			ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
 			ret = get_temp_table(ADCTempValue,&current_out_temp);
 			
-			//UART_SentChar(current_out_temp);
-			
+			UART_SentChar(current_out_temp);
+		/*	
 			//串口打印log，调试。。。
 			if(b_btm_int_flag==false)
 			{
