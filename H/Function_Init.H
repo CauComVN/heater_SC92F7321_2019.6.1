@@ -182,7 +182,7 @@ extern void Scr_Driver_power_Adjust(uint flag);
 
 extern void BTM_Init(void);
 extern void BTM_Test(void);
-extern bit b_btm_int_flag;
+extern  volatile  bit b_btm_int_flag;
 
 extern void Timer_Init(void);
 
