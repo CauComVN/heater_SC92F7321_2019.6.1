@@ -88,6 +88,9 @@ void BTM_Int(void) interrupt 9
 //					Scr_Driver_power_Adjust(2);
 //				}
 				
+				//0 --- 20000  42度-28度=14度 20000/14=1428.57
+				
+				
 				//设定值大于实际值否？
 				//偏差大于2为上限幅值输出(全速加热)
 				if(best_temp_out-current_out_temp>2) ////偏差大于2?
@@ -97,6 +100,9 @@ void BTM_Int(void) interrupt 9
 				}
 				else{
 					pidret=PIDCalc(best_temp_out,current_out_temp);
+					
+					pidret=1400*pidret;
+					
 					if(current_out_temp<best_temp_out)
 					{
 						//Scr_Driver_power_Adjust(1);
