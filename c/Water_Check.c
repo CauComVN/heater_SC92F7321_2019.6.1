@@ -10,13 +10,11 @@
 
 //记录水流脉冲触发中断个数
 
-volatile uint numberPulse = 0;   
+uint idata  numberPulse = 0;   
 
-//根据仿真确认少水流阈值，参考和比较numberPulse变量值
-uint waterThreshold=2; 
 
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-volatile int water_flow_flag=0;
+int idata water_flow_flag=0;
 
 void Water_Detection_EX_Init(void);
 void Water_Detection_EXTI_Test(void);

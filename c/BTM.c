@@ -1,11 +1,11 @@
 #include "H/Function_Init.H"
 #include <math.h>
 
-bit volatile  b_btm_int_flag=false;
-uint count=0;
+uchar idata b_btm_int_flag=false;
+//uint count=0;
 
 void BTM_Init(void);
-void BTM_Test(void);
+//void BTM_Test(void);
 
 
 
@@ -15,13 +15,13 @@ void BTM_Test(void);
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void BTM_Test(void)
-{
-	BTM_Init();
-	while(1)
-	{
-	}
-}
+//void BTM_Test(void)
+//{
+//	BTM_Init();
+//	while(1)
+//	{
+//	}
+//}
 /*****************************************************
 *函数名称：void BTM_Init(void)
 *函数功能：BTM初始化

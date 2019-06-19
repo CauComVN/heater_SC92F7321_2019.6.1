@@ -78,8 +78,8 @@ void main(void)
 			Leakage_EXTI_Test();
 		break;
 		case 14:
-			delay_1ms(10);
-			delay(300);
+			//delay_1ms(10);
+			//delay(300);
 			break;
 		default:	
 		;			
@@ -182,26 +182,36 @@ void AppHandle()
 						
 						pidret=1400*pidret;
 						
-						if(current_out_temp<best_temp_out)
+						scr_curr_time += pidret;
+						if(scr_curr_time<1)
 						{
-							//Scr_Driver_power_Adjust(1);
-							
-							scr_curr_time -= abs(pidret);
-							if(scr_curr_time<1)
-							{
-								scr_curr_time=0;
-							}
+							scr_curr_time=0;
 						}
-						if(current_out_temp>best_temp_out)
+						if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
 						{
-							//Scr_Driver_power_Adjust(2);
-							
-							scr_curr_time += abs(pidret);
-							if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
-							{
-								scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
-							}
+							scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
 						}
+						
+//						if(current_out_temp<best_temp_out)
+//						{
+//							//Scr_Driver_power_Adjust(1);
+//							
+//							scr_curr_time -= abs(pidret);
+//							if(scr_curr_time<1)
+//							{
+//								scr_curr_time=0;
+//							}
+//						}
+//						if(current_out_temp>best_temp_out)
+//						{
+//							//Scr_Driver_power_Adjust(2);
+//							
+//							scr_curr_time += abs(pidret);
+//							if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
+//							{
+//								scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
+//							}
+//						}
 					}				
 				}
 				
@@ -234,11 +244,8 @@ void AppInit()
 
 	//水流状态标记 0：无水流 1：少水流 2：多水流，正常
 	 water_flow_flag=0;
-
-	//最佳出水温度低值
-	good_temp_out_low=36;
-	//最佳出水温度高值
-	good_temp_out_high=55;
+	
+	//温度预设值
 	best_temp_out=37;
 
 	current_out_temp=28; //当前出水温度
@@ -264,10 +271,10 @@ int PIDCalc(int Sv,int Pv)
 	/******************
 	*以下四项是需要根据实际情况调试的
 	******************/
-	static int pidt = 0.0156;// 15.6ms;//300;     //300MS计算一次 计算周期
+//	static int pidt = 0.0156;// 15.6ms;//300;     //300MS计算一次 计算周期
 	static char Kp = 5;       //比例系数
-	static unsigned int Ti= 5000; //积分时间
-	static unsigned int Td= 600; //微分时间
+//	static unsigned int Ti= 5000; //积分时间
+//	static unsigned int Td= 600; //微分时间
 
 //	static uint Upper_Limit= 100; //PID输出上限
 //	static uint Lower_Limit= 0; //PID输出下限

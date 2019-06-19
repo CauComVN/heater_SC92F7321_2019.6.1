@@ -22,8 +22,6 @@ bit heater_relay_on=0;
 Enum_Ex_Flag Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int good_temp_out_low=28;
-int good_temp_out_high=60;
 int best_temp_out=37;
 int current_out_temp=28; //当前出水温度
 
@@ -32,7 +30,7 @@ void Zero_Crossing_EX_Init(void);
 void Zero_Crossing_EX2_Handle();
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-void Scr_Driver_power_Adjust(uint flag);
+//void Scr_Driver_power_Adjust(uint flag);
 
 //软件延时
 void soft_delay(uint n);
@@ -172,31 +170,31 @@ void Scr_Driver_Control_Heat_RLY(int on)
 }
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-void Scr_Driver_power_Adjust(uint flag)
-{	
-	if(flag==1 || flag==2)
-	{		
-		if(flag==1){ //增加功率
-			scr_curr_time -= scr_adjust_step;
-			if(scr_curr_time<1)
-			{
-				scr_curr_time=0;
-			}
-		}
-		else if(flag==2) //减少功率
-		{
-			scr_curr_time += scr_adjust_step;
-			if(scr_curr_time>=scr_open_time_max/scr_adjust_step)
-			{
-				scr_curr_time=scr_open_time_max;
-			}
-		}		
+//void Scr_Driver_power_Adjust(uint flag)
+//{	
+//	if(flag==1 || flag==2)
+//	{		
+//		if(flag==1){ //增加功率
+//			scr_curr_time -= scr_adjust_step;
+//			if(scr_curr_time<1)
+//			{
+//				scr_curr_time=0;
+//			}
+//		}
+//		else if(flag==2) //减少功率
+//		{
+//			scr_curr_time += scr_adjust_step;
+//			if(scr_curr_time>=scr_open_time_max/scr_adjust_step)
+//			{
+//				scr_curr_time=scr_open_time_max;
+//			}
+//		}		
 
-		//串口打印log，调试。。。
-		//UART_SentChar(scr_curr_time);
-	}
-	
-}
+//		//串口打印log，调试。。。
+//		//UART_SentChar(scr_curr_time);
+//	}
+//	
+//}
 
 //软件延时 https://blog.csdn.net/nanfeibuyi/article/details/83577641 
 /*
@@ -226,6 +224,9 @@ void soft_delay(uint n)
 //		;
 	}
 }
+
+
+#if 0
 
 //https://blog.csdn.net/nanfeibuyi/article/details/83577641 
 //函数名：delay_1ms(uint x)
@@ -259,5 +260,7 @@ void delay(uint n)//延时函数
 		for(j=0; j<200; j++) //（1+2）*200=600周期
 			;
 }
+
+#endif
 
 

@@ -61,6 +61,16 @@
 //过零检测周期高低电平的最后部分，软件处理成最低功率
 #define zero_peroid_last_time		200
 
+
+//根据仿真确认少水流阈值，参考和比较numberPulse变量值
+#define waterThreshold		2 
+
+
+//最佳出水温度低值
+#define good_temp_out_low 28
+//最佳出水温度高值
+#define good_temp_out_high 50
+
 /***********ADC采样口选择*************/
 #if (IC_MODEL == SC92F7323)
 	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
@@ -104,7 +114,7 @@ typedef enum Heater_Exception
 } Enum_Ex_Flag;
 
 //下位机热水器通信协议接收到的命令协议数据
-extern uchar heater_receive_data;
+//extern uchar heater_receive_data;
 
 //当前热水器运行或停止状态 继电器动作 0：停止 1：运行
 extern bit heater_relay_on;
@@ -113,33 +123,32 @@ extern bit heater_relay_on;
 extern Enum_Ex_Flag ex_flag;
 
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-extern volatile int water_flow_flag;
+extern int  idata  water_flow_flag;
 
-//最佳出水温度低值
-extern int good_temp_out_low;
-//最佳出水温度高值
-extern int good_temp_out_high;
+
 extern int best_temp_out;
 
 extern int current_out_temp; //当前出水温度
-extern uint current_PWMDTY1; //当前功率调节PWM占空比
 
-extern uint duty_app_time; //9ms
-extern uint max_pwm_duty; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目
-extern uint step_app_duty; //0 -- 180 调节步长
-extern uint curr_app_duty; //0 -- 180
-extern uint max_app_duty; //0 -- 180
-extern uint low_pwm_duty_cout; //low_pwm_duty_cout个PWM周期数目为低电平
-extern uint curr_low_pwm_duty_count;
 
-extern uint time2_count;
-extern int time2_curr;
-extern uint time2_count_max;
+//extern uint current_PWMDTY1; //当前功率调节PWM占空比
+
+//extern uint duty_app_time; //9ms
+//extern uint max_pwm_duty; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目
+//extern uint step_app_duty; //0 -- 180 调节步长
+//extern uint curr_app_duty; //0 -- 180
+//extern uint max_app_duty; //0 -- 180
+//extern uint low_pwm_duty_cout; //low_pwm_duty_cout个PWM周期数目为低电平
+//extern uint curr_low_pwm_duty_count;
+
+//extern uint time2_count;
+//extern int time2_curr;
+//extern uint time2_count_max;
 
 extern uint scr_open_time_max;
 extern uint scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 extern bit scr_open_flag;//可控硅开通标志 用于关断定时器 关断可控硅
-extern uint scr_adjust_step; //1us
+//extern uint scr_adjust_step; //1us
 extern uint scr_curr_time;
 
 extern void IO_Init(void);
@@ -151,7 +160,7 @@ extern void Timer_Test(void);
 
 extern void Uart0_Test(void);
 extern void ADC_Test(void);
-extern void IAP_Test(uint Address,uchar IAPArea);
+//extern void IAP_Test(uint Address,uchar IAPArea);
 
 extern void ADC_Init(uint Channel);
 extern int ADC_Convert(void);
@@ -160,8 +169,8 @@ extern int get_temp_table(uint nADValue, int* temp);
 
 //软件延时
 extern void soft_delay(uint n);
-extern void delay_1ms(uint x);
-extern void delay(uint n);
+//extern void delay_1ms(uint x);
+//extern void delay(uint n);
 
 //extern void Scr_Driver_PWM_Test(void);
 //extern void Scr_Driver_PWM_Init(void);
@@ -178,11 +187,11 @@ extern void Leakage_EXTI_Test(void);
 extern void Leakage_EX_Init(void);
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-extern void Scr_Driver_power_Adjust(uint flag);
+//extern void Scr_Driver_power_Adjust(uint flag);
 
 extern void BTM_Init(void);
-extern void BTM_Test(void);
-extern  volatile  bit b_btm_int_flag;
+//extern void BTM_Test(void);
+extern  uchar idata b_btm_int_flag;
 
 extern void Timer_Init(void);
 
