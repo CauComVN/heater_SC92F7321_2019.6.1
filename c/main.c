@@ -182,6 +182,9 @@ void AppHandle()
 						
 						pidret=1400*pidret;
 						
+						//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
+						pidret = -pidret;
+						
 						scr_curr_time += pidret;
 						if(scr_curr_time<1)
 						{
@@ -191,37 +194,13 @@ void AppHandle()
 						{
 							scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
 						}
-						
-//						if(current_out_temp<best_temp_out)
-//						{
-//							//Scr_Driver_power_Adjust(1);
-//							
-//							scr_curr_time -= abs(pidret);
-//							if(scr_curr_time<1)
-//							{
-//								scr_curr_time=0;
-//							}
-//						}
-//						if(current_out_temp>best_temp_out)
-//						{
-//							//Scr_Driver_power_Adjust(2);
-//							
-//							scr_curr_time += abs(pidret);
-//							if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
-//							{
-//								scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
-//							}
-//						}
+
 					}				
 				}
 				
 				
 				b_btm_int_flag=false;
 			}
-			
-			
-			
-			
 			
 			//串口接收到数据，处理
 			Uart_Process();
