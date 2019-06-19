@@ -19,9 +19,6 @@ void AppInit();
 //正常运行函数
 void AppHandle();
 
-// Sv设定温度值  Pv当前温度值
-int PIDCalc(int Sv,int Pv);
-
 void main(void)
 {
 	IO_Init();
@@ -178,9 +175,9 @@ void AppHandle()
 						scr_curr_time=0;
 					}
 					else{
-						pidret=PIDCalc(best_temp_out,current_out_temp);
+						pidret=PIDCalc(best_temp_out,current_out_temp);//0可以
 						
-						pidret=140*pidret;//取十分之一来算，不然数据太大，溢出了
+						pidret=14*pidret;//取十分之一来算，不然数据太大，溢出了
 						
 						//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
 						pidret = -pidret;
@@ -231,57 +228,3 @@ void AppInit()
 }
 
 
-// Sv设定温度值  Pv当前温度值
-int PIDCalc(int Sv,int Pv)
-{ 		
-	int DERR1 = 0;       //
-	int DERR2 = 0;       //
-
-	float Pout = 0;       //比例结果
-	float Iout = 0;       //积分结果
-	float Dout = 0;       //微分结果
-	int Out = 0; //总输出
-	static int Out1=0;  //记录上次输出
-
-	static int ERR=0;       //当前误差
-	static int ERR1=0;      //上次误差
-	static int ERR2=0;      //上上次误差
-
-	
-//	static uint Upper_Limit= 100; //PID输出上限
-//	static uint Lower_Limit= 0; //PID输出下限
-
-
-//	if(pidtimer < pidt)     //计算周期   pidtimer可以用定时器计时
-//		return ;  //
-
-	ERR = Sv - Pv;   //算出当前误差
-	DERR1 = ERR - ERR1;   //上次
-	DERR2 = ERR - 2 * ERR1 + ERR2; //上上次
-
-//	Pout = Kp * DERR1;    //输出P
-//	Iout = (float)(ERR * ((Kp * pidt) / Ti));  //输出I
-//	Dout = (float)(DERR2 * ((Kp * Td) / pidt));   //输出D
-//	Out = (unsigned int)(Out1 + Pout + Iout + Dout);
-	
-	//先Kp
-	Pout = Kp * DERR1;    //输出P
-	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = 0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
-	Out = (uint)(Out1 + Pout + Iout + Dout);
-	
-
-//	if(Out >= Upper_Limit) { //如果输出大于等于上限
-//		Out = Upper_Limit;
-//	} 
-//	else if(Out <= Lower_Limit) { //如果输出小于等于下线
-//		Out = Lower_Limit;
-//	}
-	Out1 = Out;      //记录这次输出的值
-
-	ERR2 = ERR1;    //记录误差
-	ERR1 = ERR;     //记录误差
-//	pidtimer = 0;   //定时器清零重新计数
-
-	return Out;
-}

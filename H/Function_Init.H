@@ -163,7 +163,7 @@ extern uint scr_open_time_max;
 extern uint scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 extern bit scr_open_flag;//可控硅开通标志 用于关断定时器 关断可控硅
 //extern uint scr_adjust_step; //1us
-extern uint scr_curr_time;
+extern int scr_curr_time;
 
 extern void IO_Init(void);
 //extern void BTM_Test(void);
@@ -202,6 +202,9 @@ extern void Leakage_EX_Init(void);
 
 //HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
 //extern void Scr_Driver_power_Adjust(uint flag);
+
+// Sv设定温度值  Pv当前温度值
+extern int PIDCalc(int Sv,int Pv);
 
 extern void BTM_Init(void);
 //extern void BTM_Test(void);

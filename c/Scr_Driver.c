@@ -25,6 +25,15 @@ Enum_Ex_Flag Ex_Flag;
 int best_temp_out=37;
 int current_out_temp=28; //当前出水温度
 
+
+
+int idata Out1=0;  //记录上次输出
+
+int idata ERR=0;       //当前误差
+int idata ERR1=0;      //上次误差
+int  idata ERR2=0;      //上上次误差
+
+
 void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
 void Zero_Crossing_EX2_Handle();
@@ -34,8 +43,11 @@ void Zero_Crossing_EX2_Handle();
 
 //软件延时
 void soft_delay(uint n);
-void delay_1ms(uint x);
-void delay(uint n);
+//void delay_1ms(uint x);
+//void delay(uint n);
+
+// Sv设定温度值  Pv当前温度值
+int PIDCalc(int Sv,int Pv);
 
 int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
@@ -264,3 +276,58 @@ void delay(uint n)//延时函数
 #endif
 
 
+// Sv设定温度值  Pv当前温度值
+int PIDCalc(int Sv,int Pv)
+{ 		
+	int DERR1 = 0;       //
+	int DERR2 = 0;       //
+
+	float Pout = 0;       //比例结果
+	float Iout = 0;       //积分结果
+	float Dout = 0;       //微分结果
+	int Out = 0; //总输出
+	
+//	static int Out1=0;  //记录上次输出
+
+//	static int ERR=0;       //当前误差
+//	static int ERR1=0;      //上次误差
+//	static int ERR2=0;      //上上次误差
+
+	
+//	static uint Upper_Limit= 100; //PID输出上限
+//	static uint Lower_Limit= 0; //PID输出下限
+
+
+//	if(pidtimer < pidt)     //计算周期   pidtimer可以用定时器计时
+//		return ;  //
+
+	ERR = Sv - Pv;   //算出当前误差
+	DERR1 = ERR - ERR1;   //上次
+	DERR2 = ERR - 2 * ERR1 + ERR2; //上上次
+
+//	Pout = Kp * DERR1;    //输出P
+//	Iout = (float)(ERR * ((Kp * pidt) / Ti));  //输出I
+//	Dout = (float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+//	Out = (unsigned int)(Out1 + Pout + Iout + Dout);
+	
+	//先Kp
+	Pout = Kp * DERR1;    //输出P
+	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
+	Dout = 0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	Out = (int)(Out1 + Pout + Iout + Dout);
+	
+
+//	if(Out >= Upper_Limit) { //如果输出大于等于上限
+//		Out = Upper_Limit;
+//	} 
+//	else if(Out <= Lower_Limit) { //如果输出小于等于下线
+//		Out = Lower_Limit;
+//	}
+	Out1 = Out;      //记录这次输出的值
+
+	ERR2 = ERR1;    //记录误差
+	ERR1 = ERR;     //记录误差
+//	pidtimer = 0;   //定时器清零重新计数
+
+	return Out;
+}
