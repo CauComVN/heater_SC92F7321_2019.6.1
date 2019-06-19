@@ -180,7 +180,7 @@ void AppHandle()
 					else{
 						pidret=PIDCalc(best_temp_out,current_out_temp);
 						
-						pidret=1400*pidret;
+						pidret=140*pidret;//取十分之一来算，不然数据太大，溢出了
 						
 						//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
 						pidret = -pidret;
@@ -240,21 +240,14 @@ int PIDCalc(int Sv,int Pv)
 	float Pout = 0;       //比例结果
 	float Iout = 0;       //积分结果
 	float Dout = 0;       //微分结果
-	unsigned int Out = 0; //总输出
-	static unsigned int Out1;  //记录上次输出
+	int Out = 0; //总输出
+	static int Out1=0;  //记录上次输出
 
-	static int ERR;       //当前误差
-	static int ERR1;      //上次误差
-	static int ERR2;      //上上次误差
+	static int ERR=0;       //当前误差
+	static int ERR1=0;      //上次误差
+	static int ERR2=0;      //上上次误差
 
-	/******************
-	*以下四项是需要根据实际情况调试的
-	******************/
-//	static int pidt = 0.0156;// 15.6ms;//300;     //300MS计算一次 计算周期
-	static char Kp = 5;       //比例系数
-//	static unsigned int Ti= 5000; //积分时间
-//	static unsigned int Td= 600; //微分时间
-
+	
 //	static uint Upper_Limit= 100; //PID输出上限
 //	static uint Lower_Limit= 0; //PID输出下限
 

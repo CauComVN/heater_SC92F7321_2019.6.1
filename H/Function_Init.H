@@ -71,6 +71,20 @@
 //最佳出水温度高值
 #define good_temp_out_high 50
 
+
+/******************
+	*以下四项是需要根据实际情况调试的
+	******************/
+	//15.6msMS计算一次 计算周期
+#define pidt   0.0156;
+//比例系数
+#define  Kp   5      
+//积分时间
+#define  Ti  5000
+//微分时间
+#define  Td 600 
+
+
 /***********ADC采样口选择*************/
 #if (IC_MODEL == SC92F7323)
 	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
