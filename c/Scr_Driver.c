@@ -333,7 +333,16 @@ void PIDCalc(int Sv,int Pv)
 	//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
 	Out = -Out;
 	
-	scr_curr_time += Out*200;
+	if(Out>100)
+	{
+		Out=100;
+	}
+	else if(Out<0)
+	{
+		Out=0;
+	}
+	
+	scr_curr_time = Out*200;
 	if(scr_curr_time<1)
 	{
 		scr_curr_time=0;
