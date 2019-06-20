@@ -78,7 +78,7 @@
 	//15.6msMS计算一次 计算周期
 #define pidt   0.0156;
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
-#define  Kp   (1/100)      
+#define  Kp   (1/10)      
 //积分时间
 #define  Ti  5000
 //微分时间
@@ -204,7 +204,7 @@ extern void Leakage_EX_Init(void);
 //extern void Scr_Driver_power_Adjust(uint flag);
 
 // Sv设定温度值  Pv当前温度值
-extern int PIDCalc(int Sv,int Pv);
+extern void PIDCalc(int Sv,int Pv);
 
 extern void BTM_Init(void);
 //extern void BTM_Test(void);

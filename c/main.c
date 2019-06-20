@@ -90,8 +90,7 @@ void AppHandle()
 	//=====================初始化
 	uint ADCTempValue=0;
 	int ret=0;
-	int pidret=0;
-	
+		
 	AppInit();
 	
 	Uart0_Init();
@@ -163,51 +162,15 @@ void AppHandle()
 				}
 				else {
 					//调节温度到一个合适的范围内
-					//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-					
-					//0 --- 20000  42度-28度=14度 20000/14=1428.57
-									
-					//设定值大于实际值否？
-					//偏差大于2为上限幅值输出(全速加热)
-					if(best_temp_out-current_out_temp>2) ////偏差大于2?
-					{
-						scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-						scr_curr_time=0;
-					}
-					else{
-						//先乘100，避免浮点运算
-						int best=best_temp_out*100;
-						int curr=current_out_temp*100;
-						pidret=PIDCalc(best,curr);
-						//pidret=PIDCalc(best_temp_out,current_out_temp);//0可以
-						
-						pidret=14*pidret;//取十分之一来算，不然数据太大，溢出了
-						
-						//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
-						pidret = -pidret;
-						
-						scr_curr_time += pidret;
-						if(scr_curr_time<1)
-						{
-							scr_curr_time=0;
-						}
-						if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
-						{
-							scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
-						}
-
-					}				
-				}
-				
+					PIDCalc(best_temp_out, current_out_temp);
+				}		
 				
 				b_btm_int_flag=false;
 			}
 			
 			//串口接收到数据，处理
-			Uart_Process();
-			
-	}
-	
+			Uart_Process();			
+	}	
 }
 
 //全局变量初始化，避免部分全局变量值不确定，导致逻辑问题

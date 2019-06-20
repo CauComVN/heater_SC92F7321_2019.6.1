@@ -47,7 +47,7 @@ void soft_delay(uint n);
 //void delay(uint n);
 
 // Sv设定温度值  Pv当前温度值
-int PIDCalc(int Sv,int Pv);
+void PIDCalc(int Sv,int Pv);
 
 int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
@@ -277,8 +277,14 @@ void delay(uint n)//延时函数
 
 
 // Sv设定温度值  Pv当前温度值
-int PIDCalc(int Sv,int Pv)
+void PIDCalc(int Sv,int Pv)
 { 		
+	int pidret=0;
+	
+	 //温度值乘10做处理
+	int target_temp=Sv*10;
+	int curr_temp=Pv*10;
+		
 	int DERR1 = 0;       //
 	int DERR2 = 0;       //
 
@@ -286,6 +292,9 @@ int PIDCalc(int Sv,int Pv)
 	int Iout = 0;       //积分结果
 	int Dout = 0;       //微分结果
 	int Out = 0; //总输出
+	
+	
+	
 	
 //	static int Out1=0;  //记录上次输出
 
@@ -296,6 +305,82 @@ int PIDCalc(int Sv,int Pv)
 	
 //	static uint Upper_Limit= 100; //PID输出上限
 //	static uint Lower_Limit= 0; //PID输出下限
+	
+	
+	 ERR = Sv - Pv;   //算出当前误差
+	DERR1 = ERR - ERR1;   //上次
+	
+	//DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
+	DERR2= ERR  + ERR2;
+	DERR2= DERR2 - ERR1;
+	DERR2= DERR2 - ERR1;
+	
+	//先Kp
+	Pout = DERR1*Kp;    //输出P
+	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
+	Dout = 0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	//Out = (int)(Out1 + Pout + Iout + Dout);
+	Out = Out1+ Pout;
+	Out = Out+ Iout;
+	Out = Out+ Dout;
+	
+	Out1 = Out;      //记录这次输出的值
+
+	ERR2 = ERR1;    //记录误差
+	ERR1 = ERR;     //记录误差
+	
+	
+	//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
+	Out = -Out;
+	
+	scr_curr_time += Out*200;
+	if(scr_curr_time<1)
+	{
+		scr_curr_time=0;
+	}
+	if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
+	{
+		scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
+	}
+	
+	/*
+					//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
+					
+					//0 --- 20000  42度-28度=14度 20000/14=1428.57
+									
+					//设定值大于实际值否？
+					//偏差大于2为上限幅值输出(全速加热)
+					if(best_temp_out-current_out_temp>2) ////偏差大于2?
+					{
+						scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+						scr_curr_time=0;
+					}
+					else{
+						//先乘100，避免浮点运算
+						int best=best_temp_out*100;
+						int curr=current_out_temp*100;
+						pidret=PIDCalc(best,curr);
+						//pidret=PIDCalc(best_temp_out,current_out_temp);//0可以
+						
+						pidret=14*pidret;//取十分之一来算，不然数据太大，溢出了
+						
+						//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
+						pidret = -pidret;
+						
+						scr_curr_time += pidret;
+						if(scr_curr_time<1)
+						{
+							scr_curr_time=0;
+						}
+						if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
+						{
+							scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
+						}
+					}
+						
+						
+						
+						
 
 
 //	if(pidtimer < pidt)     //计算周期   pidtimer可以用定时器计时
@@ -339,4 +424,6 @@ int PIDCalc(int Sv,int Pv)
 //	pidtimer = 0;   //定时器清零重新计数
 
 	return Out;
+	
+	*/
 }
