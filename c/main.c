@@ -175,7 +175,11 @@ void AppHandle()
 						scr_curr_time=0;
 					}
 					else{
-						pidret=PIDCalc(best_temp_out,current_out_temp);//0可以
+						//先乘100，避免浮点运算
+						int best=best_temp_out*100;
+						int curr=current_out_temp*100;
+						pidret=PIDCalc(best,curr);
+						//pidret=PIDCalc(best_temp_out,current_out_temp);//0可以
 						
 						pidret=14*pidret;//取十分之一来算，不然数据太大，溢出了
 						

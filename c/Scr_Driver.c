@@ -282,9 +282,9 @@ int PIDCalc(int Sv,int Pv)
 	int DERR1 = 0;       //
 	int DERR2 = 0;       //
 
-	float Pout = 0;       //比例结果
-	float Iout = 0;       //积分结果
-	float Dout = 0;       //微分结果
+	int Pout = 0;       //比例结果
+	int Iout = 0;       //积分结果
+	int Dout = 0;       //微分结果
 	int Out = 0; //总输出
 	
 //	static int Out1=0;  //记录上次输出
@@ -303,7 +303,13 @@ int PIDCalc(int Sv,int Pv)
 
 	ERR = Sv - Pv;   //算出当前误差
 	DERR1 = ERR - ERR1;   //上次
-	DERR2 = ERR - 2 * ERR1 + ERR2; //上上次
+	
+	//DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
+	DERR2= ERR  + ERR2;
+	DERR2= DERR2 - ERR1;
+	DERR2= DERR2 - ERR1;
+	
+	
 
 //	Pout = Kp * DERR1;    //输出P
 //	Iout = (float)(ERR * ((Kp * pidt) / Ti));  //输出I
@@ -311,10 +317,13 @@ int PIDCalc(int Sv,int Pv)
 //	Out = (unsigned int)(Out1 + Pout + Iout + Dout);
 	
 	//先Kp
-	Pout = Kp * DERR1;    //输出P
+	Pout = DERR1*Kp;    //输出P
 	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
 	Dout = 0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
-	Out = (int)(Out1 + Pout + Iout + Dout);
+	//Out = (int)(Out1 + Pout + Iout + Dout);
+	Out = Out1+ Pout;
+	Out = Out+ Iout;
+	Out = Out+ Dout;
 	
 
 //	if(Out >= Upper_Limit) { //如果输出大于等于上限
