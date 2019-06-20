@@ -337,12 +337,12 @@ void PIDCalc(int Sv,int Pv)
 	{
 		Out=100;
 	}
-	else if(Out<0)
+	else if(Out<-100)
 	{
-		Out=0;
+		Out=-100;
 	}
 	
-	scr_curr_time = Out*200;
+	scr_curr_time += Out*200;
 	if(scr_curr_time<1)
 	{
 		scr_curr_time=0;
