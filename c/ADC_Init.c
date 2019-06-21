@@ -22,7 +22,7 @@ int get_temp_table(uint nADValue, int* temp);
 
 
 //连续多次采样转换，设置要等于或大于7
-float ADC_Value0,ADC_Value1,ADC_Value2;
+//float ADC_Value0,ADC_Value1,ADC_Value2;
 
 /*****************************************************
 *函数名称：void ADC_Test(void)

@@ -1,14 +1,15 @@
 #include "H/Function_Init.H" 
+#include <stdio.h>
+#include <string.h>
 
-
-uchar idata Uart0BuffNumber=0;
-uchar idata Uart0Buff[UART0_BUFF_LENGTH];
+//uchar idata Uart0BuffNumber=0;
+//uchar code Uart0Buff[UART0_BUFF_LENGTH];
 
 void Uart0_Init(void);
 void UartInt_Handle();
 void Uart_Process();
 void UART_SentChar(uchar chr);
-void UART_SendString(uchar *str);
+//void UART_SendString(uchar *str);
 
 bit UartSendFlag = 0; //发送中断标志位
 bit UartReceiveFlag = 0; //接收中断标志位
@@ -52,8 +53,26 @@ bit UartReceiveFlag = 0; //接收中断标志位
 //	}
 //}
 
+char putchar(char c)//用于重写printf
+{
+	SBUF = c;
+	while(!UartSendFlag);
+	UartSendFlag=0;
+	return c;
+}
+
 void Uart_Process()
 {
+	//printf("00100\n");
+	
+	//unsigned char string[5]={"1234"};
+	//uint n;
+	//sscanf(string,"%u",&n);
+	//sscanf(string,"%u",&n); //string是字符串，%u是格式控制串，u是无符号十进制数，&n是变量n的地址。
+	//printf("%d\n",n);//可在KEIL C 开发环境中输出观察
+	
+	
+	
 	if(UartReceiveFlag)
 	{
 		UartReceiveFlag=0;
@@ -214,10 +233,10 @@ void UART_SentChar(uchar chr)
 	UartSendFlag = 0;
 }
 
-void UART_SendString(uchar *str)
-{
-  while(*str != '\0')
-  {
-      UART_SentChar(*str++);
-  }
-}
+//void UART_SendString(uchar *str)
+//{
+//  while(*str != '\0')
+//  {
+//      UART_SentChar(*str++);
+//  }
+//}

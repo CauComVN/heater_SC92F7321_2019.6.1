@@ -144,6 +144,21 @@ sbit	可寻址位	0或1
 
 17.不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
 
+14.mdk keil中sprintf不好用
+	unsigned char string[6]={"1234\n"};
+	unsigned int n;
+	sscanf(string,"%u",&n);//string是字符串，%u是格式控制串，u是无符号十进制数，&n是变量n的地址
+	printf("%d\n",n);//可在KEIL C 开发环境中输出观察
+	
+	
+	char putchar(char c)//用于重写printf
+	{
+		SBUF = c;
+		while(!UartSendFlag);
+		UartSendFlag=0;
+		return c;
+	}
+
 
 PID控制算法的C语言实现
 18.http://www.sohu.com/a/298859329_257861

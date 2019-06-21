@@ -21,7 +21,7 @@
 
 #define IC_MODEL  SC92F7321
 
-#define UART0_BUFF_LENGTH	  5	//UART0接受缓冲区的容量（Byte)
+//#define UART0_BUFF_LENGTH	  5	//UART0接受缓冲区的容量（Byte)
 
 
 //定义MCU管脚
@@ -85,6 +85,7 @@
 #define  Td 600 
 
 
+
 /***********ADC采样口选择*************/
 #if (IC_MODEL == SC92F7323)
 	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
@@ -134,13 +135,13 @@ typedef enum Heater_Exception
 extern bit heater_relay_on;
 
 //热水器内部异常状态
-extern Enum_Ex_Flag ex_flag;
+extern Enum_Ex_Flag idata ex_flag;
 
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
 extern int  idata  water_flow_flag;
 
 
-extern int best_temp_out;
+extern int idata best_temp_out;
 
 extern int current_out_temp; //当前出水温度
 
@@ -190,10 +191,10 @@ extern void soft_delay(uint n);
 //extern void Scr_Driver_PWM_Init(void);
 extern int  Scr_Driver_Check_Insurance();//检测温度保险
 extern void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
-extern void Zero_Crossing_EXTI_Test(void);
+//extern void Zero_Crossing_EXTI_Test(void);
 extern void Zero_Crossing_EX_Init(void);
-extern void Water_Detection_EXTI_Test(void);
-extern void Water_Detection_Timer_Test(void);
+//extern void Water_Detection_EXTI_Test(void);
+//extern void Water_Detection_Timer_Test(void);
 extern void Water_Detection_EX_Init(void);
 extern void Water_Detection_Timer_Init(void);
 //extern void Leakage_EXTI_Test(void);

@@ -19,11 +19,11 @@
 bit heater_relay_on=0;
 
 ////热水器内部异常状态
-Enum_Ex_Flag Ex_Flag;
+Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int best_temp_out=37;
-int current_out_temp=28; //当前出水温度
+int idata best_temp_out=37;
+int  current_out_temp=28; //当前出水温度
 
 
 
@@ -34,7 +34,7 @@ int current_out_temp=28; //当前出水温度
 //int  idata ERR2=0;      //上上次误差
 
 
-void Zero_Crossing_EXTI_Test(void);
+//void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
 void Zero_Crossing_EX2_Handle();
 
@@ -53,7 +53,7 @@ int Scr_Driver_Check_Insurance();//检测温度保险
 void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
 
 //HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
-void Scr_Driver_PWM_Adjust(uint flag);
+//void Scr_Driver_PWM_Adjust(uint flag);
 
 uchar Zero_Crossing_INT1_flag = 0x00;
 /*****************************************************
@@ -62,13 +62,13 @@ uchar Zero_Crossing_INT1_flag = 0x00;
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void Zero_Crossing_EXTI_Test(void)
-{
-    Zero_Crossing_EX_Init();
-    while(1)
-    {
-    }
-}
+//void Zero_Crossing_EXTI_Test(void)
+//{
+//    Zero_Crossing_EX_Init();
+//    while(1)
+//    {
+//    }
+//}
 /*****************************************************
 *函数名称：void Zero_Crossing_EX_Init(void)
 *函数功能：外部中断初始化

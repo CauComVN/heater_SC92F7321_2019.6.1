@@ -17,14 +17,11 @@
 
 //正常运行函数
 //void AppHandle();
-	uint idata ADCTempValue=0;
-	int idata ret=0;
-			
-char idata buf[UART0_BUFF_LENGTH];
+	
 
 void main(void)
 {
-
+	uint idata ADCTempValue=0;
 	
 	IO_Init();
 	WDTCON |= 0x10;		    //清看门狗
@@ -95,13 +92,15 @@ void main(void)
 				//出水温度
 				ADC_Init(AIN8);
 				ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
-				ret = get_temp_table(ADCTempValue,&current_out_temp);
+				get_temp_table(ADCTempValue,&current_out_temp);
 				
 				//UART_SentChar(current_out_temp);
-				//sprintf(buf,"%d",current_out_temp);
-				//UART_SendString(buf);
+				
+				//printf("%d\n",current_out_temp);
 				
 				PIDCalc(best_temp_out, current_out_temp);
+				
+				printf("%d\n",current_out_temp);
 			
 //				if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
 //						ex_flag=Ex_Out_Water_Temp_Low;
@@ -163,11 +162,14 @@ void main(void)
 		case 9: 
 			//Serial_Key_Test();
 		break;
-		case 10: Zero_Crossing_EXTI_Test();
+		case 10: 
+			//Zero_Crossing_EXTI_Test();
 		break;
-		case 11: Water_Detection_EXTI_Test();
+		case 11: 
+			//Water_Detection_EXTI_Test();
 		break;
-		case 12: Water_Detection_Timer_Test();
+		case 12: 
+			//Water_Detection_Timer_Test();
 		break;
 		case 13: 
 //			Leakage_EXTI_Test();

@@ -17,9 +17,9 @@ uint idata  numberPulse = 0;
 int idata water_flow_flag=0;
 
 void Water_Detection_EX_Init(void);
-void Water_Detection_EXTI_Test(void);
+//void Water_Detection_EXTI_Test(void);
 void Water_Detection_Timer_Init(void);
-void Water_Detection_Timer_Test(void);
+//void Water_Detection_Timer_Test(void);
 void Water_Detection_EX2_Handle();
 void Water_Detection_Timer0_Handle();
 
@@ -29,13 +29,13 @@ void Water_Detection_Timer0_Handle();
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void Water_Detection_EXTI_Test(void)
-{
-    Water_Detection_EX_Init();
-    while(1)
-    {
-    }
-}
+//void Water_Detection_EXTI_Test(void)
+//{
+//    Water_Detection_EX_Init();
+//    while(1)
+//    {
+//    }
+//}
 /*****************************************************
 *函数名称：void Water_Detection_EX_Init(void)
 *函数功能：外部中断初始化
@@ -93,13 +93,13 @@ void Water_Detection_Timer_Init(void);
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void Water_Detection_Timer_Test(void)
-{
-    Water_Detection_Timer_Init();
-    while(1)
-    {
-    }
-}
+//void Water_Detection_Timer_Test(void)
+//{
+//    Water_Detection_Timer_Init();
+//    while(1)
+//    {
+//    }
+//}
 /*****************************************************
 *函数名称：void Water_Detection_Timer_Init(void)
 *函数功能：T0/T1/T2初始化
