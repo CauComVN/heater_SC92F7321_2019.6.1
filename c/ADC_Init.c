@@ -112,7 +112,8 @@ int get_temp_table(uint nADValue, int* temp)
     //c:如果ADC采集精度为N bit，对应满量程值为c值 2^N=c，主控芯片12位ADC， 2(12)=4096  5v=5v;
     //x:ADC采集值 x=TempAdd
     //Rup:上拉电阻值 10k
-    Rntc=(uint)(10.0*nADValue/(4096-nADValue));//10000*TempAdd/(4096-TempAdd)/1000;
+    Rntc=(uint)(10*nADValue/(4096-nADValue));//10000*TempAdd/(4096-TempAdd)/1000;
+	
 
     if(Rntc>=NTC_R_VALUE_MAX)
     {
