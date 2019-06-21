@@ -284,6 +284,8 @@ void PIDCalc(int Sv,int Pv)
 	 //温度值乘10做处理
 	int target_temp=Sv*10;
 	int curr_temp=Pv*10;
+	
+	int pid_max=40;
 		
 	int DERR1 = 0;       //
 	int DERR2 = 0;       //
@@ -330,19 +332,21 @@ void PIDCalc(int Sv,int Pv)
 	ERR1 = ERR;     //记录误差
 	
 	
+	
+	
 	//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
 	Out = -Out;
 	
-	if(Out>100)
+	if(Out>pid_max)
 	{
-		Out=100;
+		Out=pid_max;
 	}
-	else if(Out<-100)
+	else if(Out<-pid_max)
 	{
-		Out=-100;
+		Out=-pid_max;
 	}
 	
-	scr_curr_time += Out*200;
+	scr_curr_time += Out*200;  // 20000/100=200
 	if(scr_curr_time<1)
 	{
 		scr_curr_time=0;
