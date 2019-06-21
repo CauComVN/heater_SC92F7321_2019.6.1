@@ -1,7 +1,7 @@
 #include "H/Function_Init.H"
 #include <math.h>
 
-uchar idata b_btm_int_flag=false;
+volatile uchar idata b_btm_int_flag=false;
 
 void BTM_Init(void);
 //void BTM_Test(void);

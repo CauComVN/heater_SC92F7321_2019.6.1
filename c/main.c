@@ -91,7 +91,7 @@ void AppHandle()
 	uint ADCTempValue=0;
 	int ret=0;
 		
-	AppInit();
+//	AppInit();
 	
 	Uart0_Init();
 	
@@ -152,19 +152,23 @@ void AppHandle()
 				ret = get_temp_table(ADCTempValue,&current_out_temp);
 				
 				UART_SentChar(current_out_temp);
-			
-				if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
-						ex_flag=Ex_Out_Water_Temp_Low;
-						
-				}
-				else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
-						ex_flag=Ex_Out_Water_Temp_High;
-				}
-				else {
-					//调节温度到一个合适的范围内
-					PIDCalc(best_temp_out, current_out_temp);
-				}		
 				
+				PIDCalc(best_temp_out, current_out_temp);
+			
+//				if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
+//						ex_flag=Ex_Out_Water_Temp_Low;
+//						
+//				}
+//				else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
+//						ex_flag=Ex_Out_Water_Temp_High;
+//				}
+//				else {
+//					UART_SentChar(current_out_temp);
+//					
+//					//调节温度到一个合适的范围内
+//					PIDCalc(best_temp_out, current_out_temp);
+//				}		
+//				
 				b_btm_int_flag=false;
 			}
 			

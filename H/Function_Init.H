@@ -78,7 +78,7 @@
 	//15.6msMS计算一次 计算周期
 #define pidt   0.0156;
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
-#define  Kp   (1/10)      
+#define  Kp   (5/10)      
 //积分时间
 #define  Ti  5000
 //微分时间
@@ -163,7 +163,7 @@ extern uint scr_open_time_max;
 extern uint scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 extern bit scr_open_flag;//可控硅开通标志 用于关断定时器 关断可控硅
 //extern uint scr_adjust_step; //1us
-extern int scr_curr_time;
+extern volatile  int scr_curr_time;
 
 extern void IO_Init(void);
 //extern void BTM_Test(void);
@@ -208,7 +208,7 @@ extern void PIDCalc(int Sv,int Pv);
 
 extern void BTM_Init(void);
 //extern void BTM_Test(void);
-extern  uchar idata b_btm_int_flag;
+extern volatile  uchar idata b_btm_int_flag;
 
 extern void Timer_Init(void);
 

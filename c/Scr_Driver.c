@@ -107,7 +107,7 @@ void Zero_Crossing_EX2_Handle()
 			HEAT_TRA=0;
 			
 			//定时器关闭
-			TR1 = 0;
+			//TR1 = 0;
 			
 			if(ZERO==1)
 			{
@@ -118,22 +118,46 @@ void Zero_Crossing_EX2_Handle()
 				scr_open_time_max=zero_period_low_time;
 			}			
 			
-//		 scr_open_time=scr_open_time_max-zero_peroid_last_time;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-//		 scr_curr_time=scr_open_time_max-zero_peroid_last_time;//20000;//6;
 			
-//			scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-//			scr_curr_time=0;//8600;//20000;//6;
+			
+//		 scr_open_time=scr_open_time_max-zero_peroid_last_time;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+////		 scr_curr_time=scr_open_time_max-zero_peroid_last_time;//20000;//6;
+//			
+////			scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+////			scr_curr_time=0;//8600;//20000;//6;
+//			
+//			scr_open_time /= 2;//37度
 			
 			//开头
 			if(scr_curr_time==0)
 			{
 				//全功率
 				HEAT_TRA=1;
+				
+				//定时器关闭
+				TR1 = 0;
 			}
-			//末尾
-			else if(scr_curr_time>0 && scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
+			else
 			{
-				Timer_Init();
+				//末尾
+				if(scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
+				{
+					if(scr_open_time != scr_curr_time)
+					{
+						scr_open_time=scr_curr_time;
+					}
+		
+					Timer_Init();
+				}
+				else
+				{
+					HEAT_TRA=0;
+					
+					//定时器关闭
+					TR1 = 0;
+					
+					scr_open_time=scr_open_time_max-zero_peroid_last_time;
+				}
 			}
     }
  /*   if(HALL_LLJ == 1) //INT25 P21 水流检测计数
@@ -335,26 +359,44 @@ void PIDCalc(int Sv,int Pv)
 	
 	
 	//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
-	Out = -Out;
+	//Out = -Out;
 	
-	if(Out>pid_max)
+//	if(Out>pid_max)
+//	{
+//		Out=pid_max;
+//	}
+//	else if(Out<-pid_max)
+//	{
+//		Out=-pid_max;
+//	}
+	
+	if(Out>0)
 	{
-		Out=pid_max;
+		UART_SentChar(0x55);
+		
+		scr_curr_time=0;// -= Out*200;  // 20000/100=200
 	}
-	else if(Out<-pid_max)
+	else if(Out<0)
 	{
-		Out=-pid_max;
+		UART_SentChar(0x57);
+		
+		HEAT_TRA=0;
+		
+		//定时器关闭
+		TR1 = 0;
+		
+		//scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
 	}
 	
-	scr_curr_time += Out*200;  // 20000/100=200
-	if(scr_curr_time<1)
-	{
-		scr_curr_time=0;
-	}
-	if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
-	{
-		scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
-	}
+	
+//	if(scr_curr_time<1)
+//	{
+//		scr_curr_time=0;
+//	}
+//	if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
+//	{
+//		scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
+//	}
 	
 	/*
 					//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
