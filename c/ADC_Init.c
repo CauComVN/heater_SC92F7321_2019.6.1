@@ -114,22 +114,33 @@ int get_temp_table(uint nADValue, int* temp)
     //Rup:上拉电阻值 10k
     Rntc=(uint)(10*nADValue/(4096-nADValue));//10000*TempAdd/(4096-TempAdd)/1000;
 	
+		if(Rntc>NTC_R_VALUE_MAX)
+		{
+			Rntc=NTC_R_VALUE_MAX;
+		}
+		if(Rntc<NTC_R_VALUE_MIN)
+		{
+			Rntc=NTC_R_VALUE_MIN;
+		}
+	
+		*temp =search(bufTable_NTC_R, sizeof(bufTable_NTC_R)/2,	Rntc);
+	
 
-    if(Rntc>=NTC_R_VALUE_MAX)
-    {
-        //通知检测温度异常，超过最低温度，发送主板BEEP报警
-        return -1;
+//    if(Rntc>=NTC_R_VALUE_MAX)
+//    {
+//        //通知检测温度异常，超过最低温度，发送主板BEEP报警
+//        return -1;
 
-    }
-    else if(Rntc<=NTC_R_VALUE_MIN)
-    {
-        //通知检测温度异常，超过最高温度发送主板BEEP报警
-        return -2;
-    }
-    else
-    {
-        *temp =search(bufTable_NTC_R, sizeof(bufTable_NTC_R)/2,	Rntc);        
-    }
+//    }
+//    else if(Rntc<=NTC_R_VALUE_MIN)
+//    {
+//        //通知检测温度异常，超过最高温度发送主板BEEP报警
+//        return -2;
+//    }
+//    else
+//    {
+//        *temp =search(bufTable_NTC_R, sizeof(bufTable_NTC_R)/2,	Rntc);        
+//    }
 		
 		return 0;
 }

@@ -27,11 +27,11 @@ int current_out_temp=28; //当前出水温度
 
 
 
-int idata Out1=0;  //记录上次输出
+//int idata Out1=0;  //记录上次输出
 
-int idata ERR=0;       //当前误差
-int idata ERR1=0;      //上次误差
-int  idata ERR2=0;      //上上次误差
+//int idata ERR=0;       //当前误差
+//int idata ERR1=0;      //上次误差
+//int  idata ERR2=0;      //上上次误差
 
 
 void Zero_Crossing_EXTI_Test(void);
@@ -322,11 +322,11 @@ void PIDCalc(int Sv,int Pv)
 	
 	
 	
-//	static int Out1=0;  //记录上次输出
+	static int Out1=0;  //记录上次输出
 
-//	static int ERR=0;       //当前误差
-//	static int ERR1=0;      //上次误差
-//	static int ERR2=0;      //上上次误差
+	static int ERR=0;       //当前误差
+	static int ERR1=0;      //上次误差
+	static int ERR2=0;      //上上次误差
 
 	
 //	static uint Upper_Limit= 100; //PID输出上限
