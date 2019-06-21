@@ -37,6 +37,10 @@ void IO_Init(void)
 	P2PH  = 0x00;
 	SC92F7321_NIO_Init(); //未引出IO口配置
 	
+	//采集温度
+	ADCCFG1 |= 0x03;
+	IE &=0xbf;//|= 0X40;        //开关闭ADC中断
+	ADCCON = 0x08;	
 	
 	// 初始化 继电器关闭，HEAT RLY P02，热水器停止状态
 	P0CON = P0CON|0x04;  //设置P02为强推挽模式

@@ -5,7 +5,6 @@
 #include "ADC.h"
 
 void ADC_Init(uint Channel);
-uint ADCValue = 0x0000;
 bit AdcFlag = 0;
 
 void ADC_Init(uint Channel);
@@ -31,28 +30,28 @@ float ADC_Value0,ADC_Value1,ADC_Value2;
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void ADC_Test(void)
-{
-    int t8=0,t9=0;
-    int ret =0;
-    int temp=26;
-    int flag=0;
+//void ADC_Test(void)
+//{
+//    int t8=0,t9=0;
+//    int ret =0;
+//    int temp=26;
+//    int flag=0;
 
-    while(1)
-    {
-        //进水温度
-        //ADC_Init(AIN9);
-        //t9=ADC_Convert(); //启动ADC转换，获得转换值
-        //ret = get_temp_table(t9,&temp);
+//    while(1)
+//    {
+//        //进水温度
+//        //ADC_Init(AIN9);
+//        //t9=ADC_Convert(); //启动ADC转换，获得转换值
+//        //ret = get_temp_table(t9,&temp);
 
-        //出水温度
-        ADC_Init(AIN8);
-        t8=ADC_Convert(); //启动ADC转换，获得转换值
-        ret = get_temp_table(t8,&temp);
+//        //出水温度
+//        ADC_Init(AIN8);
+//        t8=ADC_Convert(); //启动ADC转换，获得转换值
+//        ret = get_temp_table(t8,&temp);
 
-        flag=1;
-    }
-}
+//        flag=1;
+//    }
+//}
 /*****************************************************
 *函数名称：void ADC_Init(uint Channel)
 *函数功能：ADC初始化

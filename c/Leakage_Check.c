@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////
 //配置中断口INT00，漏电保护输出，端口p1.0
 
-void Leakage_EXTI_Test(void);
+//void Leakage_EXTI_Test(void);
 void Leakage_EX_Init(void);
 void Leakage_EX0_Handle(void);
 
@@ -15,13 +15,13 @@ void Leakage_EX0_Handle(void);
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void Leakage_EXTI_Test(void)
-{
-	Leakage_EX_Init();
-	while(1)
-	{					
-	}
-}
+//void Leakage_EXTI_Test(void)
+//{
+//	Leakage_EX_Init();
+//	while(1)
+//	{					
+//	}
+//}
 /*****************************************************
 *函数名称：void Leakage_EX_Init(void)
 *函数功能：外部中断初始化

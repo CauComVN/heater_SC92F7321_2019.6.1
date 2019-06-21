@@ -14,7 +14,7 @@ void EX0_Interrupt() interrupt	0
 	
 	if(RX1==0 || TX1==0)
 	{
-		Serial_Key_EX0_Handle();
+//		Serial_Key_EX0_Handle();
 	}
 }
 

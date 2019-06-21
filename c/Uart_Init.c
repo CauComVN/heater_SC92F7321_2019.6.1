@@ -1,9 +1,14 @@
 #include "H/Function_Init.H" 
 
+
+uchar idata Uart0BuffNumber=0;
+uchar idata Uart0Buff[UART0_BUFF_LENGTH];
+
 void Uart0_Init(void);
 void UartInt_Handle();
 void Uart_Process();
 void UART_SentChar(uchar chr);
+void UART_SendString(uchar *str);
 
 bit UartSendFlag = 0; //发送中断标志位
 bit UartReceiveFlag = 0; //接收中断标志位
@@ -13,39 +18,39 @@ bit UartReceiveFlag = 0; //接收中断标志位
 *入口参数：void
 *出口参数：void
 *****************************************************/
-void Uart0_Test(void)
-{
-	Uart0_Init();
-	while(1)
-	{
-//		SBUF = 0x55;
-//		while(!UartSendFlag);
-//		UartSendFlag = 0;
-		
-		UART_SentChar(0x55);
-		
-		if(UartReceiveFlag)
-		{
-			UartReceiveFlag=0;
-			
-			BEE = ~BEE;
-		
-			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
-			if(SBUF == 0x01)
-			{				
-				SBUF = 0x55+SBUF;
-				while(!UartSendFlag);
-				UartSendFlag = 0;
-			}
-			if(SBUF == 0x02)
-			{				
-				SBUF = 0x55+SBUF;
-				while(!UartSendFlag);
-				UartSendFlag = 0;
-			}	
-		}
-	}
-}
+//void Uart0_Test(void)
+//{
+//	Uart0_Init();
+//	while(1)
+//	{
+////		SBUF = 0x55;
+////		while(!UartSendFlag);
+////		UartSendFlag = 0;
+//		
+//		UART_SentChar(0x55);
+//		
+//		if(UartReceiveFlag)
+//		{
+//			UartReceiveFlag=0;
+//			
+//			BEE = ~BEE;
+//		
+//			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
+//			if(SBUF == 0x01)
+//			{				
+//				SBUF = 0x55+SBUF;
+//				while(!UartSendFlag);
+//				UartSendFlag = 0;
+//			}
+//			if(SBUF == 0x02)
+//			{				
+//				SBUF = 0x55+SBUF;
+//				while(!UartSendFlag);
+//				UartSendFlag = 0;
+//			}	
+//		}
+//	}
+//}
 
 void Uart_Process()
 {
@@ -207,4 +212,12 @@ void UART_SentChar(uchar chr)
 	SBUF = chr;
 	while(!UartSendFlag);
 	UartSendFlag = 0;
+}
+
+void UART_SendString(uchar *str)
+{
+  while(*str != '\0')
+  {
+      UART_SentChar(*str++);
+  }
 }

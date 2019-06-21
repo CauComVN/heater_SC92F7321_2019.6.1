@@ -2,7 +2,7 @@
 #if  0
 void EX_Init(void);
 void EX1_Handle();
-uchar INT1_flag = 0x00;
+uchar idata INT1_flag = 0x00;
 /*****************************************************
 *函数名称：void EXTI_Test(void)
 *函数功能：外部中断测试
