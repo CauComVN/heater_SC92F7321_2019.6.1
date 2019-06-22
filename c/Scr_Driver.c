@@ -37,13 +37,13 @@
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
 bit heater_relay_on=0;
 
-bit b_start_pid=false;
+bit b_start_pid=0;
 
 ////热水器内部异常状态
 Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int idata best_temp_out=37;
+int idata best_temp_out=40;
 int  current_out_temp=28; //当前出水温度
 
 int idata scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
@@ -127,7 +127,8 @@ void Zero_Crossing_EX2_Handle()
 //			HEAT_TRA=1;
 			
 //			//过零检测中断，可控硅关闭
-			HEAT_TRA=0;
+			if(HEAT_TRA!=0)
+				HEAT_TRA=0;
 			
 			//定时器关闭
 			//TR1 = 0;
@@ -135,10 +136,12 @@ void Zero_Crossing_EX2_Handle()
 			if(scr_curr_time==0)
 			{
 				//全功率
-				HEAT_TRA=1;
+				if(HEAT_TRA!=1)
+					HEAT_TRA=1;
 				
 				//定时器关闭
-				TR1 = 0;
+				if(TR1!=0)
+					TR1 = 0;
 			}			
 			else if(scr_curr_time==zero_period_high_time)
 			{				
@@ -174,10 +177,12 @@ void Zero_Crossing_EX2_Handle()
 				}
 				else
 				{
-					HEAT_TRA=0;
+					if(HEAT_TRA!=0)
+						HEAT_TRA=0;
 					
 					//定时器关闭
-					TR1 = 0;
+					if(TR1!=0)
+						TR1 = 0;
 				}				
 			}
 		}
@@ -359,35 +364,34 @@ void PIDCalc(int Sv,int Pv)
 	ERR1 = ERR;     //记录误差
 	
 	/**/
+	
+	printf("%d\n",Out);
 			
 	if(Out>0)
 	{
-		printf("111");
+		printf("111\n");
 		
 		//偏差大于2度为上限幅值输出(全速加热)
 		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
 		{
-			if(scr_curr_time<1)
-			{
-				scr_curr_time=0;
-			}
+			scr_curr_time=0;
 		}
 		else
 		{
 			//PID算法控制
-			if(b_start_pid==false)
+			if(b_start_pid==0)
 			{
-				b_start_pid=true;
+				b_start_pid=1;
 				
-				//全功率调整80% 功率调节是相反的 (100-80)/100=1/5
-				scr_curr_time = zero_period_low_time/5;
+				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
+				scr_curr_time = zero_period_low_time/10;
 			}
 			else
 			{
 				//20000/270=74
 		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time -= Out*74;
+				scr_curr_time = scr_curr_time - Out*74;
 				if(scr_curr_time<1)
 				{
 					scr_curr_time=0;
@@ -399,7 +403,7 @@ void PIDCalc(int Sv,int Pv)
 	{
 		//UART_SentChar(0x57);
 		
-		printf("222");
+		printf("222\n");
 		
 		if(HEAT_TRA!=0)
 			HEAT_TRA=0;
@@ -412,6 +416,6 @@ void PIDCalc(int Sv,int Pv)
 	}
 	else
 	{
-		printf("333");
+		printf("333\n");
 	}
 }
