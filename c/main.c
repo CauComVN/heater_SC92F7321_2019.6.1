@@ -74,23 +74,20 @@ void main(void)
 			}
 			
 		
-//			if(heater_relay_on==1)
-//			{
-//				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
-//				Scr_Driver_Check_Insurance();
-//			}
+			if(heater_relay_on==1)
+			{
+				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
+				Scr_Driver_Check_Insurance();
+			}
 		
 			if(water_flow_flag < 1 && heater_relay_on==1)
 			{
 					heater_relay_on=0;
 					Scr_Driver_Control_Heat_RLY(heater_relay_on);
-			}
+			}			
 			
-			
-			if(b_btm_int_flag==true)
-			{
-				 
-			
+			if(b_btm_int_flag==1)
+			{			
 				//出水温度
 				ADC_Init(AIN8);
 				ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
@@ -101,24 +98,8 @@ void main(void)
 				printf("%d\n",current_out_temp);
 				
 				PIDCalc(best_temp_out, current_out_temp);
-				
-				
 			
-//				if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
-//						ex_flag=Ex_Out_Water_Temp_Low;
-//						
-//				}
-//				else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
-//						ex_flag=Ex_Out_Water_Temp_High;
-//				}
-//				else {
-//					UART_SentChar(current_out_temp);
-//					
-//					//调节温度到一个合适的范围内
-//					PIDCalc(best_temp_out, current_out_temp);
-//				}		
-//				
-				b_btm_int_flag=false;
+				b_btm_int_flag=0;
 			}
 			
 			//串口接收到数据，处理
@@ -175,6 +156,10 @@ void main(void)
 		break;
 		case 13: 
 //			Leakage_EXTI_Test();
+			Leakage_EX_Init();
+			while(1)
+			{					
+			}
 		break;
 		case 14:
 			//delay_1ms(10);
@@ -185,94 +170,3 @@ void main(void)
 	}
 }
 
-////正常运行函数
-//void AppHandle()
-//{
-//		
-//	//=====================初始化
-//	uint ADCTempValue=0;
-//	int ret=0;
-//	
-//	Uart0_Init();
-//	
-//	//漏电保护
-//	//Leakage_EX_Init();
-//	
-//	
-//	//水流检测
-//  Water_Detection_EX_Init(); 
-//	
-//	//水流检测定时器
-//  Water_Detection_Timer_Init();
-//	/*
-//	//初始化按键，用串口Rx Tx做中断来调节功率 需要做防抖动处理（未处理）
-//	//Serial_Key_Init();
-//	*/
-//	
-//		
-//	//=====================主循环
-//	/**/
-//	while(1)
-//	{
-//		/**/
-//			//test........
-//			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-//			if(water_flow_flag >= 1 && heater_relay_on==0)
-//			{
-//				heater_relay_on=1;
-//				Scr_Driver_Control_Heat_RLY(heater_relay_on);
-//				
-//				//启动可控硅控制
-//				Zero_Crossing_EX_Init();
-//				
-//				//延时1s，可控硅全功率
-//				BTM_Init();
-//			}
-//			
-//		
-////			if(heater_relay_on==1)
-////			{
-////				//检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
-////				Scr_Driver_Check_Insurance();
-////			}
-//		
-//			if(water_flow_flag < 1 && heater_relay_on==1)
-//			{
-//					heater_relay_on=0;
-//					Scr_Driver_Control_Heat_RLY(heater_relay_on);
-//			}
-//			
-//			
-//			if(b_btm_int_flag==true)
-//			{
-//			
-//				//出水温度
-//				ADC_Init(AIN8);
-//				ADCTempValue=ADC_Convert(); //启动ADC转换，获得转换值
-//				ret = get_temp_table(ADCTempValue,&current_out_temp);
-//				
-//				UART_SentChar(current_out_temp);
-//				
-//				PIDCalc(best_temp_out, current_out_temp);
-//			
-////				if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
-////						ex_flag=Ex_Out_Water_Temp_Low;
-////						
-////				}
-////				else if(ret==-2) { //通知检测温度异常，超过最高温度发送主板BEEP报警
-////						ex_flag=Ex_Out_Water_Temp_High;
-////				}
-////				else {
-////					UART_SentChar(current_out_temp);
-////					
-////					//调节温度到一个合适的范围内
-////					PIDCalc(best_temp_out, current_out_temp);
-////				}		
-////				
-//				b_btm_int_flag=false;
-//			}
-//			
-//			//串口接收到数据，处理
-//			Uart_Process();			
-//	}	
-//}

@@ -1,7 +1,7 @@
 #include "H/Function_Init.H"
 #include <math.h>
 
-uchar idata b_btm_int_flag=false;
+bit b_btm_int_flag=0;
 
 void BTM_Init(void);
 //void BTM_Test(void);
@@ -52,7 +52,7 @@ void BTM_Int(void) interrupt 9
 {
 	if(!(BTMCON&0X40))		//中断标志位判断
 	{		
-		b_btm_int_flag=true;
+		b_btm_int_flag=1;
 	}
 }
 
