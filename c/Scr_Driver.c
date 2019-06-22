@@ -43,10 +43,10 @@ bit b_start_pid=0;
 Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int idata best_temp_out=40;
+int idata best_temp_out=37;
 int  current_out_temp=28; //当前出水温度
 
-int idata scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
+volatile uint  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
 
 
 
@@ -365,7 +365,7 @@ void PIDCalc(int Sv,int Pv)
 	
 	/**/
 	
-	printf("%d\n",Out);
+	//printf("%d\n",Out);
 			
 	if(Out>0)
 	{
@@ -374,7 +374,8 @@ void PIDCalc(int Sv,int Pv)
 		//偏差大于2度为上限幅值输出(全速加热)
 		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
 		{
-			scr_curr_time=0;
+			if(scr_curr_time!=0)
+				scr_curr_time=0;
 		}
 		else
 		{
@@ -384,19 +385,19 @@ void PIDCalc(int Sv,int Pv)
 				b_start_pid=1;
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = zero_period_low_time/10;
+				scr_curr_time = 4300;//zero_period_low_time/4; //17200 //不能这样用，可以给固定值
 			}
-			else
-			{
-				//20000/270=74
-		
-				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time = scr_curr_time - Out*74;
-				if(scr_curr_time<1)
-				{
-					scr_curr_time=0;
-				}
-			}
+//			else
+//			{
+//				//20000/270=74
+//		
+//				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
+//				scr_curr_time = scr_curr_time - Out*74;  //Out=50 Out*74=3700
+//				if(scr_curr_time<1)
+//				{
+//					scr_curr_time=0;
+//				}
+//			}
 		}
 	}
 	else if(Out<0)

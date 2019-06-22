@@ -155,8 +155,8 @@ int get_temp_table(uint nADValue, int* temp)
 *****************************************************/
 int ADC_Convert(void)
 {
-    float volta = 0.0;
-    int Rntc=50000;
+    //float volta = 0.0;
+//    int Rntc=50000;
     uint Tad=0;
     uint MinAd=0x0fff,MaxAd=0x0000,TempAdd=0;
     uchar t=0;
