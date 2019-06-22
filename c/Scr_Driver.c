@@ -8,7 +8,7 @@
 	*以下四项是需要根据实际情况调试的
 	******************/
 	//15.6msMS计算一次 计算周期
-#define pidt   0.0156
+#define pidt   0.5
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
 //#define  Kp   (5/10)    //一定不能这样用，keil 不支持
 //积分时间
@@ -124,16 +124,61 @@ void Zero_Crossing_EX2_Handle()
 			//定时器关闭
 			//TR1 = 0;
 			
-			if(ZERO==1)
+			if(scr_curr_time==0)
 			{
-				scr_open_time_max=zero_period_high_time;
+				//全功率
+				HEAT_TRA=1;
+				
+				//定时器关闭
+				TR1 = 0;
+			}			
+			else if(scr_curr_time==zero_period_high_time)
+			{				
+				//无功率
+				if(HEAT_TRA!=0)
+					HEAT_TRA=0;
+		
+				//定时器关闭
+				if(TR1!=0)
+					TR1 = 0;
 			}
 			else
 			{
-				scr_open_time_max=zero_period_low_time;
-			}			
+				if(ZERO==1)
+				{
+					scr_open_time_max=zero_period_high_time;
+				}
+				else
+				{
+					scr_open_time_max=zero_period_low_time;
+				}	
+				
+				//scr_open_time /= 2;//37度
+
+				if(scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
+				{
+					if(scr_open_time != scr_curr_time)
+					{
+						scr_open_time=scr_curr_time;
+					}
+		
+					Timer_Init();
+				}
+				else
+				{
+					HEAT_TRA=0;
+					
+					//定时器关闭
+					TR1 = 0;
+					
+					//scr_open_time=scr_open_time_max-zero_peroid_last_time;
+				}				
+			}
+		}
 			
 			
+			
+	/*		
 			
 //		 scr_open_time=scr_open_time_max-zero_peroid_last_time;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 ////		 scr_curr_time=scr_open_time_max-zero_peroid_last_time;//20000;//6;
@@ -171,10 +216,11 @@ void Zero_Crossing_EX2_Handle()
 					//定时器关闭
 					TR1 = 0;
 					
-					scr_open_time=scr_open_time_max-zero_peroid_last_time;
+					//scr_open_time=scr_open_time_max-zero_peroid_last_time;
 				}
 			}
     }
+		*/
  /*   if(HALL_LLJ == 1) //INT25 P21 水流检测计数
     {
 
@@ -324,6 +370,9 @@ void PIDCalc(int Sv,int Pv)
 	int target_temp=Sv*10;
 	int curr_temp=Pv*10;
 	
+	int Out=target_temp-curr_temp;
+	
+	/*
 //	int pid_max=40;
 		
 	int DERR1 = 0;       //
@@ -370,7 +419,7 @@ void PIDCalc(int Sv,int Pv)
 	ERR2 = ERR1;    //记录误差
 	ERR1 = ERR;     //记录误差
 	
-	
+	*/
 	
 	
 	//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
@@ -399,14 +448,14 @@ void PIDCalc(int Sv,int Pv)
 		
 		printf("222");
 		
-//		if(HEAT_TRA!=0)
-//		HEAT_TRA=0;
-//		
-//		//定时器关闭
-//		if(TR1!=0)
-//		TR1 = 0;
+		if(HEAT_TRA!=0)
+		HEAT_TRA=0;
 		
-		scr_curr_time=scr_open_time_max-zero_peroid_last_time;
+		//定时器关闭
+		if(TR1!=0)
+		TR1 = 0;
+		
+		scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
 	}
 	else
 	{
