@@ -8,7 +8,7 @@
 void Uart0_Init(void);
 void UartInt_Handle();
 void Uart_Process();
-void UART_SentChar(uchar chr);
+//void UART_SentChar(uchar chr);
 //void UART_SendString(uchar *str);
 
 bit UartSendFlag = 0; //发送中断标志位
@@ -129,7 +129,7 @@ void Uart_Process()
 			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
 			if(water_flow_flag == 2 && heater_relay_on==0)
 			{
-				b_start_pid==false;
+				b_start_pid=false;
 				
 				heater_relay_on=1;
 				Scr_Driver_Control_Heat_RLY(heater_relay_on);				
@@ -223,17 +223,17 @@ void UartInt_Handle()
 	}	
 }
 
-void UART_SentChar(uchar chr)
-{
-  //发送一个字节
-//  SBUF = chr;
-//  while( TI == 0);
-//  TI = 0;
-	
-	SBUF = chr;
-	while(!UartSendFlag);
-	UartSendFlag = 0;
-}
+//void UART_SentChar(uchar chr)
+//{
+//  //发送一个字节
+////  SBUF = chr;
+////  while( TI == 0);
+////  TI = 0;
+//	
+//	SBUF = chr;
+//	while(!UartSendFlag);
+//	UartSendFlag = 0;
+//}
 
 //void UART_SendString(uchar *str)
 //{
