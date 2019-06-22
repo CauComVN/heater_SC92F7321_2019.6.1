@@ -34,6 +34,8 @@
 //HEAT ERROR 为输入端，如果等于高电平，表明热水器温度过高
 //如果为低电平，表明热水器温度在正常范围内
 
+uchar heater_power_status=0; // 0:无功率 1：全功率
+
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
 bit heater_relay_on=0;
 
@@ -133,7 +135,7 @@ void Zero_Crossing_EX2_Handle()
 			//定时器关闭
 			//TR1 = 0;
 			
-			if(scr_curr_time==0)
+			if(heater_power_status==1)
 			{
 				//全功率
 				if(HEAT_TRA!=1)
@@ -143,7 +145,7 @@ void Zero_Crossing_EX2_Handle()
 				if(TR1!=0)
 					TR1 = 0;
 			}			
-			else if(scr_curr_time==zero_period_high_time)
+			else if(heater_power_status==0)
 			{				
 				//无功率
 				if(HEAT_TRA!=0)
@@ -375,7 +377,12 @@ void PIDCalc(int Sv,int Pv)
 		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
 		{
 			if(scr_curr_time!=0)
-				scr_curr_time=0;
+			{
+				if(scr_curr_time!=0)
+					scr_curr_time=0;
+				if(heater_power_status!=1)
+					heater_power_status=1;//
+			}
 		}
 		else
 		{
@@ -413,7 +420,8 @@ void PIDCalc(int Sv,int Pv)
 		if(TR1!=0)
 			TR1 = 0;
 		
-		scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
+		if(heater_power_status!=0)
+			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
 	}
 	else
 	{
