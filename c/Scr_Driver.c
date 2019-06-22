@@ -16,6 +16,10 @@
 //微分时间
 #define  Td 600 
 
+//55*10-28*10=270
+#define Upper_Limit  270
+//如果出水温度超过预设温度，可控硅无功率运行
+#define Lower_Limit  -1
 
 
 //INT24 P20 ZERO
@@ -33,12 +37,16 @@
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
 bit heater_relay_on=0;
 
+bit b_start_pid=false;
+
 ////热水器内部异常状态
 Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
 int idata best_temp_out=37;
 int  current_out_temp=28; //当前出水温度
+
+int idata scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
 
 
 
@@ -153,7 +161,7 @@ void Zero_Crossing_EX2_Handle()
 					scr_open_time_max=zero_period_low_time;
 				}	
 				
-				//scr_open_time /= 2;//37度
+				//scr_open_time = scr_open_time_max/2;//37度
 
 				if(scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
 				{
@@ -170,57 +178,10 @@ void Zero_Crossing_EX2_Handle()
 					
 					//定时器关闭
 					TR1 = 0;
-					
-					//scr_open_time=scr_open_time_max-zero_peroid_last_time;
 				}				
 			}
 		}
-			
-			
-			
-	/*		
-			
-//		 scr_open_time=scr_open_time_max-zero_peroid_last_time;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-////		 scr_curr_time=scr_open_time_max-zero_peroid_last_time;//20000;//6;
-//			
-////			scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-////			scr_curr_time=0;//8600;//20000;//6;
-//			
-//			scr_open_time /= 2;//37度
-			
-			//开头
-			if(scr_curr_time==0)
-			{
-				//全功率
-				HEAT_TRA=1;
-				
-				//定时器关闭
-				TR1 = 0;
-			}
-			else
-			{
-				//末尾
-				if(scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
-				{
-					if(scr_open_time != scr_curr_time)
-					{
-						scr_open_time=scr_curr_time;
-					}
 		
-					Timer_Init();
-				}
-				else
-				{
-					HEAT_TRA=0;
-					
-					//定时器关闭
-					TR1 = 0;
-					
-					//scr_open_time=scr_open_time_max-zero_peroid_last_time;
-				}
-			}
-    }
-		*/
  /*   if(HALL_LLJ == 1) //INT25 P21 水流检测计数
     {
 
@@ -266,32 +227,6 @@ void Scr_Driver_Control_Heat_RLY(int on)
 	soft_delay(48000); // (1+1+（1+2）*48000)*0.5us=72001us=72.001ms
 }
 
-//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-//void Scr_Driver_power_Adjust(uint flag)
-//{	
-//	if(flag==1 || flag==2)
-//	{		
-//		if(flag==1){ //增加功率
-//			scr_curr_time -= scr_adjust_step;
-//			if(scr_curr_time<1)
-//			{
-//				scr_curr_time=0;
-//			}
-//		}
-//		else if(flag==2) //减少功率
-//		{
-//			scr_curr_time += scr_adjust_step;
-//			if(scr_curr_time>=scr_open_time_max/scr_adjust_step)
-//			{
-//				scr_curr_time=scr_open_time_max;
-//			}
-//		}		
-
-//		//串口打印log，调试。。。
-//		//UART_SentChar(scr_curr_time);
-//	}
-//	
-//}
 
 //软件延时 https://blog.csdn.net/nanfeibuyi/article/details/83577641 
 /*
@@ -370,11 +305,8 @@ void PIDCalc(int Sv,int Pv)
 	int target_temp=Sv*10;
 	int curr_temp=Pv*10;
 	
-	int Out=target_temp-curr_temp;
-	
-	/*
-//	int pid_max=40;
-		
+	//int Out=target_temp-curr_temp;
+			
 	int DERR1 = 0;       //
 	int DERR2 = 0;       //
 
@@ -397,7 +329,7 @@ void PIDCalc(int Sv,int Pv)
 //	static uint Lower_Limit= 0; //PID输出下限
 	
 	
-	 ERR = Sv - Pv;   //算出当前误差
+	 ERR = target_temp - curr_temp;   //算出当前误差
 	DERR1 = ERR - ERR1;   //上次
 	
 	//DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
@@ -414,33 +346,54 @@ void PIDCalc(int Sv,int Pv)
 	Out = Out+ Iout;
 	Out = Out+ Dout;
 	
+	if(Out >= Upper_Limit) { //如果输出大于等于上限
+		Out = Upper_Limit;
+	} 
+	else if(Out <= Lower_Limit) { //如果输出小于等于下线
+		Out = Lower_Limit;
+	}
+	
 	Out1 = Out;      //记录这次输出的值
 
 	ERR2 = ERR1;    //记录误差
 	ERR1 = ERR;     //记录误差
 	
-	*/
-	
-	
-	//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
-	//Out = -Out;
-	
-//	if(Out>pid_max)
-//	{
-//		Out=pid_max;
-//	}
-//	else if(Out<-pid_max)
-//	{
-//		Out=-pid_max;
-//	}
-	
+	/**/
+			
 	if(Out>0)
 	{
 		printf("111");
-		//UART_SentChar(0x55);
 		
-		if(scr_curr_time!=0)
-		scr_curr_time=0;// -= Out*200;  // 20000/100=200
+		//偏差大于2度为上限幅值输出(全速加热)
+		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
+		{
+			if(scr_curr_time<1)
+			{
+				scr_curr_time=0;
+			}
+		}
+		else
+		{
+			//PID算法控制
+			if(b_start_pid==false)
+			{
+				b_start_pid=true;
+				
+				//全功率调整80% 功率调节是相反的 (100-80)/100=1/5
+				scr_curr_time = zero_period_low_time/5;
+			}
+			else
+			{
+				//20000/270=74
+		
+				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
+				scr_curr_time -= Out*74;
+				if(scr_curr_time<1)
+				{
+					scr_curr_time=0;
+				}
+			}
+		}
 	}
 	else if(Out<0)
 	{
@@ -449,11 +402,11 @@ void PIDCalc(int Sv,int Pv)
 		printf("222");
 		
 		if(HEAT_TRA!=0)
-		HEAT_TRA=0;
+			HEAT_TRA=0;
 		
 		//定时器关闭
 		if(TR1!=0)
-		TR1 = 0;
+			TR1 = 0;
 		
 		scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
 	}
@@ -461,98 +414,4 @@ void PIDCalc(int Sv,int Pv)
 	{
 		printf("333");
 	}
-	
-	
-//	if(scr_curr_time<1)
-//	{
-//		scr_curr_time=0;
-//	}
-//	if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
-//	{
-//		scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
-//	}
-	
-	/*
-					//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-					
-					//0 --- 20000  42度-28度=14度 20000/14=1428.57
-									
-					//设定值大于实际值否？
-					//偏差大于2为上限幅值输出(全速加热)
-					if(best_temp_out-current_out_temp>2) ////偏差大于2?
-					{
-						scr_open_time=0;//8600;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-						scr_curr_time=0;
-					}
-					else{
-						//先乘100，避免浮点运算
-						int best=best_temp_out*100;
-						int curr=current_out_temp*100;
-						pidret=PIDCalc(best,curr);
-						//pidret=PIDCalc(best_temp_out,current_out_temp);//0可以
-						
-						pidret=14*pidret;//取十分之一来算，不然数据太大，溢出了
-						
-						//一定要取负的，因为功率调节是相反的，scr_curr_time越小，功率越大
-						pidret = -pidret;
-						
-						scr_curr_time += pidret;
-						if(scr_curr_time<1)
-						{
-							scr_curr_time=0;
-						}
-						if(scr_curr_time>=(scr_open_time_max-zero_peroid_last_time))
-						{
-							scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
-						}
-					}
-						
-						
-						
-						
-
-
-//	if(pidtimer < pidt)     //计算周期   pidtimer可以用定时器计时
-//		return ;  //
-
-	ERR = Sv - Pv;   //算出当前误差
-	DERR1 = ERR - ERR1;   //上次
-	
-	//DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
-	DERR2= ERR  + ERR2;
-	DERR2= DERR2 - ERR1;
-	DERR2= DERR2 - ERR1;
-	
-	
-
-//	Pout = Kp * DERR1;    //输出P
-//	Iout = (float)(ERR * ((Kp * pidt) / Ti));  //输出I
-//	Dout = (float)(DERR2 * ((Kp * Td) / pidt));   //输出D
-//	Out = (unsigned int)(Out1 + Pout + Iout + Dout);
-	
-	//先Kp
-	Pout = DERR1*Kp;    //输出P
-	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = 0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
-	//Out = (int)(Out1 + Pout + Iout + Dout);
-	Out = Out1+ Pout;
-	Out = Out+ Iout;
-	Out = Out+ Dout;
-	
-
-//	if(Out >= Upper_Limit) { //如果输出大于等于上限
-//		Out = Upper_Limit;
-//	} 
-//	else if(Out <= Lower_Limit) { //如果输出小于等于下线
-//		Out = Lower_Limit;
-//	}
-	Out1 = Out;      //记录这次输出的值
-
-	ERR2 = ERR1;    //记录误差
-	ERR1 = ERR;     //记录误差
-//	pidtimer = 0;   //定时器清零重新计数
-
-	return Out;
-	
-	*/
 }
