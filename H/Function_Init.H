@@ -130,6 +130,8 @@ extern int  idata  water_flow_flag;
 
 extern int idata best_temp_out;
 
+extern bit b_start_pid;
+
 extern int current_out_temp; //当前出水温度
 
 
