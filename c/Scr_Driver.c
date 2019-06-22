@@ -378,11 +378,10 @@ void PIDCalc(int Sv,int Pv)
 		{
 			if(scr_curr_time!=0)
 			{
-				if(scr_curr_time!=0)
-					scr_curr_time=0;
-				if(heater_power_status!=1)
-					heater_power_status=1;//
+				scr_curr_time=0;				
 			}
+			if(heater_power_status!=1)
+					heater_power_status=1;//
 		}
 		else
 		{
@@ -392,19 +391,22 @@ void PIDCalc(int Sv,int Pv)
 				b_start_pid=1;
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = 4300;//zero_period_low_time/4; //17200 //不能这样用，可以给固定值
+				scr_curr_time = zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 			}
-//			else
-//			{
-//				//20000/270=74
-//		
-//				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-//				scr_curr_time = scr_curr_time - Out*74;  //Out=50 Out*74=3700
-//				if(scr_curr_time<1)
-//				{
-//					scr_curr_time=0;
-//				}
-//			}
+			else
+			{
+				//20000/270=74
+		
+				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
+				scr_curr_time = scr_curr_time - Out*74;  //Out=50 Out*74=3700
+				if(scr_curr_time<1)
+				{
+					if(scr_curr_time!=0)
+					{
+						scr_curr_time=0;				
+					}
+				}
+			}
 		}
 	}
 	else if(Out<0)
@@ -427,4 +429,6 @@ void PIDCalc(int Sv,int Pv)
 	{
 		printf("333\n");
 	}
+	
+	printf("%d\n",scr_curr_time);
 }
