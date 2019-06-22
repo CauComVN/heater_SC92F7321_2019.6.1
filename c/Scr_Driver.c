@@ -390,6 +390,7 @@ void PIDCalc(int Sv,int Pv)
 		printf("111");
 		//UART_SentChar(0x55);
 		
+		if(scr_curr_time!=0)
 		scr_curr_time=0;// -= Out*200;  // 20000/100=200
 	}
 	else if(Out<0)
@@ -398,12 +399,14 @@ void PIDCalc(int Sv,int Pv)
 		
 		printf("222");
 		
-		HEAT_TRA=0;
+//		if(HEAT_TRA!=0)
+//		HEAT_TRA=0;
+//		
+//		//定时器关闭
+//		if(TR1!=0)
+//		TR1 = 0;
 		
-		//定时器关闭
-		TR1 = 0;
-		
-		scr_curr_time=(scr_open_time_max-zero_peroid_last_time);
+		scr_curr_time=scr_open_time_max-zero_peroid_last_time;
 	}
 	else
 	{
