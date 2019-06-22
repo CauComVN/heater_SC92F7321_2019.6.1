@@ -70,7 +70,7 @@ void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
 //HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少
 //void Scr_Driver_PWM_Adjust(uint flag);
 
-uchar Zero_Crossing_INT1_flag = 0x00;
+//uchar Zero_Crossing_INT1_flag = 0x00;
 /*****************************************************
 *函数名称：void EXTI_Test(void)
 *函数功能：外部中断测试
