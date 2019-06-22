@@ -159,6 +159,7 @@ sbit	可寻址位	0或1
 		return c;
 	}
 
+15. keil mdk中，#define tt (5/100)  ====>>>> 不能这样用，会导致计算错误
 
 PID控制算法的C语言实现
 18.http://www.sohu.com/a/298859329_257861

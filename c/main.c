@@ -96,11 +96,11 @@ void main(void)
 				
 				//UART_SentChar(current_out_temp);
 				
-				//printf("%d\n",current_out_temp);
+				printf("%d\n",current_out_temp);
 				
 				PIDCalc(best_temp_out, current_out_temp);
 				
-				printf("%d\n",current_out_temp);
+				
 			
 //				if(ret==-1) { //通知检测温度异常，超过最低温度，发送主板BEEP报警
 //						ex_flag=Ex_Out_Water_Temp_Low;
