@@ -113,9 +113,6 @@ typedef enum Heater_Exception
 		Ex_Thermal_Switch_Error,
 } Enum_Ex_Flag;
 
-//下位机热水器通信协议接收到的命令协议数据
-//extern uchar heater_receive_data;
-
 //当前热水器运行或停止状态 继电器动作 0：停止 1：运行
 extern bit heater_relay_on;
 
@@ -132,21 +129,6 @@ extern bit b_start_pid;
 
 extern int current_out_temp; //当前出水温度
 
-
-//extern uint current_PWMDTY1; //当前功率调节PWM占空比
-
-//extern uint duty_app_time; //9ms
-//extern uint max_pwm_duty; //10ms 50Hz市电半个周期内9ms内最大PWM周期数目
-//extern uint step_app_duty; //0 -- 180 调节步长
-//extern uint curr_app_duty; //0 -- 180
-//extern uint max_app_duty; //0 -- 180
-//extern uint low_pwm_duty_cout; //low_pwm_duty_cout个PWM周期数目为低电平
-//extern uint curr_low_pwm_duty_count;
-
-//extern uint time2_count;
-//extern int time2_curr;
-//extern uint time2_count_max;
-
 extern uint idata scr_open_time_max;
 extern uint idata scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 extern bit scr_open_flag;//可控硅开通标志 用于关断定时器 关断可控硅
@@ -155,8 +137,6 @@ extern volatile  uint   scr_curr_time;
 extern void IO_Init(void);
 
 //extern void EXTI_Test(void);
-//extern void Timer_Test(void);
-//extern void LCD_Test(void);
 //extern void EX_Init(void);
 
 //extern void Uart0_Test(void);
@@ -168,8 +148,6 @@ extern int get_temp_table(uint nADValue, int* temp);
 //软件延时
 extern void soft_delay(uint n);
 
-//extern void Scr_Driver_PWM_Test(void);
-//extern void Scr_Driver_PWM_Init(void);
 extern int  Scr_Driver_Check_Insurance();//检测温度保险
 extern void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
 //extern void Zero_Crossing_EXTI_Test(void);
@@ -200,14 +178,9 @@ extern void ADC_Interrupt_Handle(void);
 extern void Water_Detection_EX2_Handle();
 extern void Water_Detection_Timer0_Handle();
 extern void Zero_Crossing_EX2_Handle();
-//extern void Scr_Driver_PWMInt_Handle();
-//extern void Serial_Key_EX0_Handle();
 extern void EX1_Handle();
 extern void UartInt_Handle();
 extern void Timer1Int_Handle();
 extern void Leakage_EX0_Handle(void);
-
-//extern void Serial_Key_Init(void);
-//extern void Serial_Key_Test(void);
 
 #endif
