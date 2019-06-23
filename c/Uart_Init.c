@@ -81,13 +81,7 @@ void Uart_Process()
 	
 		//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 		if(SBUF == 0x01)
-		{
-			//Scr_Driver_PWM_Adjust(1);	
-			
-//				time2_curr=1;
-			
-			//Scr_Driver_power_Adjust(1);
-			
+		{				
 			best_temp_out=best_temp_out+1;
 			if(best_temp_out>good_temp_out_high)
 			{
@@ -102,13 +96,7 @@ void Uart_Process()
 			UartSendFlag = 0;
 		}
 		if(SBUF == 0x02)
-		{
-			//Scr_Driver_PWM_Adjust(2);
-			
-			//time2_curr=0;			
-
-			//Scr_Driver_power_Adjust(2);
-			
+		{				
 			best_temp_out=best_temp_out-1;
 			if(best_temp_out<good_temp_out_low)
 			{

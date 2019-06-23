@@ -150,29 +150,23 @@ extern int current_out_temp; //当前出水温度
 extern uint idata scr_open_time_max;
 extern uint idata scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 extern bit scr_open_flag;//可控硅开通标志 用于关断定时器 关断可控硅
-//extern uint scr_adjust_step; //1us
 extern volatile  uint   scr_curr_time;
 //volatile
 extern void IO_Init(void);
-//extern void BTM_Test(void);
+
 //extern void EXTI_Test(void);
 //extern void Timer_Test(void);
 //extern void LCD_Test(void);
 //extern void EX_Init(void);
 
 //extern void Uart0_Test(void);
-//extern void ADC_Test(void);
-//extern void IAP_Test(uint Address,uchar IAPArea);
 
 extern void ADC_Init(uint Channel);
 extern int ADC_Convert(void);
-extern void ADC_channel(unsigned char channel);
 extern int get_temp_table(uint nADValue, int* temp);
 
 //软件延时
 extern void soft_delay(uint n);
-//extern void delay_1ms(uint x);
-//extern void delay(uint n);
 
 //extern void Scr_Driver_PWM_Test(void);
 //extern void Scr_Driver_PWM_Init(void);
@@ -188,14 +182,10 @@ extern void Water_Detection_Timer_Init(void);
 
 extern void Leakage_EX_Init(void);
 
-//HEAT TRA  功率调节方式 flag 0:不用调节 1：增加功率 2：减少功率
-//extern void Scr_Driver_power_Adjust(uint flag);
-
 // Sv设定温度值  Pv当前温度值
 extern void PIDCalc(int Sv,int Pv);
 
 extern void BTM_Init(void);
-//extern void BTM_Test(void);
 extern  bit b_btm_int_flag;
 
 extern void Timer_Init(void);

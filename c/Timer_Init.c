@@ -3,8 +3,6 @@
 uint  idata  scr_open_time_max=zero_period_high_time;
 uint idata scr_open_time=0;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 bit scr_open_flag=0;//可控硅开通标志 用于关断定时器 关断可控硅
-//uint scr_adjust_step=2; //1us
-
 
 void Timer_Init(void);
 /*****************************************************
