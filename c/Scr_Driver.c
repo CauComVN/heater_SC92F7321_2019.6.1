@@ -34,7 +34,7 @@
 //HEAT ERROR 为输入端，如果等于高电平，表明热水器温度过高
 //如果为低电平，表明热水器温度在正常范围内
 
-uchar heater_power_status=0; // 0:无功率 1：全功率
+volatile uchar heater_power_status=0; // 0:无功率 1：全功率
 
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
 bit heater_relay_on=0;
