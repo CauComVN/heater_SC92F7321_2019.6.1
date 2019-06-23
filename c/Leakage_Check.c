@@ -44,7 +44,7 @@ void Leakage_EX_Init(void)
 	IE  |= 0x01;	//0000 0x0x  INT0Ê¹ÄÜ
 	IP  |= 0X00;
 	
-	EA = 1;
+//	EA = 1;
 }
 
 void Leakage_EX0_Handle(void)

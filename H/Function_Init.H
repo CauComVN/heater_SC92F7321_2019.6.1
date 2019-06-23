@@ -114,25 +114,25 @@ typedef enum Heater_Exception
 } Enum_Ex_Flag;
 
 //当前热水器运行或停止状态 继电器动作 0：停止 1：运行
-extern bit heater_relay_on;
+extern volatile  bit heater_relay_on;
 
 //热水器内部异常状态
 extern Enum_Ex_Flag idata ex_flag;
 
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-extern int  idata  water_flow_flag;
+extern volatile  int  idata  water_flow_flag;
 
 
 extern int idata best_temp_out;
 
-extern bit b_start_pid;
+extern volatile bit b_start_pid;
 
-extern int current_out_temp; //当前出水温度
+extern volatile  uchar current_out_temp; //当前出水温度
 
 extern uint idata scr_open_time_max;
 extern uint idata scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
-extern bit scr_open_flag;//可控硅开通标志 用于关断定时器 关断可控硅
-extern volatile  uint   scr_curr_time;
+
+//extern volatile  int   scr_curr_time;
 //volatile
 extern void IO_Init(void);
 
@@ -143,7 +143,7 @@ extern void IO_Init(void);
 
 extern void ADC_Init(uint Channel);
 extern int ADC_Convert(void);
-extern int get_temp_table(uint nADValue, int* temp);
+extern int get_temp_table(uint nADValue, uchar* temp);
 
 //软件延时
 extern void soft_delay(uint n);
@@ -164,7 +164,7 @@ extern void Leakage_EX_Init(void);
 extern void PIDCalc(int Sv,int Pv);
 
 extern void BTM_Init(void);
-extern  bit b_btm_int_flag;
+extern volatile   bit b_btm_int_flag;
 
 extern void Timer_Init(void);
 

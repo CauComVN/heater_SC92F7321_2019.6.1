@@ -37,18 +37,18 @@
 volatile uchar heater_power_status=0; // 0:无功率 1：全功率
 
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
-bit heater_relay_on=0;
+ volatile bit heater_relay_on=0;
 
-bit b_start_pid=0;
+volatile bit b_start_pid=0;
 
 ////热水器内部异常状态
 Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
 int idata best_temp_out=37;
-int  current_out_temp=28; //当前出水温度
+volatile uchar  current_out_temp=28; //当前出水温度
 
-volatile uint  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
+volatile int  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
 
 
 
@@ -146,7 +146,7 @@ void Zero_Crossing_EX2_Handle()
 				
 				//scr_open_time = scr_open_time_max/2;//37度
 
-				if(scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
+				if(scr_curr_time>0 && scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
 				{
 					if(scr_open_time != scr_curr_time)
 					{
@@ -296,7 +296,7 @@ void PIDCalc(int Sv,int Pv)
 	
 	/**/
 	
-	//printf("%d\n",Out);
+	printf("%d\n",Out);
 			
 	if(Out>0)
 	{

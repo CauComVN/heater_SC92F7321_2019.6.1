@@ -1,7 +1,7 @@
 #include "H/Function_Init.H"
 #include <math.h>
 
-bit b_btm_int_flag=0;
+volatile bit b_btm_int_flag=0;
 
 void BTM_Init(void);
 
@@ -22,7 +22,7 @@ void BTM_Init(void)
 	BTMCON = 0x85;	//每0.5s产生一个中断
 //	BTMCON = 0x86;	//每1s产生一个中断
 //	BTMCON = 0x87;	//每2s产生一个中断
-	EA = 1;           //开启总中断
+	//EA = 1;           //开启总中断
 	IE1 |= 0x04;       //开启BTM中断
 }
 

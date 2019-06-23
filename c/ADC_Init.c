@@ -5,13 +5,13 @@
 #include "ADC.h"
 
 void ADC_Init(uint Channel);
-bit AdcFlag = 0;
+volatile bit AdcFlag = 0;
 
 void ADC_Init(uint Channel);
 int ADC_Convert(void);
 void ADC_Interrupt_Handle(void);
 
-int get_temp_table(uint nADValue, int* temp);
+int get_temp_table(uint nADValue, uchar* temp);
 
 
 ////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ void ADC_Init(uint Channel)
         ADCCFG1 = 1<<(Channel-8);   //设置Channel作为采样口
     }
     IE |= 0X40;        //开启ADC中断
-    EA = 1;
+//    EA = 1;
 }
 
 void ADC_Interrupt_Handle(void)
@@ -69,7 +69,7 @@ int search(uint arry[],uint n,uint key)
     return 0;
 }
 
-int get_temp_table(uint nADValue, int* temp)
+int get_temp_table(uint nADValue, uchar* temp)
 {
     uint Rntc=50;//常温
 	

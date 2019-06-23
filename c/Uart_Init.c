@@ -168,7 +168,7 @@ void Uart0_Init(void)    //选择Timer1作为波特率信号发生器
 	ET1 = 0;		 //Timer1使能
 	TR1 = 1;		 //启动Timer0
 	EUART = 1;	     //允许UART中断
-	EA = 1;		     //开总中断
+//	EA = 1;		     //开总中断
 }
 */
 
@@ -187,7 +187,7 @@ void Uart0_Init(void)    //选择Timer2作为波特率信号发生器
 	ET2 = 0;
 	TR2 = 1;
 	EUART = 1;     //开启Uart0中断
-	EA = 1;
+//	EA = 1;
 }
 
 

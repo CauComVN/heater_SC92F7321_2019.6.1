@@ -74,6 +74,9 @@ void IO_Init(void)
 //	P0CON = P0CON&0xf7; //设置P03为输入模式
 //	P0PH  = P0PH&0xf7;	//高阻输入模式，上拉电阻关闭
 //	P0VO = P0VO&0xf7; //P03端口设置成普通I/O口 轮询方式
+
+
+	EA = 1;           //开启总中断
 	#endif
 	
 	#if (IC_MODEL == SC92F7320)  //SC92F7320引脚定义
