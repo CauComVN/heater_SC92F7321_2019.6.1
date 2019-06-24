@@ -296,9 +296,12 @@ void PIDCalc(int Sv,int Pv)
 	
 	printf("%d\n",Out);	
 	
+	//关闭过零中断
+	IE1 &= 0xf7;	//0000 x000  INT2关闭
+	
 	if(Out>0)
 	{
-		printf("111\n");
+		//printf("111\n");
 		
 		if(ERR>2)
 		{
@@ -329,18 +332,21 @@ void PIDCalc(int Sv,int Pv)
 				}
 			}
 		}
-		printf("%d\n",scr_curr_time);
+		//printf("%d\n",scr_curr_time);
 		/**/
 	}
 	else if(Out<0)
 	{		
-		printf("222\n");
+		//printf("222\n");
 		
 		if(heater_power_status!=0)
 			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
 	}
 	else
 	{
-		printf("333\n");
+		//printf("333\n");
 	}
+	
+	//开启过零中断
+	IE1 |= 0x08;	//0000 x000  INT2使能
 }
