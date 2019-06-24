@@ -80,7 +80,7 @@ void main(void)
 
                 //UART_SentChar(current_out_temp);
 
-                printf("%%bd\n",current_out_temp);
+                printf("%bd\n",current_out_temp);
 
                 PIDCalc(best_temp_out, current_out_temp);
 

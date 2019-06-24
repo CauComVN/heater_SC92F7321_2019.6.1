@@ -113,6 +113,8 @@ void Zero_Crossing_EX2_Handle()
 			//定时器关闭
 			//TR1 = 0;
 			
+			//heater_power_status=1;
+			
 			if(heater_power_status==1)
 			{
 				//scr_curr_time=0;
@@ -273,6 +275,7 @@ void PIDCalc(int Sv,int Pv)
 	
 	
 	 ERR = target_temp - curr_temp;   //算出当前误差
+	 /*
 	DERR1 = ERR - ERR1;   //上次
 	
 	//DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
@@ -301,9 +304,11 @@ void PIDCalc(int Sv,int Pv)
 	ERR2 = ERR1;    //记录误差
 	ERR1 = ERR;     //记录误差
 	
-	/**/
+	*/
 	
-	Out=Out/10;
+	//Out=Out/10;
+	
+	Out=ERR;
 	
 	printf("%d\n",Out);
 			
@@ -312,8 +317,12 @@ void PIDCalc(int Sv,int Pv)
 	
 	if(Out>0)
 	{
-		//printf("111\n");
+		printf("111\n");
 		
+		if(heater_power_status!=1)
+					heater_power_status=1;
+		
+		/*
 		//偏差大于2度为上限幅值输出(全速加热)
 		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
 		{
@@ -349,12 +358,14 @@ void PIDCalc(int Sv,int Pv)
 				}
 			}
 		}
+		printf("%d\n",scr_curr_time);
+		*/
 	}
 	else if(Out<0)
 	{
 		//UART_SentChar(0x57);
 		
-		//printf("222\n");
+		printf("222\n");
 		
 //		if(HEAT_TRA!=0)
 //			HEAT_TRA=0;
@@ -368,8 +379,8 @@ void PIDCalc(int Sv,int Pv)
 	}
 	else
 	{
-		//printf("333\n");
+		printf("333\n");
 	}
 	
-	printf("%d\n",scr_curr_time);
+	
 }
