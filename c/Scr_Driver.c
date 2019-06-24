@@ -297,7 +297,7 @@ void PIDCalc(int Sv,int Pv)
 	printf("%d\n",Out);	
 	
 	//关闭过零中断
-	IE1 &= 0xf7;	//0000 x000  INT2关闭
+	//IE1 &= 0xf7;	//0000 x000  INT2关闭
 	
 	if(Out>0)
 	{
@@ -348,5 +348,5 @@ void PIDCalc(int Sv,int Pv)
 	}
 	
 	//开启过零中断
-	IE1 |= 0x08;	//0000 x000  INT2使能
+	//IE1 |= 0x08;	//0000 x000  INT2使能
 }
