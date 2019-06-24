@@ -130,10 +130,10 @@ void Zero_Crossing_EX2_Handle()
 							HEAT_TRA=1;
 					//}			
 			
-					if(scr_open_time != scr_tune_time)
-					{
+					//if(scr_open_time != scr_tune_time)
+					//{
 						scr_open_time=scr_tune_time;
-					}
+					//}
 		
 					
 					scr_open_flag=0;		
