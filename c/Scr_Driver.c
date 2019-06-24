@@ -43,6 +43,8 @@ volatile int  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
 
 volatile int  scr_tune_time=0;
 
+volatile uchar leakage_flag=0;
+
 //int idata Out1=0;  //记录上次输出
 
 //int idata ERR=0;       //当前误差
@@ -91,6 +93,8 @@ void Zero_Crossing_EX_Init(void)
 void Zero_Crossing_EX2_Handle()
 {	
 	
+	leakage_flag=1;
+	/*
 //	{
 			if(heater_power_tune==1)
 			{				
@@ -153,7 +157,7 @@ void Zero_Crossing_EX2_Handle()
 //				}				
 //			}
 		}
-	
+	*/
 	/*
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，上升沿中断，所以端口电平是1
     //if(ZERO == 1) //INT24 P20 ZERO 过零检测到零点

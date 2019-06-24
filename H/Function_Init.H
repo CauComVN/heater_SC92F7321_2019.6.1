@@ -145,6 +145,10 @@ extern int idata best_temp_out;
 
 extern volatile bit b_start_pid;
 
+extern volatile uchar leakage_flag;
+extern volatile uchar heater_power_tune;
+extern volatile int  scr_tune_time;
+
 extern volatile  uchar current_out_temp; //当前出水温度
 
 extern uint idata scr_open_time_max;

@@ -88,6 +88,77 @@ void main(void)
 
                 b_btm_int_flag=0;
             }
+						
+						
+						
+		if(leakage_flag==1)
+		{
+			leakage_flag=0;
+			
+			if(heater_power_tune==1)
+			{				
+				//全功率
+				//if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+				
+				//定时器关闭
+				//if(TR1!=0)
+					TR1 = 0;
+			}			
+			else if(heater_power_tune==0)
+			{				
+				//无功率
+				//if(HEAT_TRA!=0)
+					HEAT_TRA=0;
+		
+				//定时器关闭
+				//if(TR1!=0)
+					TR1 = 0;
+			}
+			else
+			{
+				if(ZERO==1)
+				{
+					scr_open_time_max=zero_period_high_time;
+				}
+				else
+				{
+					scr_open_time_max=zero_period_low_time;
+				}					
+				
+				//if(scr_tune_time>0 && scr_tune_time<=(scr_open_time_max-zero_peroid_last_time))
+				//{
+					//if(HEAT_TRA!=1)
+					//{
+							HEAT_TRA=1;
+					//}			
+			
+					//if(scr_open_time != scr_tune_time)
+					//{
+						scr_open_time=scr_tune_time;
+					//}
+		
+					
+					scr_open_flag=0;		
+					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+					TH1 = (65536 - scr_open_time)/256;
+					TR1 = 1;//打开定时器0
+					//Timer_Init();
+				//}
+//				else
+//				{
+//					if(HEAT_TRA!=0)
+//						HEAT_TRA=0;
+//					
+//					//定时器关闭
+//					if(TR1!=0)
+//						TR1 = 0;
+//				}				
+//			}
+		}
+	}
+	
+		
 
             //串口接收到数据，处理
             Uart_Process();
