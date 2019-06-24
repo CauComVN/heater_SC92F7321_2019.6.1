@@ -40,7 +40,7 @@ volatile uchar  current_out_temp=28; //当前出水温度
 
 volatile int  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
 
-
+volatile int  scr_tune_time=0;
 
 //int idata Out1=0;  //记录上次输出
 
@@ -121,20 +121,18 @@ void Zero_Crossing_EX2_Handle()
 				else
 				{
 					scr_open_time_max=zero_period_low_time;
-				}	
+				}					
 				
-				//scr_open_time = scr_open_time_max/2;//37度
-
-				if(scr_curr_time>0 && scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
+				if(scr_tune_time>0 && scr_tune_time<=(scr_open_time_max-zero_peroid_last_time))
 				{
 					if(HEAT_TRA!=1)
 					{
 							HEAT_TRA=1;
 					}			
 			
-					if(scr_open_time != scr_curr_time)
+					if(scr_open_time != scr_tune_time)
 					{
-						scr_open_time=scr_curr_time;
+						scr_open_time=scr_tune_time;
 					}
 		
 					Timer_Init();
@@ -321,6 +319,13 @@ void PIDCalc(int Sv,int Pv)
 						heater_power_status=1;
 				}
 			}
+			
+			//scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
+			//关闭过零中断会同时关闭水流量计中断，因为都是INT2中断，导致更大的问题，此种方法在这里不可行
+			//https://blog.csdn.net/dijindeng/article/details/50426028
+			do {
+				scr_tune_time=scr_curr_time;
+			}while(scr_tune_time != scr_curr_time);
 		}
 		//printf("%d\n",scr_curr_time);
 		/**/
