@@ -25,6 +25,7 @@
 //如果为低电平，表明热水器温度在正常范围内
 
 volatile uchar heater_power_status=0; // 0:无功率 1：全功率
+volatile uchar heater_power_tune=0;
 
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
  volatile bit heater_relay_on=0;
@@ -90,8 +91,8 @@ void Zero_Crossing_EX_Init(void)
 void Zero_Crossing_EX2_Handle()
 {	
 	
-	{
-			if(heater_power_status==1)
+//	{
+			if(heater_power_tune==1)
 			{				
 				//全功率
 				//if(HEAT_TRA!=1)
@@ -101,7 +102,7 @@ void Zero_Crossing_EX2_Handle()
 				//if(TR1!=0)
 					TR1 = 0;
 			}			
-			else if(heater_power_status==0)
+			else if(heater_power_tune==0)
 			{				
 				//无功率
 				//if(HEAT_TRA!=0)
@@ -123,7 +124,7 @@ void Zero_Crossing_EX2_Handle()
 				}					
 				
 				//if(scr_tune_time>0 && scr_tune_time<=(scr_open_time_max-zero_peroid_last_time))
-				{
+				//{
 					//if(HEAT_TRA!=1)
 					//{
 							HEAT_TRA=1;
@@ -134,8 +135,13 @@ void Zero_Crossing_EX2_Handle()
 						scr_open_time=scr_tune_time;
 					}
 		
-					Timer_Init();
-				}
+					
+					scr_open_flag=0;		
+					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+					TH1 = (65536 - scr_open_time)/256;
+					TR1 = 1;//打开定时器0
+					//Timer_Init();
+				//}
 //				else
 //				{
 //					if(HEAT_TRA!=0)
@@ -145,7 +151,7 @@ void Zero_Crossing_EX2_Handle()
 //					if(TR1!=0)
 //						TR1 = 0;
 //				}				
-			}
+//			}
 		}
 	
 	/*
@@ -354,13 +360,15 @@ void PIDCalc(int Sv,int Pv)
 		
 		if(ERR>2)
 		{
-			if(heater_power_status!=1)
+			//if(heater_power_status!=1)
 					heater_power_status=1;
+				heater_power_tune=1;
 		}
 		else
 		{
-			if(heater_power_status!=2)
+			//if(heater_power_status!=2)
 					heater_power_status=2;
+				heater_power_tune=2;
 			
 			//PID算法控制
 			if(b_start_pid==0)
@@ -395,13 +403,14 @@ void PIDCalc(int Sv,int Pv)
 	{		
 		//printf("222\n");
 		
-		if(heater_power_status!=0)
+		//if(heater_power_status!=0)
 			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
+		heater_power_tune=0;
 	}
-	else
-	{
-		//printf("333\n");
-	}
+//	else
+//	{
+//		//printf("333\n");
+//	}
 	
 	//开启过零中断
 	//IE1 |= 0x08;	//0000 x000  INT2使能

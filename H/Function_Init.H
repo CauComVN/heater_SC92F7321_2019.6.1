@@ -132,6 +132,8 @@ typedef enum Heater_Exception
 //当前热水器运行或停止状态 继电器动作 0：停止 1：运行
 extern volatile  bit heater_relay_on;
 
+extern volatile  bit scr_open_flag;
+
 //热水器内部异常状态
 extern Enum_Ex_Flag idata ex_flag;
 
