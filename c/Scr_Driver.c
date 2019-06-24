@@ -384,11 +384,8 @@ void PIDCalc(int Sv,int Pv)
 				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
 				if(scr_curr_time<1)
 				{					
-					if(heater_power_status!=1)
-					{
-						heater_power_status=1;
-						heater_power_tune=1;
-					}
+					heater_power_status=1;
+					heater_power_tune=1;					
 				}
 			}
 			
