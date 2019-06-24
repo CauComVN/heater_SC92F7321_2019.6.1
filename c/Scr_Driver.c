@@ -247,8 +247,8 @@ void soft_delay(uint n)
 void PIDCalc(int Sv,int Pv)
 { 	
 	//温度值乘10做处理
-	int target_temp=Sv*10;
-	int curr_temp=Pv*10;
+//	int target_temp=Sv*10;
+//	int curr_temp=Pv*10;
 	
 	//int Out=target_temp-curr_temp;
 			
@@ -274,8 +274,10 @@ void PIDCalc(int Sv,int Pv)
 //	static uint Lower_Limit= 0; //PID输出下限
 	
 	
-	 ERR = target_temp - curr_temp;   //算出当前误差
-	 /*
+	 //ERR = target_temp - curr_temp;   //算出当前误差
+	 
+	 ERR=Sv-Pv;
+	 /**/
 	DERR1 = ERR - ERR1;   //上次
 	
 	//DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
@@ -284,7 +286,7 @@ void PIDCalc(int Sv,int Pv)
 	DERR2= DERR2 - ERR1;
 	
 	//先Kp
-	Pout = DERR1/2;//DERR1*Kp;    //输出P
+	Pout = DERR1;///2;//DERR1*Kp;    //输出P
 	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
 	Dout = 0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
@@ -304,7 +306,7 @@ void PIDCalc(int Sv,int Pv)
 	ERR2 = ERR1;    //记录误差
 	ERR1 = ERR;     //记录误差
 	
-	*/
+	
 	
 	//Out=Out/10;
 	
@@ -319,47 +321,57 @@ void PIDCalc(int Sv,int Pv)
 	{
 		printf("111\n");
 		
-		if(heater_power_status!=1)
-					heater_power_status=1;
-		
-		/*
-		//偏差大于2度为上限幅值输出(全速加热)
-		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
+		if(ERR>2)
 		{
-//			if(scr_curr_time!=0)
-//			{
-//				scr_curr_time=0;				
-//			}
 			if(heater_power_status!=1)
-					heater_power_status=1;//
+					heater_power_status=1;
 		}
+		
+//		
+//		
+//		//偏差大于2度为上限幅值输出(全速加热)
+//		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
+//		{
+////			if(scr_curr_time!=0)
+////			{
+////				scr_curr_time=0;				
+////			}
+//			if(heater_power_status!=1)
+//					heater_power_status=1;//
+//		}
 		else
 		{
+			if(heater_power_status!=2)
+					heater_power_status=2;
+			
 			//PID算法控制
 			if(b_start_pid==0)
 			{
 				b_start_pid=1;
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				scr_curr_time = 1000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 			}
 			else
 			{
 				//20000/270=74
 		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time = scr_curr_time - Out*74;  //Out=50 Out*74=3700
+				scr_curr_time = scr_curr_time - Out*50;  //Out=50 Out*74=3700
 				if(scr_curr_time<1)
 				{
-					if(scr_curr_time!=0)
-					{
-						scr_curr_time=0;				
-					}
+//					if(scr_curr_time!=0)
+//					{
+//						scr_curr_time=0;				
+//					}
+					
+					if(heater_power_status!=1)
+						heater_power_status=1;
 				}
 			}
 		}
 		printf("%d\n",scr_curr_time);
-		*/
+		/**/
 	}
 	else if(Out<0)
 	{
