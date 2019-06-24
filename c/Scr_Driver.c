@@ -13,11 +13,11 @@
 #define  Kp   1   
 //积分时间
 #define  Ti  5000
-//微分时间
-#define  Td 600 
+//微分时间 600
+#define  Td  1
 
 //55*10-28*10=270
-#define Upper_Limit  270
+#define Upper_Limit  30
 //如果出水温度超过预设温度，可控硅无功率运行
 #define Lower_Limit  -1
 
@@ -273,7 +273,7 @@ void PIDCalc(int Sv,int Pv)
 	//先Kp
 	Pout = DERR1;///2;//DERR1*Kp;    //输出P
 	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = 0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	Dout = DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
 	Out = Out1+ Pout;
 	Out = Out+ Iout;
