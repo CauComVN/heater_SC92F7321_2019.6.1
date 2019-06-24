@@ -263,7 +263,7 @@ void PIDCalc(int Sv,int Pv)
 	//先Kp
 	Pout = DERR1*Kp;///2;//DERR1*Kp;    //输出P
 	Iout = ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = 0;//DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	Dout = DERR2*Td;//DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
 	Out = Out1+ Pout;
 	Out = Out+ Iout;

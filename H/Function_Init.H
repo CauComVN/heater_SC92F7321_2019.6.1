@@ -63,7 +63,7 @@
 //积分时间 60
 #define  Ti  500
 //微分时间 600
-#define  Td  1
+#define  Td  500
 
 
 
