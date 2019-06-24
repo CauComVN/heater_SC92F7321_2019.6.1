@@ -12,7 +12,7 @@
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
 #define  Kp   1   
 //积分时间
-#define  Ti  5000
+#define  Ti  100
 //微分时间 600
 #define  Td  1
 
@@ -272,8 +272,8 @@ void PIDCalc(int Sv,int Pv)
 	
 	//先Kp
 	Pout = DERR1;///2;//DERR1*Kp;    //输出P
-	Iout = 0;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	Iout = ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
+	Dout = 0;//DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
 	Out = Out1+ Pout;
 	Out = Out+ Iout;
@@ -324,7 +324,7 @@ void PIDCalc(int Sv,int Pv)
 			else
 			{		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time = scr_curr_time - Out*50;  //Out=50 Out*74=3700
+				scr_curr_time = scr_curr_time - Out*100;  //Out=50 Out*74=3700
 				if(scr_curr_time<1)
 				{					
 					if(heater_power_status!=1)
