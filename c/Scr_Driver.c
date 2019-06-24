@@ -10,7 +10,7 @@
 	//15.6msMS计算一次 计算周期
 #define pidt   0.5
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
-//#define  Kp   (5/10)    //一定不能这样用，keil 不支持
+#define  Kp   1   
 //积分时间
 #define  Ti  5000
 //微分时间
@@ -98,27 +98,12 @@ void Zero_Crossing_EX_Init(void)
 }
 
 void Zero_Crossing_EX2_Handle()
-{
-	
+{	
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，上升沿中断，所以端口电平是1
     //if(ZERO == 1) //INT24 P20 ZERO 过零检测到零点
-    {			
-			//全功率
-//			HEAT_TRA=1;
-			
-//			//过零检测中断，可控硅关闭
-//			if(HEAT_TRA!=0)
-//				HEAT_TRA=0;
-			
-			//定时器关闭
-			//TR1 = 0;
-			
-			//heater_power_status=1;
-			
+    {
 			if(heater_power_status==1)
-			{
-				//scr_curr_time=0;
-				
+			{				
 				//全功率
 				if(HEAT_TRA!=1)
 					HEAT_TRA=1;
@@ -307,15 +292,9 @@ void PIDCalc(int Sv,int Pv)
 	ERR1 = ERR;     //记录误差
 	
 	
-	
-	//Out=Out/10;
-	
 	Out=ERR;
 	
-	printf("%d\n",Out);
-			
-	//关闭过零检测中断
-	
+	printf("%d\n",Out);	
 	
 	if(Out>0)
 	{
@@ -326,19 +305,6 @@ void PIDCalc(int Sv,int Pv)
 			if(heater_power_status!=1)
 					heater_power_status=1;
 		}
-		
-//		
-//		
-//		//偏差大于2度为上限幅值输出(全速加热)
-//		if(best_temp_out-current_out_temp>20)//温度偏差大于2?
-//		{
-////			if(scr_curr_time!=0)
-////			{
-////				scr_curr_time=0;				
-////			}
-//			if(heater_power_status!=1)
-//					heater_power_status=1;//
-//		}
 		else
 		{
 			if(heater_power_status!=2)
@@ -353,18 +319,11 @@ void PIDCalc(int Sv,int Pv)
 				scr_curr_time = 1000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 			}
 			else
-			{
-				//20000/270=74
-		
+			{		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
 				scr_curr_time = scr_curr_time - Out*50;  //Out=50 Out*74=3700
 				if(scr_curr_time<1)
-				{
-//					if(scr_curr_time!=0)
-//					{
-//						scr_curr_time=0;				
-//					}
-					
+				{					
 					if(heater_power_status!=1)
 						heater_power_status=1;
 				}
@@ -374,17 +333,8 @@ void PIDCalc(int Sv,int Pv)
 		/**/
 	}
 	else if(Out<0)
-	{
-		//UART_SentChar(0x57);
-		
+	{		
 		printf("222\n");
-		
-//		if(HEAT_TRA!=0)
-//			HEAT_TRA=0;
-//		
-//		//定时器关闭
-//		if(TR1!=0)
-//			TR1 = 0;
 		
 		if(heater_power_status!=0)
 			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
@@ -393,6 +343,4 @@ void PIDCalc(int Sv,int Pv)
 	{
 		printf("333\n");
 	}
-	
-	
 }
