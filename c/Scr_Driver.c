@@ -307,6 +307,9 @@ void PIDCalc(int Sv,int Pv)
 	
 	printf("%d\n",Out);
 			
+	//¹Ø±Õ¹ýÁã¼ì²âÖÐ¶Ï
+	
+	
 	if(Out>0)
 	{
 		//printf("111\n");
