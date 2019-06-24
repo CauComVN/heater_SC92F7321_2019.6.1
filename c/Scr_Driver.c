@@ -347,7 +347,7 @@ void PIDCalc(int Sv,int Pv)
 	ERR1 = ERR;     //¼ÇÂ¼Îó²î
 	
 	
-	Out=ERR;
+	//Out=ERR;
 	
 	printf("%d\n",Out);	
 	
@@ -385,7 +385,10 @@ void PIDCalc(int Sv,int Pv)
 				if(scr_curr_time<1)
 				{					
 					if(heater_power_status!=1)
+					{
 						heater_power_status=1;
+						heater_power_tune=1;
+					}
 				}
 			}
 			
