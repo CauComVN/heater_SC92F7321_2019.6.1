@@ -92,6 +92,14 @@ void Zero_Crossing_EX_Init(void)
 
 void Zero_Crossing_EX2_Handle()
 {	
+	if(ZERO==1)
+	{
+		scr_open_time_max=zero_period_high_time;
+	}
+	else
+	{
+		scr_open_time_max=zero_period_low_time;
+	}				
 	
 	leakage_flag=1;
 	/*
@@ -365,14 +373,22 @@ void PIDCalc(int Sv,int Pv)
 		if(ERR>2)
 		{
 			//if(heater_power_status!=1)
-					heater_power_status=1;
-				heater_power_tune=1;
+//				heater_power_status=1;
+//				heater_power_tune=1;
+			
+			//全功率
+				if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+				
+				//定时器关闭
+				if(TR1!=0)
+					TR1 = 0;
 		}
 		else
 		{
 			//if(heater_power_status!=2)
-					heater_power_status=2;
-				heater_power_tune=2;
+//					heater_power_status=2;
+//				heater_power_tune=2;
 			
 			//PID算法控制
 			if(b_start_pid==0)
@@ -388,17 +404,45 @@ void PIDCalc(int Sv,int Pv)
 				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
 				if(scr_curr_time<1)
 				{					
-					heater_power_status=1;
-					heater_power_tune=1;					
+//					heater_power_status=1;
+//					heater_power_tune=1;					
+					
+					//全功率
+				if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+				
+				//定时器关闭
+				if(TR1!=0)
+					TR1 = 0;
+				}
+				else
+				{
+					//scr_tune_time=scr_curr_time;
+			
+					if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+					//scr_open_time=scr_tune_time;
+					
+					
+					scr_open_time=scr_curr_time;
+						
+					scr_open_flag=0;		
+					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+					TH1 = (65536 - scr_open_time)/256;
+					
+					if(TR1!=1)
+					TR1 = 1;//打开定时器0
 				}
 			}
 			
 			//scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
 			//关闭过零中断会同时关闭水流量计中断，因为都是INT2中断，导致更大的问题，此种方法在这里不可行
 			//https://blog.csdn.net/dijindeng/article/details/50426028
-			do {
-				scr_tune_time=scr_curr_time;
-			}while(scr_tune_time != scr_curr_time);
+//			do {
+//				scr_tune_time=scr_curr_time;
+//			}while(scr_tune_time != scr_curr_time);
+			
+			
 		}
 		//printf("%d\n",scr_curr_time);
 		/**/
@@ -408,8 +452,16 @@ void PIDCalc(int Sv,int Pv)
 		//printf("222\n");
 		
 		//if(heater_power_status!=0)
-			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
-		heater_power_tune=0;
+//			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
+//		heater_power_tune=0;
+		
+		//无功率
+				if(HEAT_TRA!=0)
+					HEAT_TRA=0;
+		
+				//定时器关闭
+				if(TR1!=0)
+					TR1 = 0;
 	}
 //	else
 //	{
@@ -419,3 +471,49 @@ void PIDCalc(int Sv,int Pv)
 	//开启过零中断
 	//IE1 |= 0x08;	//0000 x000  INT2使能
 }
+
+
+
+
+/*
+			if(heater_power_tune==1)
+			{				
+				//全功率
+				//if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+				
+				//定时器关闭
+				//if(TR1!=0)
+					TR1 = 0;
+			}			
+			else if(heater_power_tune==0)
+			{				
+				//无功率
+				//if(HEAT_TRA!=0)
+					HEAT_TRA=0;
+		
+				//定时器关闭
+				//if(TR1!=0)
+					TR1 = 0;
+			}
+			else
+			{
+				if(ZERO==1)
+				{
+					scr_open_time_max=zero_period_high_time;
+				}
+				else
+				{
+					scr_open_time_max=zero_period_low_time;
+				}				
+				HEAT_TRA=1;
+				scr_open_time=scr_tune_time;
+				
+					
+				scr_open_flag=0;		
+				TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+				TH1 = (65536 - scr_open_time)/256;
+				TR1 = 1;//打开定时器0
+				
+					}
+					*/

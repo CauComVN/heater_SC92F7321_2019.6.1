@@ -151,7 +151,7 @@ extern volatile int  scr_tune_time;
 
 extern volatile  uchar current_out_temp; //当前出水温度
 
-extern uint idata scr_open_time_max;
+extern volatile uint  scr_open_time_max;
 extern uint  scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 
 //extern volatile  int   scr_curr_time;
