@@ -89,6 +89,66 @@ void Zero_Crossing_EX_Init(void)
 
 void Zero_Crossing_EX2_Handle()
 {	
+	
+	{
+			if(heater_power_status==1)
+			{				
+				//全功率
+				//if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+				
+				//定时器关闭
+				//if(TR1!=0)
+					TR1 = 0;
+			}			
+			else if(heater_power_status==0)
+			{				
+				//无功率
+				//if(HEAT_TRA!=0)
+					HEAT_TRA=0;
+		
+				//定时器关闭
+				//if(TR1!=0)
+					TR1 = 0;
+			}
+			else
+			{
+				if(ZERO==1)
+				{
+					scr_open_time_max=zero_period_high_time;
+				}
+				else
+				{
+					scr_open_time_max=zero_period_low_time;
+				}					
+				
+				//if(scr_tune_time>0 && scr_tune_time<=(scr_open_time_max-zero_peroid_last_time))
+				{
+					//if(HEAT_TRA!=1)
+					//{
+							HEAT_TRA=1;
+					//}			
+			
+					if(scr_open_time != scr_tune_time)
+					{
+						scr_open_time=scr_tune_time;
+					}
+		
+					Timer_Init();
+				}
+//				else
+//				{
+//					if(HEAT_TRA!=0)
+//						HEAT_TRA=0;
+//					
+//					//定时器关闭
+//					if(TR1!=0)
+//						TR1 = 0;
+//				}				
+			}
+		}
+	
+	/*
     //如果中断2有两路输入，根据上升沿或者下降沿来确认，上升沿中断，所以端口电平是1
     //if(ZERO == 1) //INT24 P20 ZERO 过零检测到零点
     {
@@ -148,6 +208,7 @@ void Zero_Crossing_EX2_Handle()
 				}				
 			}
 		}
+		*/
 		
  /*   if(HALL_LLJ == 1) //INT25 P21 水流检测计数
     {
