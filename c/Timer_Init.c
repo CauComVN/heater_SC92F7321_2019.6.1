@@ -20,7 +20,7 @@ void Timer_Init(void)
 	
 	
 	//关闭可控硅 设置可控硅开通标记
-	HEAT_TRA=0;
+	//HEAT_TRA=0;
 	scr_open_flag=0;
 		
 	TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
@@ -30,17 +30,14 @@ void Timer_Init(void)
 	TR1 = 1;//打开定时器0
 	
 	
-     EA = 1;
+//     EA = 1;
 }
 
 void Timer1Int_Handle()
 {
 		if(scr_open_flag==0)
 		{
-			if(HEAT_TRA!=1)
-			{
-					HEAT_TRA=1;
-			}			
+			
 			scr_open_flag=1;			
 			
 			

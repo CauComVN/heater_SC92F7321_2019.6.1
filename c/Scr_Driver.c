@@ -94,7 +94,7 @@ void Zero_Crossing_EX_Init(void)
     //Íâ²¿ÖÐ¶ÏÓÅÏÈ¼¶ÉèÖ
     IE1 |= 0x08;	//0000 x000  INT2Ê¹ÄÜ
     IP1 |= 0X00;
-    EA = 1;
+//    EA = 1;
 }
 
 void Zero_Crossing_EX2_Handle()
@@ -107,14 +107,16 @@ void Zero_Crossing_EX2_Handle()
 //			HEAT_TRA=1;
 			
 //			//¹ýÁã¼ì²âÖÐ¶Ï£¬¿É¿Ø¹è¹Ø±Õ
-			if(HEAT_TRA!=0)
-				HEAT_TRA=0;
+//			if(HEAT_TRA!=0)
+//				HEAT_TRA=0;
 			
 			//¶¨Ê±Æ÷¹Ø±Õ
 			//TR1 = 0;
 			
 			if(heater_power_status==1)
 			{
+				//scr_curr_time=0;
+				
 				//È«¹¦ÂÊ
 				if(HEAT_TRA!=1)
 					HEAT_TRA=1;
@@ -148,6 +150,11 @@ void Zero_Crossing_EX2_Handle()
 
 				if(scr_curr_time>0 && scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
 				{
+					if(HEAT_TRA!=1)
+					{
+							HEAT_TRA=1;
+					}			
+			
 					if(scr_open_time != scr_curr_time)
 					{
 						scr_open_time=scr_curr_time;
@@ -296,19 +303,21 @@ void PIDCalc(int Sv,int Pv)
 	
 	/**/
 	
+	Out=Out/10;
+	
 	printf("%d\n",Out);
 			
 	if(Out>0)
 	{
-		printf("111\n");
+		//printf("111\n");
 		
 		//Æ«²î´óÓÚ2¶ÈÎªÉÏÏÞ·ùÖµÊä³ö(È«ËÙ¼ÓÈÈ)
 		if(best_temp_out-current_out_temp>20)//ÎÂ¶ÈÆ«²î´óÓÚ2?
 		{
-			if(scr_curr_time!=0)
-			{
-				scr_curr_time=0;				
-			}
+//			if(scr_curr_time!=0)
+//			{
+//				scr_curr_time=0;				
+//			}
 			if(heater_power_status!=1)
 					heater_power_status=1;//
 		}
@@ -342,21 +351,21 @@ void PIDCalc(int Sv,int Pv)
 	{
 		//UART_SentChar(0x57);
 		
-		printf("222\n");
+		//printf("222\n");
 		
-		if(HEAT_TRA!=0)
-			HEAT_TRA=0;
-		
-		//¶¨Ê±Æ÷¹Ø±Õ
-		if(TR1!=0)
-			TR1 = 0;
+//		if(HEAT_TRA!=0)
+//			HEAT_TRA=0;
+//		
+//		//¶¨Ê±Æ÷¹Ø±Õ
+//		if(TR1!=0)
+//			TR1 = 0;
 		
 		if(heater_power_status!=0)
 			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
 	}
 	else
 	{
-		printf("333\n");
+		//printf("333\n");
 	}
 	
 	printf("%d\n",scr_curr_time);
