@@ -4,18 +4,7 @@
 #include "H/Function_Init.H"
 #include <stdio.h>
 
-/******************
-	*以下四项是需要根据实际情况调试的
-	******************/
-	//15.6msMS计算一次 计算周期
-#define pidt   0.5
-//比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
-//kp=1
-#define  Kp   10  
-//积分时间 60
-#define  Ti  100
-//微分时间 600
-#define  Td  1
+
 
 //55*10-28*10=270
 #define Upper_Limit  30
@@ -272,7 +261,7 @@ void PIDCalc(int Sv,int Pv)
 	DERR2= DERR2 - ERR1;
 	
 	//先Kp
-	Pout = DERR1;///2;//DERR1*Kp;    //输出P
+	Pout = DERR1*Kp;///2;//DERR1*Kp;    //输出P
 	Iout = ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
 	Dout = 0;//DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
