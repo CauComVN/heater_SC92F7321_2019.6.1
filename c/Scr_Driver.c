@@ -7,9 +7,9 @@
 
 
 //55*10-28*10=270
-#define Upper_Limit  30
+#define Upper_Limit  20
 //如果出水温度超过预设温度，可控硅无功率运行
-#define Lower_Limit  -30
+#define Lower_Limit  -20
 
 
 //INT24 P20 ZERO
@@ -348,9 +348,10 @@ void PIDCalc(int Sv,int Pv)
 	
 	//先Kp
 	Pout = DERR1*Kp;///2;//DERR1*Kp;    //输出P
-	Iout = 0;//ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = 0;
-	//Dout = DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	//Iout = 0;//ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
+	//Dout = 0;
+	Iout = ERR * Ti;
+	Dout = DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
 	Out = Out1+ Pout;
 	Out = Out+ Iout;
@@ -379,21 +380,23 @@ void PIDCalc(int Sv,int Pv)
 	//关闭过零中断
 	//IE1 &= 0xf7;	//0000 x000  INT2关闭
 	
-	//if(Out>0)
+	if(Out>=0)
 	{
 		//printf("111\n");
 		
-//		if(ERR>2)
-//		{			
-//			//全功率
-//				if(HEAT_TRA!=1)
-//					HEAT_TRA=1;
-//				
-//				//定时器关闭
-//				if(TR1!=0)
-//					TR1 = 0;
-//		}
-//		else
+		if(ERR>2)
+		{			
+			//全功率
+				if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+				
+				//定时器关闭
+				if(TR1!=0)
+					TR1 = 0;
+				
+				b_start_pid=0;
+		}
+		else
 		{			
 			//PID算法控制
 			if(b_start_pid==0)
@@ -406,7 +409,7 @@ void PIDCalc(int Sv,int Pv)
 			else
 			{		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time = scr_curr_time - Out*10;  //Out=50 Out*74=3700
+				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
 				
 				//printf("%d\n",scr_curr_time);
 				
@@ -469,18 +472,18 @@ void PIDCalc(int Sv,int Pv)
 		//printf("%d\n",scr_curr_time);
 		/**/
 	}
-//	else if(Out<0)
-//	{		
-//		//printf("222\n");
-//		
-//		//无功率
-//				if(HEAT_TRA!=0)
-//					HEAT_TRA=0;
-//		
-//				//定时器关闭
-//				if(TR1!=0)
-//					TR1 = 0;
-//	}
+	else if(Out<0)
+	{		
+		//printf("222\n");
+		
+		//无功率
+		if(HEAT_TRA!=0)
+			HEAT_TRA=0;
+
+		//定时器关闭
+		if(TR1!=0)
+			TR1 = 0;
+	}
 //	else
 //	{
 //		//printf("333\n");
