@@ -9,7 +9,7 @@
 //55*10-28*10=270
 #define Upper_Limit  30
 //如果出水温度超过预设温度，可控硅无功率运行
-#define Lower_Limit  -1
+#define Lower_Limit  -30
 
 
 //INT24 P20 ZERO
@@ -52,8 +52,6 @@ volatile int pidout=0;
 //int idata ERR=0;       //当前误差
 //int idata ERR1=0;      //上次误差
 //int  idata ERR2=0;      //上上次误差
-
-void pid_handler(int Out,int Sv,int Pv);
 
 //void Zero_Crossing_EXTI_Test(void);
 void Zero_Crossing_EX_Init(void);
@@ -104,11 +102,10 @@ void Zero_Crossing_EX2_Handle()
 //		scr_open_time_max=zero_period_low_time;
 //	}				
 	
-	zero_int_flag=1;
+	//zero_int_flag=1;
 	
-	pid_handler(pidout,best_temp_out,current_out_temp);
 	
-	//PIDCalc(best_temp_out, current_out_temp);
+	PIDCalc(best_temp_out, current_out_temp);
 	/*
 //	{
 			if(heater_power_tune==1)
@@ -352,7 +349,8 @@ void PIDCalc(int Sv,int Pv)
 	//先Kp
 	Pout = DERR1*Kp;///2;//DERR1*Kp;    //输出P
 	Iout = 0;//ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = 0;//DERR2*Td;//DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	Dout = 0;
+	//Dout = DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
 	Out = Out1+ Pout;
 	Out = Out+ Iout;
@@ -373,7 +371,7 @@ void PIDCalc(int Sv,int Pv)
 	pidout=Out;
 	
 	
-	#if 0
+	//#if 0
 	
 	
 	//printf("%d\n",Out);	
@@ -381,16 +379,12 @@ void PIDCalc(int Sv,int Pv)
 	//关闭过零中断
 	//IE1 &= 0xf7;	//0000 x000  INT2关闭
 	
-	if(Out>0)
+	//if(Out>0)
 	{
 		//printf("111\n");
 		
 		if(ERR>2)
-		{
-			//if(heater_power_status!=1)
-//				heater_power_status=1;
-//				heater_power_tune=1;
-			
+		{			
 			//全功率
 				if(HEAT_TRA!=1)
 					HEAT_TRA=1;
@@ -400,18 +394,14 @@ void PIDCalc(int Sv,int Pv)
 					TR1 = 0;
 		}
 		else
-		{
-			//if(heater_power_status!=2)
-//					heater_power_status=2;
-//				heater_power_tune=2;
-			
+		{			
 			//PID算法控制
 			if(b_start_pid==0)
 			{
 				b_start_pid=1;
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = 1000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				scr_curr_time = 8000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 			}
 			else
 			{		
@@ -421,10 +411,7 @@ void PIDCalc(int Sv,int Pv)
 				//printf("%d\n",scr_curr_time);
 				
 				if(scr_curr_time<1)
-				{					
-//					heater_power_status=1;
-//					heater_power_tune=1;					
-					
+				{							
 						//全功率
 					if(HEAT_TRA!=1)
 						HEAT_TRA=1;
@@ -441,27 +428,30 @@ void PIDCalc(int Sv,int Pv)
 					//HEAT_TRA=1;
 					//scr_open_time=scr_tune_time;
 					
+					//关闭可控硅 设置可控硅开通标记
+					//HEAT_TRA=0;
 					
 						scr_open_time=scr_curr_time;
-//						printf("%d\n",scr_curr_time);
 //					
 						Timer_Init();
-					/*
+					
 //					
 //					scr_open_flag=0;		
 //					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
 //					TH1 = (65536 - scr_open_time)/256;
 					
-					//scr_open_time=scr_curr_time;
+//					//scr_open_time=scr_curr_time;
+//					
+//					scr_open_flag=0;		
+//					TL1 = (65536 - scr_curr_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+//					TH1 = (65536 - scr_curr_time)/256;
+//					
+//					if(TR1!=1)
+//					TR1 = 1;//打开定时器0		
+
+//						printf("%d\n",scr_curr_time);
+
 					
-					scr_open_flag=0;		
-					TL1 = (65536 - scr_curr_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-					TH1 = (65536 - scr_curr_time)/256;
-					
-					if(TR1!=1)
-					TR1 = 1;//打开定时器0
-					
-					*/
 				}
 			}
 			
@@ -475,24 +465,20 @@ void PIDCalc(int Sv,int Pv)
 			
 		}
 		//printf("%d\n",scr_curr_time);
-		
+		/**/
 	}
-	else if(Out<0)
-	{		
-		//printf("222\n");
-		
-		//if(heater_power_status!=0)
-//			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
-//		heater_power_tune=0;
-		
-		//无功率
-				if(HEAT_TRA!=0)
-					HEAT_TRA=0;
-		
-				//定时器关闭
-				if(TR1!=0)
-					TR1 = 0;
-	}
+//	else if(Out<0)
+//	{		
+//		//printf("222\n");
+//		
+//		//无功率
+//				if(HEAT_TRA!=0)
+//					HEAT_TRA=0;
+//		
+//				//定时器关闭
+//				if(TR1!=0)
+//					TR1 = 0;
+//	}
 //	else
 //	{
 //		//printf("333\n");
@@ -502,9 +488,10 @@ void PIDCalc(int Sv,int Pv)
 	//IE1 |= 0x08;	//0000 x000  INT2使能
 	
 	
-	#endif
+//	#endif
 }
 
+/*
 void pid_handler(int Out,int Sv,int Pv)
 {
 	if(Out>0)
@@ -595,48 +582,4 @@ void pid_handler(int Out,int Sv,int Pv)
 
 }
 
-
-
-
-/*
-			if(heater_power_tune==1)
-			{				
-				//全功率
-				//if(HEAT_TRA!=1)
-					HEAT_TRA=1;
-				
-				//定时器关闭
-				//if(TR1!=0)
-					TR1 = 0;
-			}			
-			else if(heater_power_tune==0)
-			{				
-				//无功率
-				//if(HEAT_TRA!=0)
-					HEAT_TRA=0;
-		
-				//定时器关闭
-				//if(TR1!=0)
-					TR1 = 0;
-			}
-			else
-			{
-				if(ZERO==1)
-				{
-					scr_open_time_max=zero_period_high_time;
-				}
-				else
-				{
-					scr_open_time_max=zero_period_low_time;
-				}				
-				HEAT_TRA=1;
-				scr_open_time=scr_tune_time;
-				
-					
-				scr_open_flag=0;		
-				TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-				TH1 = (65536 - scr_open_time)/256;
-				TR1 = 1;//打开定时器0
-				
-					}
-					*/
+*/

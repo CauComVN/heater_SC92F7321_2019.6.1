@@ -59,11 +59,11 @@
 //#define pidt   0.5
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
 //kp=1
-#define  Kp   (5)  
+#define  Kp   (9)  
 //积分时间 60
-#define  Ti  500
+#define  Ti  400
 //微分时间 600
-#define  Td  500
+#define  Td  1000
 
 
 

@@ -41,7 +41,7 @@ void main(void)
         //水流检测定时器
         Water_Detection_Timer_Init();
 			
-				Timer_Init();
+				//Timer_Init();
 
         //=====================主循环
         while(1)
