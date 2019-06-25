@@ -39,7 +39,7 @@ void main(void)
         //水流检测定时器
         Water_Detection_Timer_Init();
 			
-				Timer_Init();
+				//Timer_Init();
 
         //=====================主循环
         while(1)
@@ -91,59 +91,18 @@ void main(void)
 						
 						
 						
-		if(zero_int_flag==1)
-		{
-			zero_int_flag=0;
+						if(zero_int_flag==1)
+						{
+							zero_int_flag=0;
+							
+							PIDCalc(best_temp_out, current_out_temp);
 			
-			PIDCalc(best_temp_out, current_out_temp);
-			/*
-			if(heater_power_tune==1)
-			{				
-				//全功率
-				//if(HEAT_TRA!=1)
-					HEAT_TRA=1;
-				
-				//定时器关闭
-				//if(TR1!=0)
-					TR1 = 0;
-			}			
-			else if(heater_power_tune==0)
-			{				
-				//无功率
-				//if(HEAT_TRA!=0)
-					HEAT_TRA=0;
-		
-				//定时器关闭
-				//if(TR1!=0)
-					TR1 = 0;
-			}
-			else
-			{
-				if(ZERO==1)
-				{
-					scr_open_time_max=zero_period_high_time;
-				}
-				else
-				{
-					scr_open_time_max=zero_period_low_time;
-				}				
-				HEAT_TRA=1;
-				scr_open_time=scr_tune_time;
-				
-					
-				scr_open_flag=0;		
-				TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-				TH1 = (65536 - scr_open_time)/256;
-				TR1 = 1;//打开定时器0
-				
-					}
-					*/
-				}
+						}
 	
 		
 
-				//串口接收到数据，处理
-				Uart_Process();
+						//串口接收到数据，处理
+						Uart_Process();
       }
     }
     break;    

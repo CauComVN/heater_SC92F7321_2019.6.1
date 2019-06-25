@@ -329,6 +329,11 @@ void PIDCalc(int Sv,int Pv)
 	 //ERR = target_temp - curr_temp;   //算出当前误差
 	 
 	 ERR=Sv-Pv;
+	 
+	 //测试
+	 //Out=ERR;
+	 
+	 
 	 /**/
 	DERR1 = ERR - ERR1;   //上次
 	
@@ -339,8 +344,8 @@ void PIDCalc(int Sv,int Pv)
 	
 	//先Kp
 	Pout = DERR1*Kp;///2;//DERR1*Kp;    //输出P
-	Iout = ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-	Dout = DERR2*Td;//DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+	Iout = 0;//ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
+	Dout = 0;//DERR2*Td;//DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
 	//Out = (int)(Out1 + Pout + Iout + Dout);
 	Out = Out1+ Pout;
 	Out = Out+ Iout;
@@ -359,9 +364,9 @@ void PIDCalc(int Sv,int Pv)
 	ERR1 = ERR;     //记录误差
 	
 	
-	//Out=ERR;
 	
-	//printf("%d\n",Out);	
+	
+	printf("%d\n",Out);	
 	
 	//关闭过零中断
 	//IE1 &= 0xf7;	//0000 x000  INT2关闭
@@ -402,6 +407,9 @@ void PIDCalc(int Sv,int Pv)
 			{		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
 				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
+				
+				printf("%d\n",scr_curr_time);
+				
 				if(scr_curr_time<1)
 				{					
 //					heater_power_status=1;
@@ -419,12 +427,16 @@ void PIDCalc(int Sv,int Pv)
 				{
 					//scr_tune_time=scr_curr_time;
 			
-					if(HEAT_TRA!=1)
-					HEAT_TRA=1;
+					//if(HEAT_TRA!=1)
+					//HEAT_TRA=1;
 					//scr_open_time=scr_tune_time;
 					
 					
-					scr_open_time=scr_curr_time;
+//						scr_open_time=scr_curr_time;
+//						printf("%d\n",scr_curr_time);
+//					
+//						Timer_Init();
+					/*
 //					
 //					scr_open_flag=0;		
 //					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
@@ -438,6 +450,8 @@ void PIDCalc(int Sv,int Pv)
 					
 					if(TR1!=1)
 					TR1 = 1;//打开定时器0
+					
+					*/
 				}
 			}
 			
@@ -451,7 +465,7 @@ void PIDCalc(int Sv,int Pv)
 			
 		}
 		//printf("%d\n",scr_curr_time);
-		/**/
+		
 	}
 	else if(Out<0)
 	{		
