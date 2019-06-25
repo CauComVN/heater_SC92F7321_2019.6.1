@@ -85,6 +85,30 @@ void main(void)
                 //UART_SentChar(current_out_temp);
 
                 printf("%bd\n",current_out_temp);
+							
+								if((best_temp_out-current_out_temp)>1)
+								{
+									scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+									if(scr_curr_time<1)
+											scr_curr_time=0;
+									scr_open_time=scr_curr_time;
+											
+//									TR1 = 0;
+//									Timer_Init();
+								}
+								else if((current_out_temp-best_temp_out)>1)
+								{
+									scr_curr_time += 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+									if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
+										scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
+									scr_open_time=scr_curr_time;
+										
+//									TR1 = 0;
+//									Timer_Init();
+								}
+								else
+								{
+								}
 
                 //PIDCalc(best_temp_out, current_out_temp);
 

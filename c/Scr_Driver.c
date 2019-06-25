@@ -36,7 +36,7 @@ volatile bit b_start_pid=0;
 Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int idata best_temp_out=34;
+int idata best_temp_out=39;
 volatile uchar  current_out_temp=28; //当前出水温度
 
 volatile int  scr_curr_time=8000;//zero_period_high_time/2;//20000;//6;
@@ -93,6 +93,9 @@ void Zero_Crossing_EX_Init(void)
 
 void Zero_Crossing_EX2_Handle()
 {	
+	HEAT_TRA=0;
+	TR1 = 0;
+									Timer_Init();
 //	if(ZERO==1)
 //	{
 //		scr_open_time_max=zero_period_high_time;
@@ -105,7 +108,7 @@ void Zero_Crossing_EX2_Handle()
 	//zero_int_flag=1;
 	
 	
-	PIDCalc(best_temp_out, current_out_temp);
+	//PIDCalc(best_temp_out, current_out_temp);
 	/*
 //	{
 			if(heater_power_tune==1)
@@ -373,25 +376,7 @@ void PIDCalc(int Sv,int Pv)
 	
 	
 	
-	if(ERR>1)
-	{
-		scr_curr_time -= 400;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
-				
-		scr_open_time=scr_curr_time;
-				
-		Timer_Init();
-	}
-	else if(ERR<1)
-	{
-		scr_curr_time -= 400;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
-				
-		scr_open_time=scr_curr_time;
-				
-		Timer_Init();
-	}
-	else
-	{
-	}
+	
 	
 	
 	
@@ -412,19 +397,19 @@ void PIDCalc(int Sv,int Pv)
 	{
 		//printf("111\n");
 		
-//		if(ERR>2)
-//		{			
-//			//全功率
-//				if(HEAT_TRA!=1)
-//					HEAT_TRA=1;
-//				
-//				//定时器关闭
-//				if(TR1!=0)
-//					TR1 = 0;
-//				
-//				b_start_pid=0;
-//		}/**/
-//		else
+		if(scr_curr_time==0 || ERR>2)
+		{			
+			//全功率
+				if(HEAT_TRA!=1)
+					HEAT_TRA=1;
+				
+				//定时器关闭
+				if(TR1!=0)
+					TR1 = 0;
+				
+				b_start_pid=0;
+		}/**/
+		else
 		{			
 			//PID算法控制
 			if(b_start_pid==0)
@@ -483,96 +468,3 @@ void PIDCalc(int Sv,int Pv)
 	#endif
 
 }
-
-/*
-void pid_handler(int Out,int Sv,int Pv)
-{
-	if(Out>0)
-	{
-		//printf("111\n");
-		
-		if(Sv-Pv>2)//if(ERR>2)
-		{			
-			//全功率
-				if(HEAT_TRA!=1)
-					HEAT_TRA=1;
-				
-				//定时器关闭
-				if(TR1!=0)
-					TR1 = 0;
-		}
-		else
-		{			
-			//PID算法控制
-			if(b_start_pid==0)
-			{
-				b_start_pid=1;
-				
-				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = 1000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
-			}
-			else
-			{		
-				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
-				
-				//printf("%d\n",scr_curr_time);
-				
-				if(scr_curr_time<1)
-				{						
-						//全功率
-					if(HEAT_TRA!=1)
-						HEAT_TRA=1;
-					
-					//定时器关闭
-					if(TR1!=0)
-						TR1 = 0;
-				}
-				else
-				{		
-					if(HEAT_TRA!=0)
-						HEAT_TRA=0;
-
-					scr_open_time=scr_curr_time;
-					scr_open_flag=0;		
-					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-					TH1 = (65536 - scr_open_time)/256;
-					
-					
-					
-//					scr_open_flag=0;		
-//					TL1 = (65536 - scr_curr_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-//					TH1 = (65536 - scr_curr_time)/256;
-					
-					if(TR1!=1)
-					TR1 = 1;//打开定时器0
-				}
-			}
-			
-			//scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
-			//关闭过零中断会同时关闭水流量计中断，因为都是INT2中断，导致更大的问题，此种方法在这里不可行
-			//https://blog.csdn.net/dijindeng/article/details/50426028
-//			do {
-//				scr_tune_time=scr_curr_time;
-//			}while(scr_tune_time != scr_curr_time);
-			
-			
-		}		
-	}
-	else if(Out<0)
-	{			
-		//无功率
-				if(HEAT_TRA!=0)
-					HEAT_TRA=0;
-		
-				//定时器关闭
-				if(TR1!=0)
-					TR1 = 0;
-	}
-	
-	//开启过零中断
-	//IE1 |= 0x08;	//0000 x000  INT2使能
-
-}
-
-*/

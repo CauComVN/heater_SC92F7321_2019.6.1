@@ -65,8 +65,8 @@ void Timer1Int_Handle()
 			scr_open_flag=1;	
 
 			//100us
-			TL1 = 56;// (65536 - 200)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-			TH1 = 255;//(65536 - 200)/256;
+			TL1 = 0;// (65536 - 200)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+			TH1 = 25;//(65536 - 200)/256;
 						
 			if(HEAT_TRA!=1)
 					HEAT_TRA=1;
