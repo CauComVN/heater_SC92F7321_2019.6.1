@@ -383,17 +383,17 @@ void PIDCalc(int Sv,int Pv)
 	{
 		//printf("111\n");
 		
-		if(ERR>2)
-		{			
-			//全功率
-				if(HEAT_TRA!=1)
-					HEAT_TRA=1;
-				
-				//定时器关闭
-				if(TR1!=0)
-					TR1 = 0;
-		}
-		else
+//		if(ERR>2)
+//		{			
+//			//全功率
+//				if(HEAT_TRA!=1)
+//					HEAT_TRA=1;
+//				
+//				//定时器关闭
+//				if(TR1!=0)
+//					TR1 = 0;
+//		}
+//		else
 		{			
 			//PID算法控制
 			if(b_start_pid==0)
@@ -401,17 +401,19 @@ void PIDCalc(int Sv,int Pv)
 				b_start_pid=1;
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = 8000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				scr_curr_time = 1000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 			}
 			else
 			{		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
+				scr_curr_time = scr_curr_time - Out*10;  //Out=50 Out*74=3700
 				
 				//printf("%d\n",scr_curr_time);
 				
 				if(scr_curr_time<1)
-				{							
+				{					
+					scr_curr_time=0;		
+					
 						//全功率
 					if(HEAT_TRA!=1)
 						HEAT_TRA=1;
