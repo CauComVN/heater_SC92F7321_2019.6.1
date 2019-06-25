@@ -2,7 +2,7 @@
 
 volatile uint   scr_open_time_max=zero_period_high_time;
 uint  scr_open_time=0;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
- volatile bit scr_open_flag=0;//可控硅开通标志 用于关断定时器 关断可控硅
+volatile bit scr_open_flag=0;//可控硅开通标志 用于关断定时器 关断可控硅
 
 void Timer_Init(void);
 
@@ -60,7 +60,11 @@ void Timer1Int_Handle()
 		if(scr_open_flag==0)
 		{
 			
-			scr_open_flag=1;			
+			scr_open_flag=1;	
+
+			//100us
+			TL1 = 56;// (65536 - 200)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+			TH1 = 255;//(65536 - 200)/256;
 			
 			
 			//可控硅开通时间点之后，计算关断可控硅和定时器时间，然后重置定时器
@@ -71,8 +75,8 @@ void Timer1Int_Handle()
 //			}
 //			else
 //			{
-				TH1 = (65536-(scr_open_time_max-scr_open_time))/256;     //溢出时间：时钟为Fsys，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-				TL1 = (65536-(scr_open_time_max-scr_open_time))%256;	
+//				TH1 = (65536-(scr_open_time_max-scr_open_time))/256;     //溢出时间：时钟为Fsys，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+//				TL1 = (65536-(scr_open_time_max-scr_open_time))%256;	
 			//}
 		}
 		else

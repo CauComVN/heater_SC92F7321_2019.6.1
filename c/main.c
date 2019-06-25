@@ -91,9 +91,9 @@ void main(void)
 						
 						
 						
-		if(leakage_flag==1)
+		if(zero_int_flag==1)
 		{
-			leakage_flag=0;
+			zero_int_flag=0;
 			
 			PIDCalc(best_temp_out, current_out_temp);
 			/*

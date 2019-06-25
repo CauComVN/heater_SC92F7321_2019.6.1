@@ -145,7 +145,7 @@ extern int idata best_temp_out;
 
 extern volatile bit b_start_pid;
 
-extern volatile uchar leakage_flag;
+extern volatile uchar zero_int_flag;
 extern volatile uchar heater_power_tune;
 extern volatile int  scr_tune_time;
 

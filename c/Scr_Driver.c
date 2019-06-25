@@ -7,7 +7,7 @@
 
 
 //55*10-28*10=270
-#define Upper_Limit  30
+#define Upper_Limit  50
 //如果出水温度超过预设温度，可控硅无功率运行
 #define Lower_Limit  -1
 
@@ -43,7 +43,7 @@ volatile int  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
 
 volatile int  scr_tune_time=0;
 
-volatile uchar leakage_flag=0;
+volatile uchar zero_int_flag=0;
 
 //int idata Out1=0;  //记录上次输出
 
@@ -92,16 +92,16 @@ void Zero_Crossing_EX_Init(void)
 
 void Zero_Crossing_EX2_Handle()
 {	
-	if(ZERO==1)
-	{
-		scr_open_time_max=zero_period_high_time;
-	}
-	else
-	{
-		scr_open_time_max=zero_period_low_time;
-	}				
+//	if(ZERO==1)
+//	{
+//		scr_open_time_max=zero_period_high_time;
+//	}
+//	else
+//	{
+//		scr_open_time_max=zero_period_low_time;
+//	}				
 	
-	leakage_flag=1;
+	zero_int_flag=1;
 	/*
 //	{
 			if(heater_power_tune==1)
@@ -361,7 +361,7 @@ void PIDCalc(int Sv,int Pv)
 	
 	//Out=ERR;
 	
-	printf("%d\n",Out);	
+	//printf("%d\n",Out);	
 	
 	//关闭过零中断
 	//IE1 &= 0xf7;	//0000 x000  INT2关闭
@@ -407,13 +407,13 @@ void PIDCalc(int Sv,int Pv)
 //					heater_power_status=1;
 //					heater_power_tune=1;					
 					
-					//全功率
-				if(HEAT_TRA!=1)
-					HEAT_TRA=1;
-				
-				//定时器关闭
-				if(TR1!=0)
-					TR1 = 0;
+						//全功率
+					if(HEAT_TRA!=1)
+						HEAT_TRA=1;
+					
+					//定时器关闭
+					if(TR1!=0)
+						TR1 = 0;
 				}
 				else
 				{
@@ -425,10 +425,16 @@ void PIDCalc(int Sv,int Pv)
 					
 					
 					scr_open_time=scr_curr_time;
-						
+//					
+//					scr_open_flag=0;		
+//					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+//					TH1 = (65536 - scr_open_time)/256;
+					
+					//scr_open_time=scr_curr_time;
+					
 					scr_open_flag=0;		
-					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-					TH1 = (65536 - scr_open_time)/256;
+					TL1 = (65536 - scr_curr_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+					TH1 = (65536 - scr_curr_time)/256;
 					
 					if(TR1!=1)
 					TR1 = 1;//打开定时器0
