@@ -369,8 +369,7 @@ void PIDCalc(int Sv,int Pv)
 	ERR2 = ERR1;    //¼ÇÂ¼Îó²î
 	ERR1 = ERR;     //¼ÇÂ¼Îó²î
 	
-	//pidout=Out;
-	
+	//pidout=Out;	
 	
 	//#if 0
 	
