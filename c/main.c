@@ -41,7 +41,7 @@ void main(void)
         //水流检测定时器
         Water_Detection_Timer_Init();
 			
-				//Timer_Init();
+				Timer_Init();
 
         //=====================主循环
         while(1)
@@ -86,7 +86,7 @@ void main(void)
 
                 printf("%bd\n",current_out_temp);
 
-                //PIDCalc(best_temp_out, current_out_temp);
+                PIDCalc(best_temp_out, current_out_temp);
 
                 b_btm_int_flag=0;
             }
