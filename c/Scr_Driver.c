@@ -36,10 +36,10 @@ volatile bit b_start_pid=0;
 Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int idata best_temp_out=37;
+int idata best_temp_out=34;
 volatile uchar  current_out_temp=28; //当前出水温度
 
-volatile int  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
+volatile int  scr_curr_time=8000;//zero_period_high_time/2;//20000;//6;
 
 volatile int  scr_tune_time=0;
 
@@ -371,7 +371,36 @@ void PIDCalc(int Sv,int Pv)
 	
 	//pidout=Out;	
 	
-	//#if 0
+	
+	
+	if(ERR>1)
+	{
+		scr_curr_time -= 400;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				
+		scr_open_time=scr_curr_time;
+				
+		Timer_Init();
+	}
+	else if(ERR<1)
+	{
+		scr_curr_time -= 400;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				
+		scr_open_time=scr_curr_time;
+				
+		Timer_Init();
+	}
+	else
+	{
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	#if 0
 	
 	
 	//printf("%d\n",Out);	
@@ -450,6 +479,8 @@ void PIDCalc(int Sv,int Pv)
 		if(TR1!=0)
 			TR1 = 0;
 	}
+	
+	#endif
 
 }
 
