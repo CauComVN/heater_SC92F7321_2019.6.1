@@ -86,26 +86,10 @@ void main(void)
 
                 printf("%bd\n",current_out_temp);
 
-                PIDCalc(best_temp_out, current_out_temp);
+                //PIDCalc(best_temp_out, current_out_temp);
 
                 b_btm_int_flag=0;
             }
-						
-						
-						
-						if(zero_int_flag==1)
-						{
-							zero_int_flag=0;
-							
-							//if(last_temp_value!=current_out_temp)
-							{
-							//last_temp_value=current_out_temp;
-							//PIDCalc(best_temp_out, current_out_temp);
-							}
-			
-						}
-	
-		
 
 						//串口接收到数据，处理
 						Uart_Process();
