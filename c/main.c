@@ -18,6 +18,8 @@
 void main(void)
 {
     uint idata ADCTempValue=0;
+	
+		uint last_temp_value=0;
 
     IO_Init();
     WDTCON |= 0x10;		    //Çå¿´ÃÅ¹·
@@ -95,7 +97,11 @@ void main(void)
 						{
 							zero_int_flag=0;
 							
+							//if(last_temp_value!=current_out_temp)
+							{
+							//last_temp_value=current_out_temp;
 							PIDCalc(best_temp_out, current_out_temp);
+							}
 			
 						}
 	

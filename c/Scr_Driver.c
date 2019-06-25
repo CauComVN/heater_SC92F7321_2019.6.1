@@ -7,7 +7,7 @@
 
 
 //55*10-28*10=270
-#define Upper_Limit  50
+#define Upper_Limit  30
 //如果出水温度超过预设温度，可控硅无功率运行
 #define Lower_Limit  -1
 
@@ -432,10 +432,10 @@ void PIDCalc(int Sv,int Pv)
 					//scr_open_time=scr_tune_time;
 					
 					
-//						scr_open_time=scr_curr_time;
+						scr_open_time=scr_curr_time;
 //						printf("%d\n",scr_curr_time);
 //					
-//						Timer_Init();
+						Timer_Init();
 					/*
 //					
 //					scr_open_flag=0;		
