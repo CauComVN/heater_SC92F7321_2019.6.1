@@ -100,7 +100,7 @@ void main(void)
 							//if(last_temp_value!=current_out_temp)
 							{
 							//last_temp_value=current_out_temp;
-							PIDCalc(best_temp_out, current_out_temp);
+							//PIDCalc(best_temp_out, current_out_temp);
 							}
 			
 						}

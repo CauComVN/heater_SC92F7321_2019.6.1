@@ -102,6 +102,8 @@ void Zero_Crossing_EX2_Handle()
 //	}				
 	
 	zero_int_flag=1;
+	
+	PIDCalc(best_temp_out, current_out_temp);
 	/*
 //	{
 			if(heater_power_tune==1)
@@ -366,7 +368,7 @@ void PIDCalc(int Sv,int Pv)
 	
 	
 	
-	printf("%d\n",Out);	
+	//printf("%d\n",Out);	
 	
 	//关闭过零中断
 	//IE1 &= 0xf7;	//0000 x000  INT2关闭
@@ -408,7 +410,7 @@ void PIDCalc(int Sv,int Pv)
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
 				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
 				
-				printf("%d\n",scr_curr_time);
+				//printf("%d\n",scr_curr_time);
 				
 				if(scr_curr_time<1)
 				{					
