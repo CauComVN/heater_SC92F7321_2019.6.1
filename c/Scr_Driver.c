@@ -394,7 +394,7 @@ void PIDCalc(int Sv,int Pv)
 //					TR1 = 0;
 //				
 //				b_start_pid=0;
-//		}
+//		}/**/
 //		else
 		{			
 			//PID算法控制
@@ -403,71 +403,38 @@ void PIDCalc(int Sv,int Pv)
 				b_start_pid=1;
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = 2000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				scr_curr_time = 10000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				
+				scr_open_time=scr_curr_time;
+				
+						Timer_Init();
 			}
 			else
 			{		
 				//一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-				scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
+				scr_curr_time = scr_curr_time - Out*100;  //Out=50 Out*74=3700
 				
 				//printf("%d\n",scr_curr_time);
 				
 				if(scr_curr_time<1)
-				{					
-					scr_curr_time = 2000;
-//					
-//						//全功率
-//					if(HEAT_TRA!=1)
-//						HEAT_TRA=1;
-//					
-//					//定时器关闭
-//					if(TR1!=0)
-//						TR1 = 0;
+				{												
+						//全功率
+					if(HEAT_TRA!=1)
+						HEAT_TRA=1;
+					
+					//定时器关闭
+					if(TR1!=0)
+						TR1 = 0;					
 				}
 				else
-				{
-					//scr_tune_time=scr_curr_time;
-			
-					//if(HEAT_TRA!=1)
-					//HEAT_TRA=1;
-					//scr_open_time=scr_tune_time;
-					
-					//关闭可控硅 设置可控硅开通标记
-					//HEAT_TRA=0;
-					
-						scr_open_time=scr_curr_time;
-//					
-						Timer_Init();
-					
-//					
-//					scr_open_flag=0;		
-//					TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-//					TH1 = (65536 - scr_open_time)/256;
-					
-//					//scr_open_time=scr_curr_time;
-//					
-//					scr_open_flag=0;		
-//					TL1 = (65536 - scr_curr_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-//					TH1 = (65536 - scr_curr_time)/256;
-//					
-//					if(TR1!=1)
-//					TR1 = 1;//打开定时器0		
-
-//						printf("%d\n",scr_curr_time);
-
-					
+				{					
+						scr_open_time=scr_curr_time;				
+						Timer_Init();				
 				}
 			}
 			
-			//scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
-			//关闭过零中断会同时关闭水流量计中断，因为都是INT2中断，导致更大的问题，此种方法在这里不可行
-			//https://blog.csdn.net/dijindeng/article/details/50426028
-//			do {
-//				scr_tune_time=scr_curr_time;
-//			}while(scr_tune_time != scr_curr_time);
-			
-			
-		}
+					
+		}/**/
 		//printf("%d\n",scr_curr_time);
 		/**/
 	}
@@ -483,16 +450,7 @@ void PIDCalc(int Sv,int Pv)
 		if(TR1!=0)
 			TR1 = 0;
 	}
-//	else
-//	{
-//		//printf("333\n");
-//	}
-	
-	//开启过零中断
-	//IE1 |= 0x08;	//0000 x000  INT2使能
-	
-	
-//	#endif
+
 }
 
 /*
