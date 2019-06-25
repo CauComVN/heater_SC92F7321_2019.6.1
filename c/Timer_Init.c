@@ -64,36 +64,17 @@ void Timer1Int_Handle()
 			
 			scr_open_flag=1;	
 
-			//100us
-			TL1 = 0;// (65536 - 200)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-			TH1 = 25;//(65536 - 200)/256;
+			//768us
+			TL1 = 0;// (65536 - 1536)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+			TH1 = 250;//(65536 - 1536)/256;
 						
 			if(HEAT_TRA!=1)
 					HEAT_TRA=1;
-			
-			//可控硅开通时间点之后，计算关断可控硅和定时器时间，然后重置定时器
-//			if((scr_open_time_max-scr_open_time)<0)
-//			{
-//				TH1 = 65536/256;     //溢出时间：时钟为Fsys，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-//				TL1 = 65536%256;	
-//			}
-//			else
-//			{
-//				TH1 = (65536-(scr_open_time_max-scr_open_time))/256;     //溢出时间：时钟为Fsys，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-//				TL1 = (65536-(scr_open_time_max-scr_open_time))%256;	
-			//}
 		}
 		else
 		{
-			//if(HEAT_TRA!=0)
-			//{
-					HEAT_TRA=0;
-			//}
-			//if(TR2!=0)
-			//{
-				//ET1 = 0;
-					TR2 = 0;
-			//}			
+			HEAT_TRA=0;
+			TR2 = 0;
 			scr_open_flag=0;
 		}
 }
