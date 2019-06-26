@@ -181,7 +181,6 @@ extern void ADC_Interrupt_Handle(void);
 extern void Water_Detection_EX2_Handle();
 extern void Water_Detection_Timer0_Handle();
 extern void Zero_Crossing_EX2_Handle();
-extern void EX1_Handle();
 extern void UartInt_Handle();
 extern void Timer1Int_Handle();
 extern void Leakage_EX0_Handle(void);

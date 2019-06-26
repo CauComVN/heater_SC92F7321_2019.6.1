@@ -13,45 +13,6 @@ void Uart_Process();
 
 bit UartSendFlag = 0; //发送中断标志位
 bit UartReceiveFlag = 0; //接收中断标志位
-/*****************************************************
-*函数名称：void Uart0_Test(void)
-*函数功能：Uart0测试
-*入口参数：void
-*出口参数：void
-*****************************************************/
-//void Uart0_Test(void)
-//{
-//	Uart0_Init();
-//	while(1)
-//	{
-////		SBUF = 0x55;
-////		while(!UartSendFlag);
-////		UartSendFlag = 0;
-//		
-//		UART_SentChar(0x55);
-//		
-//		if(UartReceiveFlag)
-//		{
-//			UartReceiveFlag=0;
-//			
-//			BEE = ~BEE;
-//		
-//			//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
-//			if(SBUF == 0x01)
-//			{				
-//				SBUF = 0x55+SBUF;
-//				while(!UartSendFlag);
-//				UartSendFlag = 0;
-//			}
-//			if(SBUF == 0x02)
-//			{				
-//				SBUF = 0x55+SBUF;
-//				while(!UartSendFlag);
-//				UartSendFlag = 0;
-//			}	
-//		}
-//	}
-//}
 
 char putchar(char c)//用于重写printf
 {
@@ -63,11 +24,10 @@ char putchar(char c)//用于重写printf
 
 void Uart_Process()
 {
-	//unsigned char string[5]={"1234"};
-	//uint n;
-	//sscanf(string,"%u",&n);
-	//sscanf(string,"%u",&n); //string是字符串，%u是格式控制串，u是无符号十进制数，&n是变量n的地址。
-	//printf("%d\n",n);//可在KEIL C 开发环境中输出观察
+//	unsigned char string[5]={"1234"};
+//	uint n;
+//	sscanf(string,"%u",&n); //string是字符串，%u是格式控制串，u是无符号十进制数，&n是变量n的地址。
+//	printf("%d\n",n);//可在KEIL C 开发环境中输出观察
 	
 	if(UartReceiveFlag)
 	{
@@ -75,7 +35,6 @@ void Uart_Process()
 		
 		BEE = ~BEE;
 	
-		//HEAT TRA PWM1 功率调节方式 flag 0:不用调节 1：增加功率 Duty增大 2：减少功率 Duty减少	
 		if(SBUF == 0x01)
 		{				
 			best_temp_out=best_temp_out+1;
