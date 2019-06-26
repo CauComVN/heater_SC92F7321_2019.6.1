@@ -23,8 +23,9 @@ void Timer_Init(void)
 	HEAT_TRA=0;
 	scr_open_flag=0;
 		
-	TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-	TH1 = (65536 - scr_open_time)/256;
+	//65536*scr_open_time/20000
+	TL1 = (65536 - scr_open_time*16/5)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+	TH1 = (65536 - scr_open_time*16/5)/256;
 	TR1 = 0;
 	ET1 = 1;//定时器0允许
 	TR1 = 1;//打开定时器0
@@ -64,9 +65,9 @@ void Timer1Int_Handle()
 			
 			scr_open_flag=1;	
 
-			//768us
-			TL1 = 0;// (65536 - 1536)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-			TH1 = 250;//(65536 - 1536)/256;
+			//400us
+			TL1 = 224;// (65536 - 800)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+			TH1 = 252;//(65536 - 800)/256;
 						
 			if(HEAT_TRA!=1)
 					HEAT_TRA=1;
