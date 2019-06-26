@@ -35,7 +35,7 @@ volatile bit b_start_pid=0;
 Enum_Ex_Flag idata Ex_Flag;
 
 //35度~60度 自动调节  最佳：40 - 50
-int idata best_temp_out=39;
+int idata best_temp_out=36;
 volatile uchar  current_out_temp=28; //当前出水温度
 
 volatile int  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
@@ -290,7 +290,7 @@ void PIDCalc(int Sv,int Pv)
 	{
 		//printf("111\n");
 		
-		if(ERR>2)
+		if(ERR>1)
 		{
 			if(heater_power_status!=1)
 					heater_power_status=1;
@@ -306,7 +306,7 @@ void PIDCalc(int Sv,int Pv)
 				b_start_pid=1;
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-				scr_curr_time = 1000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				scr_curr_time = 6000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 				
 				do {
 						scr_tune_time=scr_curr_time;
