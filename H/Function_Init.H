@@ -146,14 +146,7 @@ extern volatile  uchar current_out_temp; //当前出水温度
 extern uint idata scr_open_time_max;
 extern uint  scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 
-//extern volatile  int   scr_curr_time;
-//volatile
 extern void IO_Init(void);
-
-//extern void EXTI_Test(void);
-//extern void EX_Init(void);
-
-//extern void Uart0_Test(void);
 
 extern void ADC_Init(uint Channel);
 extern int ADC_Convert(void);
@@ -164,13 +157,9 @@ extern void soft_delay(uint n);
 
 extern int  Scr_Driver_Check_Insurance();//检测温度保险
 extern void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
-//extern void Zero_Crossing_EXTI_Test(void);
 extern void Zero_Crossing_EX_Init(void);
-//extern void Water_Detection_EXTI_Test(void);
-//extern void Water_Detection_Timer_Test(void);
 extern void Water_Detection_EX_Init(void);
 extern void Water_Detection_Timer_Init(void);
-//extern void Leakage_EXTI_Test(void);
 
 extern void Leakage_EX_Init(void);
 
@@ -185,7 +174,7 @@ extern void Timer_Init(void);
 extern void Uart0_Init(void);
 extern void Uart_Process();
 //extern void UART_SentChar(uchar chr);
-extern void UART_SendString(uchar *str);
+//extern void UART_SendString(uchar *str);
 
 //中断
 extern void ADC_Interrupt_Handle(void);

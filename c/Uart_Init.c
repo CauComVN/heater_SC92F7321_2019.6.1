@@ -63,15 +63,11 @@ char putchar(char c)//用于重写printf
 
 void Uart_Process()
 {
-	//printf("00100\n");
-	
 	//unsigned char string[5]={"1234"};
 	//uint n;
 	//sscanf(string,"%u",&n);
 	//sscanf(string,"%u",&n); //string是字符串，%u是格式控制串，u是无符号十进制数，&n是变量n的地址。
 	//printf("%d\n",n);//可在KEIL C 开发环境中输出观察
-	
-	
 	
 	if(UartReceiveFlag)
 	{
@@ -89,7 +85,7 @@ void Uart_Process()
 			}
 			
 			//软件延时，保证变量更新完成，避免主循环逻辑错误或者混乱
-			soft_delay(48000); //48000/24=2000=2ms
+			soft_delay(48000); 
 			
 			SBUF = 0x55+SBUF;
 			while(!UartSendFlag);
@@ -104,7 +100,7 @@ void Uart_Process()
 			}
 			
 			//软件延时，保证变量更新完成，避免主循环逻辑错误或者混乱
-			soft_delay(48000); //48000/24=2000=2ms
+			soft_delay(48000); 
 			
 			SBUF = 0x55+SBUF;
 			while(!UartSendFlag);
