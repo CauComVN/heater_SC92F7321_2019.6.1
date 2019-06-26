@@ -72,28 +72,28 @@ int search(uint arry[],uint n,uint key)
 int get_temp_table(uint nADValue, uchar* temp)
 {
     uint Rntc=50;//常温
-	
-		//计算电阻公式 x/c=Rntc/(Rup+Rntc)
+
+    //计算电阻公式 x/c=Rntc/(Rup+Rntc)
     //c:如果ADC采集精度为N bit，对应满量程值为c值 2^N=c，主控芯片12位ADC， 2(12)=4096  5v=5v;
     //x:ADC采集值 x=TempAdd
     //Rup:上拉电阻值 10k
-    //Rntc=10*nADValue/(4096-nADValue); 
-		//10*10*nADValue/(4096-nADValue)/10;
+    //Rntc=10*nADValue/(4096-nADValue);
+    //10*10*nADValue/(4096-nADValue)/10;
 
     Rntc=(uint)(10*nADValue/(4096-nADValue));
-	
-		if(Rntc>NTC_R_VALUE_MAX)
-		{
-			Rntc=NTC_R_VALUE_MAX;
-		}
-		if(Rntc<NTC_R_VALUE_MIN)
-		{
-			Rntc=NTC_R_VALUE_MIN;
-		}
-	
-		*temp =search(bufTable_NTC_R, sizeof(bufTable_NTC_R)/2,	Rntc);
-		
-		return 0;
+
+    if(Rntc>NTC_R_VALUE_MAX)
+    {
+        Rntc=NTC_R_VALUE_MAX;
+    }
+    if(Rntc<NTC_R_VALUE_MIN)
+    {
+        Rntc=NTC_R_VALUE_MIN;
+    }
+
+    *temp =search(bufTable_NTC_R, sizeof(bufTable_NTC_R)/2,	Rntc);
+
+    return 0;
 }
 
 
@@ -136,6 +136,6 @@ int ADC_Convert(void)
 
     //TempAdd=TempAdd/4; //求平均值
     TempAdd>>=2; //求平均值，如果检测7次，去掉3次，变为4，4是2次方，所以右移2
-    
+
     return TempAdd;
 }
