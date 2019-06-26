@@ -91,6 +91,12 @@ void main(void)
 
                 b_btm_int_flag=0;
             }
+						
+						if(zero_int_flag==1)
+						{
+							zero_int_flag=0;
+							PIDCalc(best_temp_out, current_out_temp);
+						}
 
 						//串口接收到数据，处理
 						Uart_Process();

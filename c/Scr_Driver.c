@@ -96,33 +96,33 @@ void Zero_Crossing_EX2_Handle()
 //	scr_open_time=5000;        
 //  Timer_Init();
 	
-	if((best_temp_out-current_out_temp)>2)
-    {
-//			scr_open_time=5000;        
-//			Timer_Init();
-			
-        scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
-        if(scr_curr_time<1)
-            scr_curr_time=0;
-        scr_open_time=scr_curr_time;
-				
-        Timer_Init();
-    }
-    else if((current_out_temp-best_temp_out)>2)
-    {
-			scr_open_time=15000;        
-			Timer_Init();
-			
-//        scr_curr_time += 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
-//        if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
-//            scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
+//	if((best_temp_out-current_out_temp)>2)
+//    {
+////			scr_open_time=5000;        
+////			Timer_Init();
+//			
+//        scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+//        if(scr_curr_time<1)
+//            scr_curr_time=0;
 //        scr_open_time=scr_curr_time;
-//        
+//				
 //        Timer_Init();
-    }
+//    }
+//    else if((current_out_temp-best_temp_out)>2)
+//    {
+//			scr_open_time=15000;        
+//			Timer_Init();
+//			
+////        scr_curr_time += 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+////        if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
+////            scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
+////        scr_open_time=scr_curr_time;
+////        
+////        Timer_Init();
+//    }
 		
 
-    //zero_int_flag=1;
+    zero_int_flag=1;
 
 
     //PIDCalc(best_temp_out, current_out_temp);      
