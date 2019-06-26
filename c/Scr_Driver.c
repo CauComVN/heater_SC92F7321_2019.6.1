@@ -384,8 +384,7 @@ void PIDCalc(int Sv,int Pv)
         if(scr_curr_time<1)
             scr_curr_time=0;
         scr_open_time=scr_curr_time;
-
-        TR1 = 0;
+				
         Timer_Init();
     }
     else if((current_out_temp-best_temp_out)>2)
@@ -394,8 +393,7 @@ void PIDCalc(int Sv,int Pv)
         if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
             scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
         scr_open_time=scr_curr_time;
-
-        TR1 = 0;
+        
         Timer_Init();
     }
     else
@@ -472,7 +470,6 @@ void PIDCalc(int Sv,int Pv)
 										}
                     else
                     {
-											TR1 = 0;
                       scr_open_time=scr_curr_time;
                       Timer_Init();
                     }
