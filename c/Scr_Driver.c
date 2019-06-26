@@ -39,7 +39,7 @@ Enum_Ex_Flag idata Ex_Flag;
 int idata best_temp_out=39;
 volatile uchar  current_out_temp=28; //当前出水温度
 
-volatile int  scr_curr_time=8000;//zero_period_high_time/2;//20000;//6;
+volatile int  scr_curr_time=5000;//zero_period_high_time/2;//20000;//6;
 
 volatile int  scr_tune_time=0;
 
@@ -93,153 +93,39 @@ void Zero_Crossing_EX_Init(void)
 
 void Zero_Crossing_EX2_Handle()
 {
-//    HEAT_TRA=0;
-//    TR1 = 0;
-//    Timer_Init();
-//	if(ZERO==1)
-//	{
-//		scr_open_time_max=zero_period_high_time;
-//	}
-//	else
-//	{
-//		scr_open_time_max=zero_period_low_time;
-//	}
+//	scr_open_time=5000;        
+//  Timer_Init();
+	
+	if((best_temp_out-current_out_temp)>2)
+    {
+//			scr_open_time=5000;        
+//			Timer_Init();
+			
+        scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+        if(scr_curr_time<1)
+            scr_curr_time=0;
+        scr_open_time=scr_curr_time;
+				
+        Timer_Init();
+    }
+    else if((current_out_temp-best_temp_out)>2)
+    {
+			scr_open_time=15000;        
+			Timer_Init();
+			
+//        scr_curr_time += 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+//        if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
+//            scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
+//        scr_open_time=scr_curr_time;
+//        
+//        Timer_Init();
+    }
+		
 
     //zero_int_flag=1;
 
 
-    PIDCalc(best_temp_out, current_out_temp);
-    /*
-    //	{
-    		if(heater_power_tune==1)
-    		{
-    			//全功率
-    			//if(HEAT_TRA!=1)
-    				HEAT_TRA=1;
-
-    			//定时器关闭
-    			//if(TR1!=0)
-    				TR1 = 0;
-    		}
-    		else if(heater_power_tune==0)
-    		{
-    			//无功率
-    			//if(HEAT_TRA!=0)
-    				HEAT_TRA=0;
-
-    			//定时器关闭
-    			//if(TR1!=0)
-    				TR1 = 0;
-    		}
-    		else
-    		{
-    			if(ZERO==1)
-    			{
-    				scr_open_time_max=zero_period_high_time;
-    			}
-    			else
-    			{
-    				scr_open_time_max=zero_period_low_time;
-    			}
-
-    			//if(scr_tune_time>0 && scr_tune_time<=(scr_open_time_max-zero_peroid_last_time))
-    			//{
-    				//if(HEAT_TRA!=1)
-    				//{
-    						HEAT_TRA=1;
-    				//}
-
-    				//if(scr_open_time != scr_tune_time)
-    				//{
-    					scr_open_time=scr_tune_time;
-    				//}
-
-
-    				scr_open_flag=0;
-    				TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-    				TH1 = (65536 - scr_open_time)/256;
-    				TR1 = 1;//打开定时器0
-    				//Timer_Init();
-    			//}
-    //				else
-    //				{
-    //					if(HEAT_TRA!=0)
-    //						HEAT_TRA=0;
-    //
-    //					//定时器关闭
-    //					if(TR1!=0)
-    //						TR1 = 0;
-    //				}
-    //			}
-    	}
-    */
-    /*
-    //如果中断2有两路输入，根据上升沿或者下降沿来确认，上升沿中断，所以端口电平是1
-    //if(ZERO == 1) //INT24 P20 ZERO 过零检测到零点
-    {
-    		if(heater_power_status==1)
-    		{
-    			//全功率
-    			if(HEAT_TRA!=1)
-    				HEAT_TRA=1;
-
-    			//定时器关闭
-    			if(TR1!=0)
-    				TR1 = 0;
-    		}
-    		else if(heater_power_status==0)
-    		{
-    			//无功率
-    			if(HEAT_TRA!=0)
-    				HEAT_TRA=0;
-
-    			//定时器关闭
-    			if(TR1!=0)
-    				TR1 = 0;
-    		}
-    		else
-    		{
-    			if(ZERO==1)
-    			{
-    				scr_open_time_max=zero_period_high_time;
-    			}
-    			else
-    			{
-    				scr_open_time_max=zero_period_low_time;
-    			}
-
-    			if(scr_tune_time>0 && scr_tune_time<=(scr_open_time_max-zero_peroid_last_time))
-    			{
-    				if(HEAT_TRA!=1)
-    				{
-    						HEAT_TRA=1;
-    				}
-
-    				if(scr_open_time != scr_tune_time)
-    				{
-    					scr_open_time=scr_tune_time;
-    				}
-
-    				Timer_Init();
-    			}
-    			else
-    			{
-    				if(HEAT_TRA!=0)
-    					HEAT_TRA=0;
-
-    				//定时器关闭
-    				if(TR1!=0)
-    					TR1 = 0;
-    			}
-    		}
-    	}
-    	*/
-
-    /*   if(HALL_LLJ == 1) //INT25 P21 水流检测计数
-       {
-
-       }
-    */
+    //PIDCalc(best_temp_out, current_out_temp);      
 }
 
 //检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
