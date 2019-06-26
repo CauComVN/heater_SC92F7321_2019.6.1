@@ -40,7 +40,7 @@ volatile uchar  current_out_temp=28; //当前出水温度
 
 volatile int  scr_curr_time=0;//zero_period_high_time/2;//20000;//6;
 
-
+volatile int  scr_tune_time=0;
 
 //int idata Out1=0;  //记录上次输出
 
@@ -125,16 +125,16 @@ void Zero_Crossing_EX2_Handle()
 				
 				//scr_open_time = scr_open_time_max/2;//37度
 
-				if(scr_curr_time>0 && scr_curr_time<=(scr_open_time_max-zero_peroid_last_time))
+				if(scr_tune_time>0 && scr_tune_time<=(scr_open_time_max-zero_peroid_last_time))
 				{
 					if(HEAT_TRA!=0)
 					{
 							HEAT_TRA=0;
 					}			
 			
-					if(scr_open_time != scr_curr_time)
+					if(scr_open_time != scr_tune_time)
 					{
-						scr_open_time=scr_curr_time;
+						scr_open_time=scr_tune_time;
 					}
 		
 					Timer_Init();
@@ -286,9 +286,6 @@ void PIDCalc(int Sv,int Pv)
 	
 	printf("%d\n",Out);	
 	
-	//关闭过零中断
-	//IE1 &= 0xf7;	//0000 x000  INT2关闭
-	
 	//if(Out>0)
 	{
 		//printf("111\n");
@@ -310,6 +307,10 @@ void PIDCalc(int Sv,int Pv)
 				
 				//全功率调整90% 功率调节是相反的 (100-90)/100=1/10
 				scr_curr_time = 1000;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+				
+				do {
+						scr_tune_time=scr_curr_time;
+				}while(scr_tune_time != scr_curr_time);
 			}
 			else
 			{		
@@ -319,6 +320,15 @@ void PIDCalc(int Sv,int Pv)
 				{					
 					if(heater_power_status!=1)
 						heater_power_status=1;
+				}
+				else
+				{
+					//scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
+					//关闭过零中断会同时关闭水流量计中断，因为都是INT2中断，导致更大的问题，此种方法在这里不可行
+					//https://blog.csdn.net/dijindeng/article/details/50426028
+					do {
+						scr_tune_time=scr_curr_time;
+					}while(scr_tune_time != scr_curr_time);
 				}
 			}
 		}
@@ -336,7 +346,4 @@ void PIDCalc(int Sv,int Pv)
 //	{
 //		//printf("333\n");
 //	}
-	
-	//开启过零中断
-	//IE1 |= 0x08;	//0000 x000  INT2使能
 }
