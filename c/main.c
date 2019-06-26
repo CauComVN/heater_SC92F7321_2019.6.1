@@ -18,8 +18,6 @@
 void main(void)
 {
     uint idata ADCTempValue=0;
-	
-		uint last_temp_value=0;
 
     IO_Init();
     WDTCON |= 0x10;		    //清看门狗
@@ -40,8 +38,6 @@ void main(void)
 
         //水流检测定时器
         Water_Detection_Timer_Init();
-			
-				Timer_Init();
 
         //=====================主循环
         while(1)
@@ -84,23 +80,16 @@ void main(void)
 
                 //UART_SentChar(current_out_temp);
 
-                printf("%bd\n",current_out_temp);						
-								
+                printf("%bd\n",current_out_temp);
 
-                //PIDCalc(best_temp_out, current_out_temp);
+                PIDCalc(best_temp_out, current_out_temp);
 
                 b_btm_int_flag=0;
             }
-						
-						if(zero_int_flag==1)
-						{
-							zero_int_flag=0;
-							PIDCalc(best_temp_out, current_out_temp);
-						}
 
-						//串口接收到数据，处理
-						Uart_Process();
-      }
+            //串口接收到数据，处理
+            Uart_Process();
+        }
     }
     break;    
     case 5:

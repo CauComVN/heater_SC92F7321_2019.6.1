@@ -59,7 +59,7 @@
 //#define pidt   0.5
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
 //kp=1
-#define  Kp   (5)  
+#define  Kp   5  
 //积分时间 60
 #define  Ti  500
 //微分时间 600
@@ -132,8 +132,6 @@ typedef enum Heater_Exception
 //当前热水器运行或停止状态 继电器动作 0：停止 1：运行
 extern volatile  bit heater_relay_on;
 
-extern volatile  bit scr_open_flag;
-
 //热水器内部异常状态
 extern Enum_Ex_Flag idata ex_flag;
 
@@ -145,16 +143,12 @@ extern int idata best_temp_out;
 
 extern volatile bit b_start_pid;
 
-extern volatile uchar zero_int_flag;
-extern volatile uchar heater_power_tune;
-extern volatile int  scr_tune_time;
-
 extern volatile  uchar current_out_temp; //当前出水温度
 
-extern volatile uint  scr_open_time_max;
+extern uint idata scr_open_time_max;
 extern uint  scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
 
-extern volatile  int   scr_curr_time;
+//extern volatile  int   scr_curr_time;
 //volatile
 extern void IO_Init(void);
 
@@ -181,8 +175,6 @@ extern void Water_Detection_Timer_Init(void);
 //extern void Leakage_EXTI_Test(void);
 
 extern void Leakage_EX_Init(void);
-
-extern void Time1Run(uint scr_open_time);
 
 // Sv设定温度值  Pv当前温度值
 extern void PIDCalc(int Sv,int Pv);
