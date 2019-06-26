@@ -213,6 +213,32 @@ void PIDCalc(int Sv,int Pv)
     static int ERR=0;       //当前误差
     static int ERR1=0;      //上次误差
     static int ERR2=0;      //上上次误差
+		
+		
+		
+		if((best_temp_out-current_out_temp)>2)
+    {
+        scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+        if(scr_curr_time<1)
+            scr_curr_time=0;
+        scr_open_time=scr_curr_time;
+				
+//        Timer_Init();
+				TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+				TH1 = (65536 - scr_open_time)/256;
+				TR1 = 1;//打开定时器0	
+    }
+    else if((current_out_temp-best_temp_out)>2)
+    {
+        scr_curr_time += 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
+        if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
+            scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
+        scr_open_time=scr_curr_time;
+        
+        Timer_Init();
+    }
+    else
+    {
 
 
 //	static uint Upper_Limit= 100; //PID输出上限
@@ -264,26 +290,7 @@ void PIDCalc(int Sv,int Pv)
 
 
 
-    if((best_temp_out-current_out_temp)>2)
-    {
-        scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
-        if(scr_curr_time<1)
-            scr_curr_time=0;
-        scr_open_time=scr_curr_time;
-				
-        Timer_Init();
-    }
-    else if((current_out_temp-best_temp_out)>2)
-    {
-        scr_curr_time += 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
-        if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
-            scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
-        scr_open_time=scr_curr_time;
-        
-        Timer_Init();
-    }
-    else
-    {
+    
 
 //	#if 0
 
