@@ -182,6 +182,8 @@ extern void Water_Detection_Timer_Init(void);
 
 extern void Leakage_EX_Init(void);
 
+extern void Time1Run(uint scr_open_time);
+
 // Sv设定温度值  Pv当前温度值
 extern void PIDCalc(int Sv,int Pv);
 

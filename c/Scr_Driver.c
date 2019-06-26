@@ -93,39 +93,39 @@ void Zero_Crossing_EX_Init(void)
 
 void Zero_Crossing_EX2_Handle()
 {
-//	scr_open_time=5000;        
+//	scr_open_time=5000;
 //  Timer_Init();
-	
+
 //	if((best_temp_out-current_out_temp)>2)
 //    {
-////			scr_open_time=5000;        
+////			scr_open_time=5000;
 ////			Timer_Init();
-//			
+//
 //        scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 //        if(scr_curr_time<1)
 //            scr_curr_time=0;
 //        scr_open_time=scr_curr_time;
-//				
+//
 //        Timer_Init();
 //    }
 //    else if((current_out_temp-best_temp_out)>2)
 //    {
-//			scr_open_time=15000;        
+//			scr_open_time=15000;
 //			Timer_Init();
-//			
+//
 ////        scr_curr_time += 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
 ////        if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
 ////            scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
 ////        scr_open_time=scr_curr_time;
-////        
+////
 ////        Timer_Init();
 //    }
-		
+
 
     zero_int_flag=1;
 
 
-    //PIDCalc(best_temp_out, current_out_temp);      
+    //PIDCalc(best_temp_out, current_out_temp);
 }
 
 //检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
@@ -213,20 +213,18 @@ void PIDCalc(int Sv,int Pv)
     static int ERR=0;       //当前误差
     static int ERR1=0;      //上次误差
     static int ERR2=0;      //上上次误差
-		
-		
-		
-		if((best_temp_out-current_out_temp)>2)
+
+
+
+    if((best_temp_out-current_out_temp)>2)
     {
         scr_curr_time -= 200;//zero_period_low_time/10; //17200 //不能这样用，可以给固定值
         if(scr_curr_time<1)
             scr_curr_time=0;
         scr_open_time=scr_curr_time;
-				
+
 //        Timer_Init();
-				TL1 = (65536 - scr_open_time)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
-				TH1 = (65536 - scr_open_time)/256;
-				TR1 = 1;//打开定时器0	
+					Time1Run(scr_open_time);
     }
     else if((current_out_temp-best_temp_out)>2)
     {
@@ -234,8 +232,9 @@ void PIDCalc(int Sv,int Pv)
         if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
             scr_curr_time=(zero_period_low_time-zero_peroid_last_time);
         scr_open_time=scr_curr_time;
-        
-        Timer_Init();
+
+//        Timer_Init();
+				Time1Run(scr_open_time);
     }
     else
     {
@@ -245,52 +244,52 @@ void PIDCalc(int Sv,int Pv)
 //	static uint Lower_Limit= 0; //PID输出下限
 
 
-    //ERR = target_temp - curr_temp;   //算出当前误差
+        //ERR = target_temp - curr_temp;   //算出当前误差
 
-    ERR=Sv-Pv;
+        ERR=Sv-Pv;
 
-    //测试
-    //Out=ERR;
-
-
-    /**/
-    DERR1 = ERR - ERR1;   //上次
-
-    //DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
-    DERR2= ERR  + ERR2;
-    DERR2= DERR2 - ERR1;
-    DERR2= DERR2 - ERR1;
-
-    //先Kp
-    Pout = DERR1*Kp;///2;//DERR1*Kp;    //输出P
-    //Iout = 0;//ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
-    //Dout = 0;
-    Iout = ERR * Ti;
-    Dout = DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
-    //Out = (int)(Out1 + Pout + Iout + Dout);
-    Out = Out1+ Pout;
-    Out = Out+ Iout;
-    Out = Out+ Dout;
-
-    if(Out >= Upper_Limit) { //如果输出大于等于上限
-        Out = Upper_Limit;
-    }
-    else if(Out <= Lower_Limit) { //如果输出小于等于下线
-        Out = Lower_Limit;
-    }
-
-    Out1 = Out;      //记录这次输出的值
-
-    ERR2 = ERR1;    //记录误差
-    ERR1 = ERR;     //记录误差
-
-    //pidout=Out;
+        //测试
+        //Out=ERR;
 
 
+        /**/
+        DERR1 = ERR - ERR1;   //上次
+
+        //DERR2 = ERR - 2*ERR1 + ERR2; //上上次  //不要在主程序和中断程序中同时做8bit以上的乘除法运算，会出错
+        DERR2= ERR  + ERR2;
+        DERR2= DERR2 - ERR1;
+        DERR2= DERR2 - ERR1;
+
+        //先Kp
+        Pout = DERR1*Kp;///2;//DERR1*Kp;    //输出P
+        //Iout = 0;//ERR * Ti;//(float)(ERR * ((Kp * pidt) / Ti));  //输出I
+        //Dout = 0;
+        Iout = ERR * Ti;
+        Dout = DERR2 * Td;//0;//(float)(DERR2 * ((Kp * Td) / pidt));   //输出D
+        //Out = (int)(Out1 + Pout + Iout + Dout);
+        Out = Out1+ Pout;
+        Out = Out+ Iout;
+        Out = Out+ Dout;
+
+        if(Out >= Upper_Limit) { //如果输出大于等于上限
+            Out = Upper_Limit;
+        }
+        else if(Out <= Lower_Limit) { //如果输出小于等于下线
+            Out = Lower_Limit;
+        }
+
+        Out1 = Out;      //记录这次输出的值
+
+        ERR2 = ERR1;    //记录误差
+        ERR1 = ERR;     //记录误差
+
+        //pidout=Out;
 
 
 
-    
+
+
+
 
 //	#if 0
 
@@ -329,6 +328,7 @@ void PIDCalc(int Sv,int Pv)
 //                    scr_open_time=scr_curr_time;
 
 //                    Timer_Init();
+//							Time1Run(scr_open_time);
 //                }
 //                else
                 {
@@ -339,8 +339,8 @@ void PIDCalc(int Sv,int Pv)
 
                     if(scr_curr_time<1)
                     {
-												scr_curr_time=0;
-											
+                        scr_curr_time=0;
+
                         //全功率
                         if(HEAT_TRA!=1)
                             HEAT_TRA=1;
@@ -349,22 +349,23 @@ void PIDCalc(int Sv,int Pv)
                         if(TR1!=0)
                             TR1 = 0;
                     }
-										else if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
-										{
-											scr_curr_time=zero_period_low_time-zero_peroid_last_time;
-											
-											//无功率
-											if(HEAT_TRA!=0)
-													HEAT_TRA=0;
+                    else if(scr_curr_time>(zero_period_low_time-zero_peroid_last_time))
+                    {
+                        scr_curr_time=zero_period_low_time-zero_peroid_last_time;
 
-											//定时器关闭
-											if(TR1!=0)
-													TR1 = 0;
-										}
+                        //无功率
+                        if(HEAT_TRA!=0)
+                            HEAT_TRA=0;
+
+                        //定时器关闭
+                        if(TR1!=0)
+                            TR1 = 0;
+                    }
                     else
                     {
-                      scr_open_time=scr_curr_time;
-                      Timer_Init();
+                        scr_open_time=scr_curr_time;
+//                        Timer_Init();
+											Time1Run(scr_open_time);
                     }
                 }
 

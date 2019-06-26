@@ -5,6 +5,7 @@ uint  scr_open_time=0;//17200;//20000;//5;//低电平 8.6ms 17200---0  高电平 10ms 
 volatile bit scr_open_flag=0;//可控硅开通标志 用于关断定时器 关断可控硅
 
 void Timer_Init(void);
+void Time1Run(uint scr_open_time);
 
 /*****************************************************
 *函数名称：void Timer_Init(void)
@@ -53,6 +54,17 @@ void Timer_Init(void)
 	//TR1 = 1;//打开定时器0	
 	
 //     EA = 1;
+}
+
+void Time1Run(uint scr_open_time)
+{
+	//关闭可控硅 设置可控硅开通标记
+	 HEAT_TRA=0;
+	 scr_open_flag=0;
+	
+   TL1 = (65536 - scr_open_time/5*16)%256;     //溢出时间：时钟为Fsys/12，则scr_open_time*（1/(Fsys/12)）=scr_open_time*0.5us;
+	 TH1 = (65536 - scr_open_time/5*16)/256;
+   TR1 = 1;//打开定时器0
 }
 
 void Timer1Int_Handle()
