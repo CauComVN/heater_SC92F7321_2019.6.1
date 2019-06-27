@@ -1,6 +1,7 @@
 #include "H/Function_Init.H"
 #include <math.h>
 
+//采集温度定时器中断标记 基础定时器中断，采集出水温度值，采集周期和处理周期0.5s	
 volatile bit b_btm_int_flag=0;
 
 void BTM_Init(void);

@@ -125,26 +125,43 @@ typedef enum Heater_Exception
 		Ex_Water_No_Flow,
 		Ex_Water_Little_Flow,
 		Ex_Thermal_Switch_Error,
-} Enum_Ex_Flag;
+}Enum_Ex_Flag;
 
-//当前热水器运行或停止状态 继电器动作 0：停止 1：运行
-extern volatile  bit heater_relay_on;
+//温度采集ADC转换标记
+extern volatile bit AdcFlag;
 
-//热水器内部异常状态
-extern Enum_Ex_Flag idata ex_flag;
+//可控硅触发时间 低电平 8.6ms 17200---0  高电平 10ms  20000---0
+extern uint scr_open_time;
+//可控硅开通标志 用于标记可控硅触发，关断定时器，关断可控硅
+extern bit scr_open_flag;
 
-//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-extern volatile  int  idata  water_flow_flag;
-
-
-extern int idata best_temp_out;
-
+// 0:无功率 1：全功率
+extern volatile uchar heater_power_status; 
+//当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
+extern volatile bit heater_relay_on;
+//开始PID算法标记
 extern volatile bit b_start_pid;
-
-extern volatile  uchar current_out_temp; //当前出水温度
-
+////热水器内部异常状态
+extern Enum_Ex_Flag idata ex_flag;
+//35度~60度 自动调节  最佳：40 - 50
+extern int idata best_temp_out;
+//当前出水温度
+extern volatile uchar  current_out_temp; 
+//可控硅触发时间最大值 
 extern uint idata scr_open_time_max;
-extern uint  scr_open_time;//低电平 8.6ms 17200---0  高电平 10ms  20000---0
+//实时计算的可控硅触发时间
+extern volatile int  scr_curr_time;
+//实时计算的可控硅触发时间副本，用于解决主循环和过零检测中断内全局变量scr_curr_time问题
+extern volatile int  scr_tune_time;
+
+//记录水流脉冲触发中断个数
+extern volatile uint idata  numberPulse;
+//水流状态标记 0：无水流 1：少水流 2：多水流，正常
+extern volatile uchar idata water_flow_flag;
+
+//采集温度定时器中断标记 基础定时器中断，采集出水温度值，采集周期和处理周期0.5s	
+extern volatile bit b_btm_int_flag;
+
 
 extern void IO_Init(void);
 
@@ -158,6 +175,7 @@ extern void soft_delay(uint n);
 extern int  Scr_Driver_Check_Insurance();//检测温度保险
 extern void Scr_Driver_Control_Heat_RLY(int on);//继电器控制 HEAT RLY P02
 extern void Zero_Crossing_EX_Init(void);
+
 extern void Water_Detection_EX_Init(void);
 extern void Water_Detection_Timer_Init(void);
 
@@ -167,7 +185,6 @@ extern void Leakage_EX_Init(void);
 extern void PIDCalc(int Sv,int Pv);
 
 extern void BTM_Init(void);
-extern volatile   bit b_btm_int_flag;
 
 extern void Timer_Init(void);
 

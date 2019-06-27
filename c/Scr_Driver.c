@@ -22,21 +22,23 @@
 //HEAT ERROR 为输入端，如果等于高电平，表明热水器温度过高
 //如果为低电平，表明热水器温度在正常范围内
 
-volatile uchar heater_power_status=0; // 0:无功率 1：全功率
-
+// 0:无功率 1：全功率
+volatile uchar heater_power_status=0; 
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
 volatile bit heater_relay_on=0;
-
+//开始PID算法标记
 volatile bit b_start_pid=0;
-
 ////热水器内部异常状态
-Enum_Ex_Flag idata Ex_Flag;
-
+Enum_Ex_Flag idata ex_flag=Ex_Normal;
 //35度~60度 自动调节  最佳：40 - 50
-int idata best_temp_out=39;
-volatile uchar  current_out_temp=28; //当前出水温度
-
+int idata best_temp_out=38;
+//当前出水温度
+volatile uchar  current_out_temp=29; 
+//可控硅触发时间最大值 
+uint idata scr_open_time_max=zero_period_low_time;
+//实时计算的可控硅触发时间
 volatile int  scr_curr_time=0;
+//实时计算的可控硅触发时间副本，用于解决主循环和过零检测中断内全局变量scr_curr_time问题
 volatile int  scr_tune_time=0;
 
 void Zero_Crossing_EX_Init(void);
@@ -290,10 +292,6 @@ void PIDCalc(int Sv,int Pv)
 //		//printf("222\n");
 //
 //		if(heater_power_status!=0)
-//			heater_power_status=0;//scr_curr_time=zero_period_high_time;//scr_open_time_max-zero_peroid_last_time;
-//	}
-//	else
-//	{
-//		//printf("333\n");
+//			heater_power_status=0;
 //	}
 }

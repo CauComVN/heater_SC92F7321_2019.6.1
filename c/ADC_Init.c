@@ -4,15 +4,15 @@
 #include "MATH.H"
 #include "ADC.h"
 
-void ADC_Init(uint Channel);
+//温度采集ADC转换标记
 volatile bit AdcFlag = 0;
 
+void ADC_Init(uint Channel);
 void ADC_Init(uint Channel);
 int ADC_Convert(void);
 void ADC_Interrupt_Handle(void);
 
 int get_temp_table(uint nADValue, uchar* temp);
-
 
 ////////////////////////////////////////////////////////////
 //AIN9: AD in 进水采样温度

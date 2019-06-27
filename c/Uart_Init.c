@@ -5,6 +5,10 @@
 //uchar idata Uart0BuffNumber=0;
 //uchar code Uart0Buff[UART0_BUFF_LENGTH];
 
+int CalCrc(int crc, const char *buf, int len);
+void start_heater();
+void stop_heater();
+
 void Uart0_Init(void);
 void UartInt_Handle();
 void Uart_Process();
@@ -23,14 +27,15 @@ char putchar(char c)//用于重写printf
 }
 
 void Uart_Process()
-{
-//	unsigned char string[5]={"1234"};
-//	uint n;
-//	sscanf(string,"%u",&n); //string是字符串，%u是格式控制串，u是无符号十进制数，&n是变量n的地址。
-//	printf("%d\n",n);//可在KEIL C 开发环境中输出观察
-	
+{	
 	if(UartReceiveFlag)
 	{
+		
+//		unsigned char string[6]={"1234\n"};
+//	unsigned int n;
+//	sscanf(string,"%u",&n);//string是字符串，%u是格式控制串，u是无符号十进制数，&n是变量n的地址
+//	printf("%d\n",n);//可在KEIL C 开发环境中输出观察
+		
 		UartReceiveFlag=0;
 		
 		BEE = ~BEE;
@@ -66,66 +71,18 @@ void Uart_Process()
 			UartSendFlag = 0;
 		}	
 		
-		//启动加热开关
 		if(SBUF == 0x03)
-		{
-			//水流状态标记 0：无水流 1：少水流 2：多水流，正常
-			if(water_flow_flag == 2 && heater_relay_on==0)
-			{
-				b_start_pid=0;
-				
-				heater_relay_on=1;
-				Scr_Driver_Control_Heat_RLY(heater_relay_on);				
-				
-				//启动可控硅控制
-				Zero_Crossing_EX_Init();
-			}
+		{	
+			start_heater();			
 		}
+		
 		//关闭加热开关
 		if(SBUF == 0x04)
 		{
-			if(heater_relay_on==1)
-			{
-				heater_relay_on=0;
-				Scr_Driver_Control_Heat_RLY(heater_relay_on);
-			}
+			stop_heater();
 		}
 	}
 }
-
-/*****************************************************
-*函数名称：void Uart0_Init(void)
-*函数功能：Uart0中断初始化
-*入口参数：void 
-*出口参数：void
-*****************************************************/
-/*
-void Uart0_Init(void)    //选择Timer1作为波特率信号发生器
-{
-	P1CON &= 0XF3;
-	P1PH |= 0X0C;	 //TX/RX为带上拉输入；
-	TX1 = 1;		 //TX初始高电平；
-	SCON = 0X50;     //方式1，允许接收数据
-	PCON |= 0X80; 
-	
-	
-	T2CON = 0x00;    //使用定时器1作UART时钟
-	
-	//TMOD = 0X20;     //定时器1  8位自动重载
-	//TMCON = 0X02;    //定时器1   Fsys；
-	TMOD |= 0X20;     //定时器1  8位自动重载
-	TMOD &=0xbf; //////
-	TMCON |= 0X02;    //定时器1   Fsys；
-	
-	TL1 = 217;		
-	TH1 = 217;		 //UART 波特率24M情况下=38400；
-	TR1 = 0;
-	ET1 = 0;		 //Timer1使能
-	TR1 = 1;		 //启动Timer0
-	EUART = 1;	     //允许UART中断
-//	EA = 1;		     //开总中断
-}
-*/
 
 void Uart0_Init(void)    //选择Timer2作为波特率信号发生器
 {
@@ -185,3 +142,122 @@ void UartInt_Handle()
 //      UART_SentChar(*str++);
 //  }
 //}
+
+//CRC校验和有16位的，也有32位的。CRC校验和算法原理：
+//CRC校验和就是将一段二进制数据进行加密（乘以一个多项式），
+//然后得到一个校验码。将这个校验码添加在这段二进制数据后边就行了。
+//然后接收方在接收到数据之后，再对这个校验码进行解码。
+int CalCrc(int crc, const char *buf, int len)
+{
+    unsigned int byte;
+    unsigned char k;
+    unsigned short ACC,TOPBIT;
+//    unsigned short remainder = 0x0000;
+    unsigned short remainder = crc;
+    TOPBIT = 0x8000;
+    for (byte = 0; byte < len; ++byte)
+    {
+        ACC = buf[byte];
+        remainder ^= (ACC <<8);
+        for (k = 8; k > 0; --k)
+        {
+            if (remainder & TOPBIT)
+            {
+                remainder = (remainder << 1) ^0x8005;
+            }
+            else
+            {
+                remainder = (remainder << 1);
+            }
+        }
+    }
+    remainder=remainder^0x0000;
+    return remainder;
+}
+
+void start_heater()
+{		
+		//温度采集ADC转换标记
+		AdcFlag = 0;
+	
+		// 0:无功率 1：全功率
+		heater_power_status=0; 
+		//当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
+		heater_relay_on=0;
+		//开始PID算法标记
+		b_start_pid=0;		
+		////热水器内部异常状态
+		ex_flag=Ex_Normal;
+		//35度~60度 自动调节  最佳：40 - 50
+		best_temp_out=38;
+		//当前出水温度
+		current_out_temp=29;
+		//可控硅触发时间最大值 
+		scr_open_time_max=zero_period_low_time;
+		//实时计算的可控硅触发时间
+		scr_curr_time=0;
+		//实时计算的可控硅触发时间副本，用于解决主循环和过零检测中断内全局变量scr_curr_time问题
+		scr_tune_time=0;
+
+		//可控硅触发时间 低电平 8.6ms 17200---0  高电平 10ms  20000---0
+		scr_open_time=0;
+		//可控硅开通标志 用于标记可控硅触发，关断定时器，关断可控硅
+		scr_open_flag=0;
+	
+		//采集温度定时器中断标记 基础定时器中断，采集出水温度值，采集周期和处理周期0.5s	
+		b_btm_int_flag=0;		
+	
+		//水流检测霍尔计数器计数中断
+		numberPulse = 0;
+		//水流检测状态标记 0：无水流 1：少水流 2：多水流，正常
+		water_flow_flag=0;
+		
+	
+    //水流检测计数中断
+    Water_Detection_EX_Init();
+
+    //水流检测定时器中断
+    Water_Detection_Timer_Init();
+	
+		soft_delay(50000); // (1+1+(1+2)*50000)*0.5us=75001us=75.001ms
+	
+		//水流状态标记 0：无水流 1：少水流 2：多水流，正常
+		if(water_flow_flag == 2 && heater_relay_on==0)
+		{			
+			heater_relay_on=1;
+			Scr_Driver_Control_Heat_RLY(heater_relay_on);				
+			
+			//过零检测中断
+			Zero_Crossing_EX_Init();
+			
+			//基础定时器中断，采集出水温度值，采集周期和处理周期0.5s
+      BTM_Init();
+		}
+}
+
+void stop_heater()
+{
+	if(heater_relay_on==1)
+	{
+		heater_relay_on=0;
+		Scr_Driver_Control_Heat_RLY(heater_relay_on);
+	}
+	
+	//关闭水流霍尔传感器外部计数中断 INT25 P21 
+	//关闭过零检测外部中断 INT24 P20 ZERO
+	//基础定时器Base Timer中断不使能 出水温度采集定时器
+	//关闭PWM中断
+	IE1 &= 0xf1;	
+	
+	//关闭水流检测定时器
+	TR0 = 0;//定时器0停止计数
+  ET0 = 0;//定时器0不允许
+	
+	//关闭可控硅触发定时器	
+	TR1 = 0;//定时器1停止计数
+  ET1 = 0;//定时器1不允许
+	
+	//关闭出水温度采集ADC转换中断
+	EADC=0; //ADC中断不使能
+	ADCCON &= 0x08;//关闭ADC模块电源
+}

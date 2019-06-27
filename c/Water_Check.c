@@ -7,11 +7,9 @@
 ///40ms
 
 //记录水流脉冲触发中断个数
-
 volatile uint idata  numberPulse = 0;
-
 //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-volatile int idata water_flow_flag=0;
+volatile uchar idata water_flow_flag=0;
 
 void Water_Detection_EX_Init(void);
 void Water_Detection_Timer_Init(void);
@@ -26,7 +24,6 @@ void Water_Detection_Timer0_Handle();
 *****************************************************/
 void Water_Detection_EX_Init(void)
 {
-
     //配置中断口25
     P2CON &= 0xfd;     //中断IO口设置为高阻输入
     P2PH  |= 0x02;     //中断IO口设置为高阻带上拉
