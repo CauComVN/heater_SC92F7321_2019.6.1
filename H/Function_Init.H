@@ -19,7 +19,7 @@
 
 #define IC_MODEL  SC92F7321
 
-//#define UART0_BUFF_LENGTH	  5	//UART0接受缓冲区的容量（Byte)
+#define UART0_BUFF_LENGTH	  5	//UART0接受缓冲区的容量（Byte)
 
 
 //定义MCU管脚
@@ -146,7 +146,7 @@ extern Enum_Ex_Flag idata ex_flag;
 //35度~60度 自动调节  最佳：40 - 50
 extern int idata best_temp_out;
 //当前出水温度
-extern volatile uchar  current_out_temp; 
+extern volatile char  current_out_temp; 
 //可控硅触发时间最大值 
 extern uint idata scr_open_time_max;
 //实时计算的可控硅触发时间

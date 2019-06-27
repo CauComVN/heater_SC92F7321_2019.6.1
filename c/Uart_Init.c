@@ -2,10 +2,15 @@
 #include <stdio.h>
 #include <string.h>
 
-//uchar idata Uart0BuffNumber=0;
-//uchar code Uart0Buff[UART0_BUFF_LENGTH];
+bit UartSendFlag = 0; //发送中断标志位
+bit UartReceiveFlag = 0; //接收中断标志位
+
+uchar idata Uart0RecvBuffNum=0;
+char idata Uart0SendBuff[UART0_BUFF_LENGTH];
+char idata Uart0RecvBuff[UART0_BUFF_LENGTH];
 
 int CalCrc(int crc, const char *buf, int len);
+void init_heater();
 void start_heater();
 void stop_heater();
 
@@ -14,9 +19,6 @@ void UartInt_Handle();
 void Uart_Process();
 //void UART_SentChar(uchar chr);
 //void UART_SendString(uchar *str);
-
-bit UartSendFlag = 0; //发送中断标志位
-bit UartReceiveFlag = 0; //接收中断标志位
 
 char putchar(char c)//用于重写printf
 {
@@ -81,6 +83,24 @@ void Uart_Process()
 		{
 			stop_heater();
 		}
+		
+		//发送故障信息给上位机
+		if(ex_flag!=Ex_Normal)
+		{
+			int idata crc=0;
+				
+			//停止热水器
+			stop_heater();
+			
+			//发送异常协议给上位机  当前温度值+故障字+CSC校验
+			Uart0SendBuff[0]=current_out_temp;
+			Uart0SendBuff[1]=ex_flag;
+			crc = CalCrc(0x00, Uart0SendBuff, 2);//计算得到的16位CRC校验码
+			Uart0SendBuff[2] = (char)(crc >> 8);//取校验码的高八位
+			Uart0SendBuff[3] = (char)crc;//取校验码的低八位
+			Uart0SendBuff[4] = '\0';
+			printf(Uart0SendBuff);
+		}
 	}
 }
 
@@ -119,7 +139,10 @@ void UartInt_Handle()
 	if(RI)
 	{
 		RI = 0;	
-		UartReceiveFlag = 1;		
+		UartReceiveFlag = 1;	
+
+		Uart0RecvBuff[Uart0RecvBuffNum] = SBUF; //将接收的数据存入缓冲区
+		Uart0RecvBuffNum++;
 	}	
 }
 
@@ -149,11 +172,11 @@ void UartInt_Handle()
 //然后接收方在接收到数据之后，再对这个校验码进行解码。
 int CalCrc(int crc, const char *buf, int len)
 {
-    unsigned int byte;
-    unsigned char k;
-    unsigned short ACC,TOPBIT;
-//    unsigned short remainder = 0x0000;
-    unsigned short remainder = crc;
+    unsigned int idata byte;
+    unsigned char idata k;
+    unsigned short idata ACC,TOPBIT;
+//    unsigned short idata remainder = 0x0000;
+    unsigned short idata remainder = crc;
     TOPBIT = 0x8000;
     for (byte = 0; byte < len; ++byte)
     {
@@ -175,9 +198,9 @@ int CalCrc(int crc, const char *buf, int len)
     return remainder;
 }
 
-void start_heater()
-{		
-		//温度采集ADC转换标记
+void init_heater()
+{
+	//温度采集ADC转换标记
 		AdcFlag = 0;
 	
 		// 0:无功率 1：全功率
@@ -210,8 +233,13 @@ void start_heater()
 		//水流检测霍尔计数器计数中断
 		numberPulse = 0;
 		//水流检测状态标记 0：无水流 1：少水流 2：多水流，正常
-		water_flow_flag=0;
-		
+		water_flow_flag=0;		
+}
+
+void start_heater()
+{
+		//热水器初始化
+		init_heater();
 	
     //水流检测计数中断
     Water_Detection_EX_Init();
@@ -236,13 +264,7 @@ void start_heater()
 }
 
 void stop_heater()
-{
-	if(heater_relay_on==1)
-	{
-		heater_relay_on=0;
-		Scr_Driver_Control_Heat_RLY(heater_relay_on);
-	}
-	
+{	
 	//关闭水流霍尔传感器外部计数中断 INT25 P21 
 	//关闭过零检测外部中断 INT24 P20 ZERO
 	//基础定时器Base Timer中断不使能 出水温度采集定时器
@@ -260,4 +282,7 @@ void stop_heater()
 	//关闭出水温度采集ADC转换中断
 	EADC=0; //ADC中断不使能
 	ADCCON &= 0x08;//关闭ADC模块电源
+	
+	//热水器初始化
+	init_heater();
 }

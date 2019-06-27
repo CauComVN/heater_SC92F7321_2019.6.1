@@ -25,32 +25,6 @@ void main(void)
     //=====================主循环=====================
     while(1)
     {
-				/*
-        //====================test==========================
-        //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-        if(water_flow_flag >= 1 && heater_relay_on==0)
-        {
-						//开始PID算法标记
-            b_start_pid=0;
-
-            heater_relay_on=1;
-            Scr_Driver_Control_Heat_RLY(heater_relay_on);
-
-            //过零检测中断
-            Zero_Crossing_EX_Init();
-
-            //基础定时器中断，采集出水温度值，采集周期和处理周期0.5s
-            BTM_Init();
-        }
-				
-				if(water_flow_flag < 1 && heater_relay_on==1)
-        {
-            heater_relay_on=0;
-            Scr_Driver_Control_Heat_RLY(heater_relay_on);
-        }
-				//====================test==========================
-				*/
-
         if(heater_relay_on==1)
         {
             //检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式

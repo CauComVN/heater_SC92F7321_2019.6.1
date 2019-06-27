@@ -33,7 +33,7 @@ Enum_Ex_Flag idata ex_flag=Ex_Normal;
 //35度~60度 自动调节  最佳：40 - 50
 int idata best_temp_out=38;
 //当前出水温度
-volatile uchar  current_out_temp=29; 
+volatile char  current_out_temp=29; 
 //可控硅触发时间最大值 
 uint idata scr_open_time_max=zero_period_low_time;
 //实时计算的可控硅触发时间
@@ -147,15 +147,11 @@ int Scr_Driver_Check_Insurance()
     }
     else if(HEAT_ERROR==1)
     {
-        //温度异常范围内，温度保险已跳闸
-        if(heater_relay_on==1)
-        {
-            heater_relay_on=0;
-            Scr_Driver_Control_Heat_RLY(heater_relay_on);
-        }
+        //设置温度保险已跳闸标记        
+        ex_flag = Ex_Thermal_Switch_Error;
         return -1;
     }
-    return -1;
+    return 0;
 }
 
 //继电器控制 HEAT RLY P02
