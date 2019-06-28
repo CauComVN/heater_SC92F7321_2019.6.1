@@ -221,12 +221,12 @@ void PIDCalc(int Sv,int Pv)
     Out = Out+ Iout;
     Out = Out+ Dout;
 
-    if(Out >= Upper_Limit) { //如果输出大于等于上限
-        Out = Upper_Limit;
-    }
-    else if(Out <= Lower_Limit) { //如果输出小于等于下线
-        Out = Lower_Limit;
-    }
+//    if(Out >= Upper_Limit) { //如果输出大于等于上限
+//        Out = Upper_Limit;
+//    }
+//    else if(Out <= Lower_Limit) { //如果输出小于等于下线
+//        Out = Lower_Limit;
+//    }
 
     Out1 = Out;      //记录这次输出的值
 
