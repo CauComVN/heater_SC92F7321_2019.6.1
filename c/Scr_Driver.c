@@ -5,9 +5,9 @@
 #include <stdio.h>
 
 //55*10-28*10=270
-#define Upper_Limit  30
+#define Upper_Limit  100
 //如果出水温度超过预设温度，可控硅无功率运行
-#define Lower_Limit  -30
+#define Lower_Limit  -100
 
 
 //INT24 P20 ZERO
@@ -239,29 +239,29 @@ void PIDCalc(int Sv,int Pv)
     {
         //printf("111\n");
 
-        if(ERR>2)
-        {
-            if(heater_power_status!=1)
-                heater_power_status=1;
-        }
-        else
+//        if(ERR>2)
+//        {
+//            if(heater_power_status!=1)
+//                heater_power_status=1;
+//        }
+//        else
         {
             if(heater_power_status!=2)
                 heater_power_status=2;
 
             //PID算法控制
-            if(b_start_pid==0)
-            {
-                b_start_pid=1;
+//            if(b_start_pid==0)
+//            {
+//                b_start_pid=1;
 
-                //全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-                scr_curr_time = 5000;
+//                //全功率调整90% 功率调节是相反的 (100-90)/100=1/10
+//                scr_curr_time = 5000;
 
-                do {
-                    scr_tune_time=scr_curr_time;
-                } while(scr_tune_time != scr_curr_time);
-            }
-            else
+//                do {
+//                    scr_tune_time=scr_curr_time;
+//                } while(scr_tune_time != scr_curr_time);
+//            }
+//            else
             {
                 //一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
                 scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
@@ -270,6 +270,11 @@ void PIDCalc(int Sv,int Pv)
                     if(heater_power_status!=1)
                         heater_power_status=1;
                 }
+								else if(scr_curr_time>zero_period_low_time-zero_peroid_last_time)
+								{
+									if(heater_power_status!=0)
+										heater_power_status=0;
+								}
                 else
                 {
                     //scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
