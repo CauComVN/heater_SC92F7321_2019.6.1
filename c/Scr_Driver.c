@@ -214,9 +214,9 @@ void PIDCalc(int Sv,int Pv)
     DERR2= DERR2 - ERR1;
 
     //œ»Kp
-    Pout = DERR1*Kp;//0;//DERR1*Kp;    // ‰≥ˆP
-    Iout = ERR * Ti;//0;
-    Dout = DERR2*Td;//DERR2 * Td;//0;
+    Pout = DERR1*Kp;
+    Iout = ERR * Ti;
+    Dout = DERR2*Td;
     Out = Out1+ Pout;
     Out = Out+ Iout;
     Out = Out+ Dout;
