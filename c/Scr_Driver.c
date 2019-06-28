@@ -17,6 +17,16 @@
 //HEAT ERROR 为输入端，如果等于高电平，表明热水器温度过高
 //如果为低电平，表明热水器温度在正常范围内
 
+//抗饱和积分
+int idata umax=50;//理想最大温度值
+int idata umin=29;//理想最小温度值	
+		
+int idata Out1=0;  		//记录上次输出
+int idata ERR=0;       //当前误差
+int idata ERR1=0;      //上次误差
+int idata ERR2=0;      //上上次误差	
+int idata integral=0;		//积分分离
+
 // 0:无功率 1：全功率
 volatile uchar heater_power_status=0;
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
@@ -190,7 +200,7 @@ void PIDCalc(int Sv,int Pv)
 		int idata Upper_Limit=zero_period_low_time-zero_peroid_last_time;
 		int idata Lower_Limit=-1*(zero_period_low_time-zero_peroid_last_time);
 	
-    int idata index;
+    int idata index=0;
 	
     int idata DERR1 = 0;
     int idata DERR2 = 0;
@@ -200,17 +210,14 @@ void PIDCalc(int Sv,int Pv)
     int idata Dout = 0;       //微分结果
     int idata Out = 0; 				//总输出
 
-    static int Out1=0;  		//记录上次输出
-    static int ERR=0;       //当前误差
-    static int ERR1=0;      //上次误差
-    static int ERR2=0;      //上上次误差
-		
-		//抗饱和积分
-    int idata umax=50;//理想最大温度值
-    int idata umin=29;//理想最小温度值
-	
-	 //积分分离
-    static int integral=0;		
+//    static int Out1=0;  		//记录上次输出
+//    static int ERR=0;       //当前误差
+//    static int ERR1=0;      //上次误差
+//    static int ERR2=0;      //上上次误差
+//	
+//		//积分分离
+//    static int integral=0;		
+		  		
 
     ERR=Sv-Pv; //算出当前误差
     DERR1 = ERR - ERR1;   //上次

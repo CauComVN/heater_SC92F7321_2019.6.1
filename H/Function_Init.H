@@ -58,11 +58,11 @@
 	//15.6msMS计算一次 计算周期
 //比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
 //功率一半，得温度37  29-37 8 20000/8=2500 17200/8=2150
-#define  Kp   2300  
+#define  Kp   2400  
 //积分时间 Ki一般是比Kd还要小0.01个级别
-#define  Ti  0 //1000
+#define  Ti  100 //1000
 //微分时间 Kp/Kd=2 比例I/微分D=2，一般还要更大（10倍左右）
-#define  Td  1100
+#define  Td  0
 
 
 //过零检测周期高电平时间和低电平时间不等
@@ -130,6 +130,11 @@ extern uint scr_open_time;
 //可控硅开通标志 用于标记可控硅触发，关断定时器，关断可控硅
 extern bit scr_open_flag;
 
+extern int idata Out1;  		//记录上次输出
+extern int idata ERR;       //当前误差
+extern int idata ERR1;      //上次误差
+extern int idata ERR2;      //上上次误差	
+extern int idata integral;		//积分分离
 // 0:无功率 1：全功率
 extern volatile uchar heater_power_status; 
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
