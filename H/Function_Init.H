@@ -19,7 +19,7 @@
 
 #define IC_MODEL  SC92F7321
 
-#define UART0_BUFF_LENGTH	  5	//UART0接受缓冲区的容量（Byte)
+#define UART0_BUFF_LENGTH	  4	//UART0接受缓冲区的容量（Byte)
 
 
 //定义MCU管脚
@@ -64,7 +64,6 @@
 #define  Td  1000
 
 
-
 //过零检测周期高电平时间和低电平时间不等
 //10ms 时钟Fsys/12
 #define zero_period_high_time 	20000  
@@ -73,44 +72,38 @@
 //过零检测周期高低电平的最后部分，软件处理成最低功率
 #define zero_peroid_last_time		200
 
-
 //根据仿真确认少水流阈值，参考和比较numberPulse变量值
 #define waterThreshold		2 
 
-
 //最佳出水温度低值
-#define good_temp_out_low 28
+#define good_temp_out_low 29
 //最佳出水温度高值
 #define good_temp_out_high 50
 
-
-
-/***********ADC采样口选择*************/
-#if (IC_MODEL == SC92F7323)
-	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
-#endif
-
-#if (IC_MODEL == SC92F7322)
-	enum Channel {AIN0=0,AIN1,AIN4=4,AIN5,AIN6,AIN7,AIN8,AIN9,VDD4=15};
-#endif
-	
+/***********ADC采样口选择*************/	
 #if (IC_MODEL == SC92F7321)
 	enum Channel {AIN0=0,AIN1,AIN2,AIN3,AIN8=8,AIN9,VDD4=15};
 #endif
+
+/***********串口协议，Mod-Bus方式*************/		
+//	crc：校验和 
+//	主发报文：开/关/设定温度增1/设定温度减1/用设定温度值(1)+设定温度T(1)+crc(2)
+//	从发报文：实际温度T(1)+故障字(1)+crc(2)
 	
-#if (IC_MODEL == SC92F7320)
-	enum Channel {AIN0=0,AIN1,AIN6=6,AIN7,VDD4=15};
-#endif
-
-
 //下位机热水器通信协议
 enum Protocol_Heater 
 {
-	Protocol_Heater_Default						= 0x00,			//初始值
+	Protocol_Heater_Default						= 0x00,			//默认状态
+	//0x01 0x24 0x86 0xdb
 	Protocol_Heater_Start						  = 0x01, 		//启动热水器
+	//0x02 0x24 0x8c 0xdb
 	Protocol_Heater_Stop  						= 0x02, 		//停止热水器
-	Protocol_Heater_Increases_Power   = 0x03,			//热水器增加功率
-	Protocol_Heater_Reduce_Power			= 0x04,			//热水器减少功率 
+	//0x03 0x24 0x0a 0xd8
+	Protocol_Heater_Inc_Power				  = 0x03,			//热水器增加功率
+	//0x04 0x24 0x98 0xdb
+	Protocol_Heater_Red_Power	  		  = 0x04,			//热水器减少功率
+	//0x05 0x24 0x1e 0xd8
+	Protocol_Heater_Reset_Temp				= 0x05,			//热水器温度设定
 };
 
 //热水器内部异常状态
@@ -125,6 +118,7 @@ typedef enum Heater_Exception
 		Ex_Water_No_Flow,
 		Ex_Water_Little_Flow,
 		Ex_Thermal_Switch_Error,
+		Ex_Uart_Crc_Error,
 }Enum_Ex_Flag;
 
 //温度采集ADC转换标记

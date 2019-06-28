@@ -34,7 +34,6 @@ char putchar(char c)//用于重写printf
 
 void Uart_Process()
 {
-
     //发送故障信息给上位机
     if(ex_flag!=Ex_Normal)
     {
@@ -47,75 +46,53 @@ void Uart_Process()
         crc = CalCrc(0x00, Uart0SendBuff, 2);//计算得到的16位CRC校验码
         Uart0SendBuff[2] = (char)(crc >> 8);//取校验码的高八位
         Uart0SendBuff[3] = (char)crc;//取校验码的低八位
-        Uart0SendBuff[4] = '\0';
         printf(Uart0SendBuff);
     }
 
-
     if(Uart0RecvBuffNum>=(UART0_BUFF_LENGTH-1))				//接收计数
     {
-        result = CalCrc(0x00, Uart0RecvBuff, UART0_BUFF_LENGTH-1);
+        result = CalCrc(0x00, Uart0RecvBuff, UART0_BUFF_LENGTH);
         if(result==0)//CRC验证通过
         {
+					switch(Uart0RecvBuff[0])
+					{
+						case Protocol_Heater_Start:
+							start_heater();
+							break;
+						case Protocol_Heater_Stop:
+							stop_heater();
+							break;
+						case Protocol_Heater_Inc_Power:
+							best_temp_out=best_temp_out-1;
+							if(best_temp_out<good_temp_out_low)
+							{
+									best_temp_out=good_temp_out_low;
+							}
+							break;
+						case Protocol_Heater_Red_Power:
+							best_temp_out=best_temp_out+1;
+							if(best_temp_out>good_temp_out_high)
+							{
+									best_temp_out=good_temp_out_high;
+							}
+							break;
+						case Protocol_Heater_Reset_Temp:
+							best_temp_out=Uart0RecvBuff[1];
+							break;
+						default:
+							break;
+					}
+					Uart0RecvBuffNum = 0;//将缓冲数组指向开始
+					for(i=0; i<UART0_BUFF_LENGTH; i++)	//清空接收缓存准备下一次的接收
+					{
+							Uart0RecvBuff[i] = 0;
+					}
         }
-
-        Uart0RecvBuffNum = 0;//将缓冲数组指向开始
-        for(i=0; i<UART0_BUFF_LENGTH; i++)	//清空接收缓存准备下一次的接收
-        {
-            Uart0RecvBuff[i] = 0;
-        }
-
-    }
-
-    if(UartReceiveFlag)
-    {
-        UartReceiveFlag=0;
-
-        BEE = ~BEE;
-
-        if(SBUF == 0x01)
-        {
-            best_temp_out=best_temp_out+1;
-            if(best_temp_out>good_temp_out_high)
-            {
-                best_temp_out=good_temp_out_high;
-            }
-
-            //软件延时，保证变量更新完成，避免主循环逻辑错误或者混乱
-            soft_delay(48000);
-
-            SBUF = 0x55+SBUF;
-            while(!UartSendFlag);
-            UartSendFlag = 0;
-        }
-        if(SBUF == 0x02)
-        {
-            best_temp_out=best_temp_out-1;
-            if(best_temp_out<good_temp_out_low)
-            {
-                best_temp_out=good_temp_out_low;
-            }
-
-            //软件延时，保证变量更新完成，避免主循环逻辑错误或者混乱
-            soft_delay(48000);
-
-            SBUF = 0x55+SBUF;
-            while(!UartSendFlag);
-            UartSendFlag = 0;
-        }
-
-        if(SBUF == 0x03)
-        {
-            start_heater();
-        }
-
-        //关闭加热开关
-        if(SBUF == 0x04)
-        {
-            stop_heater();
-        }
-
-
+				else
+				{
+					////CRC验证不通过
+					ex_flag=Ex_Uart_Crc_Error;
+				}
     }
 }
 
@@ -260,15 +237,16 @@ void start_heater()
     Water_Detection_EX_Init();
 
     //水流检测定时器中断
-    Water_Detection_Timer_Init();
-
-    soft_delay(50000); // (1+1+(1+2)*50000)*0.5us=75001us=75.001ms
+    Water_Detection_Timer_Init();    
 
     //水流状态标记 0：无水流 1：少水流 2：多水流，正常
     if(water_flow_flag == 2 && heater_relay_on==0)
-    {
+    {				
         heater_relay_on=1;
         Scr_Driver_Control_Heat_RLY(heater_relay_on);
+
+				//防抖动
+				soft_delay(50000); // (1+1+(1+2)*50000)*0.5us=75001us =75ms
 
         //过零检测中断
         Zero_Crossing_EX_Init();
@@ -280,6 +258,12 @@ void start_heater()
 
 void stop_heater()
 {
+		heater_relay_on=0;
+    Scr_Driver_Control_Heat_RLY(heater_relay_on);
+	
+		//防抖动
+		soft_delay(50000); // (1+1+(1+2)*50000)*0.5us=75001us =75ms
+	
     //关闭水流霍尔传感器外部计数中断 INT25 P21
     //关闭过零检测外部中断 INT24 P20 ZERO
     //基础定时器Base Timer中断不使能 出水温度采集定时器
