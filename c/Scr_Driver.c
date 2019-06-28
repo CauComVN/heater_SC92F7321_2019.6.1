@@ -3,12 +3,7 @@
 
 #include "H/Function_Init.H"
 #include <stdio.h>
-
-//55*10-28*10=270
-#define Upper_Limit  100
-//如果出水温度超过预设温度，可控硅无功率运行
-#define Lower_Limit  -100
-
+#include <math.h>
 
 //INT24 P20 ZERO
 
@@ -23,7 +18,7 @@
 //如果为低电平，表明热水器温度在正常范围内
 
 // 0:无功率 1：全功率
-volatile uchar heater_power_status=0; 
+volatile uchar heater_power_status=0;
 //当前热水器运行或停止状态 控制继电器动作 0：停止 1：运行
 volatile bit heater_relay_on=0;
 //开始PID算法标记
@@ -33,8 +28,8 @@ Enum_Ex_Flag idata ex_flag=Ex_Normal;
 //35度~60度 自动调节  最佳：40 - 50
 int idata best_temp_out=38;
 //当前出水温度
-volatile char  current_out_temp=29; 
-//可控硅触发时间最大值 
+volatile char  current_out_temp=29;
+//可控硅触发时间最大值
 uint idata scr_open_time_max=zero_period_low_time;
 //实时计算的可控硅触发时间
 volatile int  scr_curr_time=0;
@@ -147,7 +142,7 @@ int Scr_Driver_Check_Insurance()
     }
     else if(HEAT_ERROR==1)
     {
-        //设置温度保险已跳闸标记        
+        //设置温度保险已跳闸标记
         ex_flag = Ex_Thermal_Switch_Error;
         return -1;
     }
@@ -192,18 +187,30 @@ void soft_delay(uint n)
 // Sv设定温度值  Pv当前温度值
 void PIDCalc(int Sv,int Pv)
 {
-    int DERR1 = 0;
-    int DERR2 = 0;
+		int idata Upper_Limit=zero_period_low_time-zero_peroid_last_time;
+		int idata Lower_Limit=-1*(zero_period_low_time-zero_peroid_last_time);
+	
+    int idata index;
+	
+    int idata DERR1 = 0;
+    int idata DERR2 = 0;
 
-    int Pout = 0;       //比例结果
-    int Iout = 0;       //积分结果
-    int Dout = 0;       //微分结果
-    int Out = 0; 				//总输出
+    int idata Pout = 0;       //比例结果
+    int idata Iout = 0;       //积分结果
+    int idata Dout = 0;       //微分结果
+    int idata Out = 0; 				//总输出
 
-    static int Out1=0;  //记录上次输出
+    static int Out1=0;  		//记录上次输出
     static int ERR=0;       //当前误差
     static int ERR1=0;      //上次误差
     static int ERR2=0;      //上上次误差
+		
+		//抗饱和积分
+    int idata umax=50;//理想最大温度值
+    int idata umin=29;//理想最小温度值
+	
+	 //积分分离
+    static int integral=0;		
 
     ERR=Sv-Pv; //算出当前误差
     DERR1 = ERR - ERR1;   //上次
@@ -213,10 +220,42 @@ void PIDCalc(int Sv,int Pv)
     DERR2= DERR2 - ERR1;
     DERR2= DERR2 - ERR1;
 
-    //先Kp
-    Pout = DERR1*Kp;
-    Iout = ERR * Ti;
-    Dout = DERR2*Td;
+    //Kp
+    Pout = Kp*ERR;
+
+    //Ki 积分分离过程 抗积分饱和
+    if(Pv>umax) { //灰色底色表示抗积分饱和的实现
+
+        if(abs(ERR)>1) {    //蓝色标注为积分分离过程
+            index=0;
+        } else {
+            index=1;
+            if(ERR<0) {
+                integral+=ERR;
+            }
+        }
+    } else if(Pv<umin) {
+        if(abs(ERR)>1) {    //积分分离过程
+            index=0;
+        } else {
+            index=1;
+            if(ERR>0) {
+                integral+=ERR;
+            }
+        }
+    } else {
+        if(abs(ERR)>1) {                  //积分分离过程
+            index=0;
+        } else {
+            index=1;
+            integral+=ERR;
+        }
+    }
+    Iout = index*Ti*integral;
+
+    //Kd
+    Dout = DERR1*Td;
+
     Out = Out1+ Pout;
     Out = Out+ Iout;
     Out = Out+ Dout;
@@ -270,11 +309,11 @@ void PIDCalc(int Sv,int Pv)
                     if(heater_power_status!=1)
                         heater_power_status=1;
                 }
-								else if(scr_curr_time>zero_period_low_time-zero_peroid_last_time)
-								{
-									if(heater_power_status!=0)
-										heater_power_status=0;
-								}
+                else if(scr_curr_time>zero_period_low_time-zero_peroid_last_time)
+                {
+                    if(heater_power_status!=0)
+                        heater_power_status=0;
+                }
                 else
                 {
                     //scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
