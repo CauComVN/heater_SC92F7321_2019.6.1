@@ -237,7 +237,9 @@ void start_heater()
     Water_Detection_EX_Init();
 
     //水流检测定时器中断
-    Water_Detection_Timer_Init();    
+    Water_Detection_Timer_Init();  
+
+		soft_delay(50000); 
 
     //水流状态标记 0：无水流 1：少水流 2：多水流，正常
     if(water_flow_flag >=1 && heater_relay_on==0)

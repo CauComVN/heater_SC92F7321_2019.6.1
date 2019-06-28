@@ -22,20 +22,13 @@ void main(void)
 	
 		//漏电保护
     Leakage_EX_Init();
+	
+		//=====================Test====================
+		start_heater();
+	
     //=====================主循环=====================
     while(1)
-    {
-			  //=====================Test====================
-			  if(water_flow_flag >= 1 && heater_relay_on==0)
-        {
-						start_heater();
-				}
-				if(water_flow_flag < 1 && heater_relay_on==1)
-				{
-						stop_heater();
-				}
-				//===================Test=====================
-						
+    {						
         if(heater_relay_on==1)
         {
             //检测温度保险 HEAT ERROR 直接检测端口值 P03   轮询方式
