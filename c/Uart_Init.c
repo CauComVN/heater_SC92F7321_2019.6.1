@@ -49,7 +49,7 @@ void Uart_Process()
         printf(Uart0SendBuff);
     }
 
-    if(Uart0RecvBuffNum>=(UART0_BUFF_LENGTH-1))				//接收计数
+    if(Uart0RecvBuffNum>=UART0_BUFF_LENGTH)				//接收计数
     {
         result = CalCrc(0x00, Uart0RecvBuff, UART0_BUFF_LENGTH);
         if(result==0)//CRC验证通过
@@ -240,7 +240,7 @@ void start_heater()
     Water_Detection_Timer_Init();    
 
     //水流状态标记 0：无水流 1：少水流 2：多水流，正常
-    if(water_flow_flag == 2 && heater_relay_on==0)
+    if(water_flow_flag >=1 && heater_relay_on==0)
     {				
         heater_relay_on=1;
         Scr_Driver_Control_Heat_RLY(heater_relay_on);

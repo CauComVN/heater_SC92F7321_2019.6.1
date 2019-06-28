@@ -187,6 +187,9 @@ extern void Uart_Process();
 //extern void UART_SentChar(uchar chr);
 //extern void UART_SendString(uchar *str);
 
+extern void start_heater();
+extern void stop_heater();
+
 //ÖÐ¶Ï
 extern void ADC_Interrupt_Handle(void);
 extern void Water_Detection_EX2_Handle();
