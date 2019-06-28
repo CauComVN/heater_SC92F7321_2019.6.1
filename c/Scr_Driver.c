@@ -17,15 +17,15 @@
 //HEAT ERROR 为输入端，如果等于高电平，表明热水器温度过高
 //如果为低电平，表明热水器温度在正常范围内
 
-//抗饱和积分 
+//抗饱和积分
 //8位单片机不支持浮点运算，提高控制精度，乘10处理
 int idata umax=500;//=50;//理想最大温度值
-int idata umin=290;//=29;//理想最小温度值	
-		
+int idata umin=290;//=29;//理想最小温度值
+
 int idata Out1=0;  		//记录上次输出
 int idata ERR=0;       //当前误差
 int idata ERR1=0;      //上次误差
-int idata ERR2=0;      //上上次误差	
+int idata ERR2=0;      //上上次误差
 int idata integral=0;		//积分分离
 
 // 0:无功率 1：全功率
@@ -200,11 +200,8 @@ void soft_delay(uint n)
 // Sv设定温度值  Pv当前温度值
 void PIDCalc(int Sv,int Pv)
 {
-		int idata Upper_Limit=zero_period_low_time-zero_peroid_last_time;
-		int idata Lower_Limit=-1*(zero_period_low_time-zero_peroid_last_time);
-	
     int idata index=0;
-	
+
     int idata DERR1 = 0;
     int idata DERR2 = 0;
 
@@ -212,15 +209,6 @@ void PIDCalc(int Sv,int Pv)
     int idata Iout = 0;       //积分结果
     int idata Dout = 0;       //微分结果
     int idata Out = 0; 				//总输出
-
-//    static int Out1=0;  		//记录上次输出
-//    static int ERR=0;       //当前误差
-//    static int ERR1=0;      //上次误差
-//    static int ERR2=0;      //上上次误差
-//	
-//		//积分分离
-//    static int integral=0;		
-		  		
 
     ERR=Sv-Pv; //算出当前误差
     DERR1 = ERR - ERR1;   //上次
@@ -270,78 +258,38 @@ void PIDCalc(int Sv,int Pv)
     Out = Out+ Iout;
     Out = Out+ Dout;
 
-//    if(Out >= Upper_Limit) { //如果输出大于等于上限
-//        Out = Upper_Limit;
-//    }
-//    else if(Out <= Lower_Limit) { //如果输出小于等于下线
-//        Out = Lower_Limit;
-//    }
-
     Out1 = Out;      //记录这次输出的值
 
     ERR2 = ERR1;    //记录误差
     ERR1 = ERR;     //记录误差
 
-    printf("%d\n",Out);
+    //printf("%d\n",Out);
 
-    //if(Out>=0)
+    //PID算法控制
+    if(heater_power_status!=2)
+        heater_power_status=2;
+
+    //一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
+    scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
+    if(scr_curr_time<1)
     {
-        //printf("111\n");
-
-//        if(ERR>2)
-//        {
-//            if(heater_power_status!=1)
-//                heater_power_status=1;
-//        }
-//        else
-        {
-            if(heater_power_status!=2)
-                heater_power_status=2;
-
-            //PID算法控制
-//            if(b_start_pid==0)
-//            {
-//                b_start_pid=1;
-
-//                //全功率调整90% 功率调节是相反的 (100-90)/100=1/10
-//                scr_curr_time = 5000;
-
-//                do {
-//                    scr_tune_time=scr_curr_time;
-//                } while(scr_tune_time != scr_curr_time);
-//            }
-//            else
-            {
-                //一定要相减，因为功率调节是相反的，scr_curr_time越小，功率越大
-                scr_curr_time = scr_curr_time - Out;  //Out=50 Out*74=3700
-                if(scr_curr_time<1)
-                {
-                    if(heater_power_status!=1)
-                        heater_power_status=1;
-                }
-                else if(scr_curr_time>zero_period_low_time-zero_peroid_last_time)
-                {
-                    if(heater_power_status!=0)
-                        heater_power_status=0;
-                }
-                else
-                {
-                    //scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
-                    //关闭过零中断会同时关闭水流量计中断，因为都是INT2中断，导致更大的问题，此种方法在这里不可行
-                    //https://blog.csdn.net/dijindeng/article/details/50426028
-                    do {
-                        scr_tune_time=scr_curr_time;
-                    } while(scr_tune_time != scr_curr_time);
-                }
-            }
-        }
-        //printf("%d\n",scr_curr_time);
+        if(heater_power_status!=1)
+            heater_power_status=1;
     }
-//	else if(Out<0)
-//	{
-//		//printf("222\n");
-//
-//		if(heater_power_status!=0)
-//			heater_power_status=0;
-//	}
+    else if(scr_curr_time>zero_period_low_time-zero_peroid_last_time)
+    {
+        if(heater_power_status!=0)
+            heater_power_status=0;
+    }
+    else
+    {
+        //scr_curr_time复制给副本scr_tune_time，避开主循环和过零中断共享全局变量导致的严重问题，这是用操作系统的方法
+        //关闭过零中断会同时关闭水流量计中断，因为都是INT2中断，导致更大的问题，此种方法在这里不可行
+        //https://blog.csdn.net/dijindeng/article/details/50426028
+        do {
+            scr_tune_time=scr_curr_time;
+        } while(scr_tune_time != scr_curr_time);
+    }
+
+    //printf("%d\n",scr_curr_time);
 }

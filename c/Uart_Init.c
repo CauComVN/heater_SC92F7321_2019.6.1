@@ -83,7 +83,9 @@ void Uart_Process()
 							}
 							break;
 						case Protocol_Heater_Reset_Temp:
-							best_temp_out=Uart0RecvBuff[1];
+							//best_temp_out=Uart0RecvBuff[1];
+							//8位单片机不支持浮点运算，提高控制精度，乘10处理
+							best_temp_out=10*Uart0RecvBuff[1];
 							break;
 						default:
 							break;
