@@ -21,8 +21,10 @@ void stop_heater();
 void Uart0_Init(void);
 void UartInt_Handle();
 void Uart_Process();
-//void UART_SentChar(uchar chr);
-//void UART_SendString(uchar *str);
+void UART_SendChar(uchar chr);
+
+//等价于printf
+void UART_SendString(uchar *str);
 
 char putchar(char c)//用于重写printf
 {
@@ -46,12 +48,16 @@ void Uart_Process()
         crc = CalCrc(0x00, Uart0SendBuff, 2);//计算得到的16位CRC校验码
         Uart0SendBuff[2] = (char)(crc >> 8);//取校验码的高八位
         Uart0SendBuff[3] = (char)crc;//取校验码的低八位
-        printf(Uart0SendBuff);
+			
+				UART_SendChar(Uart0SendBuff[0]);
+				UART_SendChar(Uart0SendBuff[1]);
+				UART_SendChar(Uart0SendBuff[2]);
+				UART_SendChar(Uart0SendBuff[3]);
     }
 
-    if(Uart0RecvBuffNum>=UART0_BUFF_LENGTH)				//接收计数
+    if(Uart0RecvBuffNum==UART0_BUFF_LENGTH-1)				//接收计数
     {
-        result = CalCrc(0x00, Uart0RecvBuff, UART0_BUFF_LENGTH);
+        result = CalCrc(0x00, Uart0RecvBuff, UART0_BUFF_LENGTH-1);
         if(result==0)//CRC验证通过
         {
 					switch(Uart0RecvBuff[0])
@@ -81,17 +87,18 @@ void Uart_Process()
 							break;
 						default:
 							break;
-					}
-					Uart0RecvBuffNum = 0;//将缓冲数组指向开始
-					for(i=0; i<UART0_BUFF_LENGTH; i++)	//清空接收缓存准备下一次的接收
-					{
-							Uart0RecvBuff[i] = 0;
-					}
+					}					
         }
 				else
 				{
 					////CRC验证不通过
 					ex_flag=Ex_Uart_Crc_Error;
+				}
+				
+				Uart0RecvBuffNum = 0;//将缓冲数组指向开始
+				for(i=0; i<UART0_BUFF_LENGTH; i++)	//清空接收缓存准备下一次的接收
+				{
+						Uart0RecvBuff[i] = 0;
 				}
     }
 }
@@ -133,28 +140,27 @@ void UartInt_Handle()
         RI = 0;
         UartReceiveFlag = 1;
 
-        Uart0RecvBuff[Uart0RecvBuffNum] = SBUF; //将接收的数据存入缓冲区
-        Uart0RecvBuffNum++;
+			
+			  if(Uart0RecvBuffNum<UART0_BUFF_LENGTH)
+				{
+					Uart0RecvBuff[Uart0RecvBuffNum] = SBUF; //将接收的数据存入缓冲区
+					Uart0RecvBuffNum++;
+				}
     }
 }
 
-//void UART_SentChar(uchar chr)
-//{
-//  //发送一个字节
-////  SBUF = chr;
-////  while( TI == 0);
-////  TI = 0;
-//
-//	SBUF = chr;
-//	while(!UartSendFlag);
-//	UartSendFlag = 0;
-//}
+void UART_SendChar(uchar chr)
+{
+	SBUF = chr;
+	while(!UartSendFlag);
+	UartSendFlag = 0;
+}
 
 //void UART_SendString(uchar *str)
 //{
 //  while(*str != '\0')
 //  {
-//      UART_SentChar(*str++);
+//      UART_SendChar(*str++);
 //  }
 //}
 

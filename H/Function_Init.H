@@ -184,7 +184,7 @@ extern void Timer_Init(void);
 
 extern void Uart0_Init(void);
 extern void Uart_Process();
-//extern void UART_SentChar(uchar chr);
+extern void UART_SendChar(uchar chr);
 //extern void UART_SendString(uchar *str);
 
 extern void start_heater();
