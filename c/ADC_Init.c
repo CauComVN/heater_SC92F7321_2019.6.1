@@ -80,7 +80,9 @@ int get_temp_table(uint nADValue, uchar* temp)
     //Rntc=10*nADValue/(4096-nADValue);
     //10*10*nADValue/(4096-nADValue)/10;
 
-    Rntc=(uint)(10*nADValue/(4096-nADValue));
+    //Rntc=(uint)(10*nADValue/(4096-nADValue));
+		//8位单片机不支持浮点运算，提高控制精度，乘10处理
+		Rntc=(uint)(10*10*nADValue/(4096-nADValue));
 
     if(Rntc>NTC_R_VALUE_MAX)
     {

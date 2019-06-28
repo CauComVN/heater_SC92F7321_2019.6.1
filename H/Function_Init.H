@@ -55,15 +55,19 @@
 /******************
 	*以下四项是需要根据实际情况调试的
 	******************/
-	//15.6msMS计算一次 计算周期
-//比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
-//功率一半，得温度37  29-37 8 20000/8=2500 17200/8=2150
-#define  Kp   2400  
-//积分时间 Ki一般是比Kd还要小0.01个级别
-#define  Ti  100 //1000
-//微分时间 Kp/Kd=2 比例I/微分D=2，一般还要更大（10倍左右）
-#define  Td  0
+////31.3msMS计算一次 采集周期 计算周期
+////比例系数  0.01 --- 10  采样频率低（如500ms），Kp一般是0.01级别；采样频率高（如1ms），Kp一般是1级别
+////功率一半，得温度37  29-37 8 20000/8=2500 17200/8=2150
+//#define  Kp   2400  
+////积分时间 Ki一般是比Kd还要小0.01个级别
+//#define  Ti  100 
+////微分时间 Kp/Kd=2 比例I/微分D=2，一般还要更大（10倍左右）
+//#define  Td  0
 
+//8位单片机不支持浮点运算，提高控制精度，乘10处理，这里除以10
+#define  Kp   240 
+#define  Ti   10
+#define  Td   0
 
 //过零检测周期高电平时间和低电平时间不等
 //10ms 时钟Fsys/12
@@ -76,10 +80,11 @@
 //根据仿真确认少水流阈值，参考和比较numberPulse变量值
 #define waterThreshold		2 
 
+//8位单片机不支持浮点运算，提高控制精度，乘10处理
 //最佳出水温度低值
-#define good_temp_out_low 29
+#define good_temp_out_low 290
 //最佳出水温度高值
-#define good_temp_out_high 50
+#define good_temp_out_high 500
 
 /***********ADC采样口选择*************/	
 #if (IC_MODEL == SC92F7321)
@@ -129,6 +134,11 @@ extern volatile bit AdcFlag;
 extern uint scr_open_time;
 //可控硅开通标志 用于标记可控硅触发，关断定时器，关断可控硅
 extern bit scr_open_flag;
+
+//抗饱和积分 
+//8位单片机不支持浮点运算，提高控制精度，乘10处理
+extern int idata umax;//=500;//=50;//理想最大温度值
+extern int idata umin;//=290;//=29;//理想最小温度值	
 
 extern int idata Out1;  		//记录上次输出
 extern int idata ERR;       //当前误差

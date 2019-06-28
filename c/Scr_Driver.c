@@ -17,9 +17,10 @@
 //HEAT ERROR 为输入端，如果等于高电平，表明热水器温度过高
 //如果为低电平，表明热水器温度在正常范围内
 
-//抗饱和积分
-int idata umax=50;//理想最大温度值
-int idata umin=29;//理想最小温度值	
+//抗饱和积分 
+//8位单片机不支持浮点运算，提高控制精度，乘10处理
+int idata umax=500;//=50;//理想最大温度值
+int idata umin=290;//=29;//理想最小温度值	
 		
 int idata Out1=0;  		//记录上次输出
 int idata ERR=0;       //当前误差
@@ -36,9 +37,11 @@ volatile bit b_start_pid=0;
 ////热水器内部异常状态
 Enum_Ex_Flag idata ex_flag=Ex_Normal;
 //35度~60度 自动调节  最佳：40 - 50
-int idata best_temp_out=38;
+//8位单片机不支持浮点运算，提高控制精度，乘10处理
+int idata best_temp_out=380;//38;
 //当前出水温度
-volatile char  current_out_temp=29;
+//8位单片机不支持浮点运算，提高控制精度，乘10处理
+volatile char  current_out_temp=290;//29;
 //可控硅触发时间最大值
 uint idata scr_open_time_max=zero_period_low_time;
 //实时计算的可控硅触发时间

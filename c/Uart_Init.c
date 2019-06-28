@@ -200,6 +200,11 @@ void init_heater()
 {
     //温度采集ADC转换标记
     AdcFlag = 0;
+	
+		//抗饱和积分 
+		//8位单片机不支持浮点运算，提高控制精度，乘10处理
+		umax=500;//=50;//理想最大温度值
+		umin=290;//=29;//理想最小温度值	
 
 		Out1=0;  		//记录上次输出
 		ERR=0;       //当前误差
@@ -215,9 +220,11 @@ void init_heater()
     ////热水器内部异常状态
     ex_flag=Ex_Normal;
     //35度~60度 自动调节  最佳：40 - 50
-    best_temp_out=38;
-    //当前出水温度
-    current_out_temp=29;
+		//8位单片机不支持浮点运算，提高控制精度，乘10处理
+		best_temp_out=380;//38;
+		//当前出水温度
+		//8位单片机不支持浮点运算，提高控制精度，乘10处理
+		current_out_temp=290;//29;
     //可控硅触发时间最大值
     scr_open_time_max=zero_period_low_time;
     //实时计算的可控硅触发时间
