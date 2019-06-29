@@ -21,10 +21,12 @@ void main(void)
     Uart0_Init();
 	
 		//漏电保护
-    Leakage_EX_Init();
+    //Leakage_EX_Init();
 	
 		//=====================Test====================
-		start_heater();
+		//ex_flag = Ex_Water_No_Flow;
+	
+		//start_heater();
 	
     //=====================主循环=====================
     while(1)

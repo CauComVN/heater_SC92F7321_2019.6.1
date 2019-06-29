@@ -24,7 +24,7 @@ void Uart_Process();
 void UART_SendChar(uchar chr);
 
 //等价于printf
-void UART_SendString(uchar *str);
+//void UART_SendString(uchar *str);
 
 char putchar(char c)//用于重写printf
 {
@@ -37,27 +37,27 @@ char putchar(char c)//用于重写printf
 void Uart_Process()
 {
     //发送故障信息给上位机
-//    if(ex_flag!=Ex_Normal)
-//    {
-//        //停止热水器
-//        stop_heater();
-
-//        //发送异常协议给上位机  当前温度值+故障字+CSC校验
-//        Uart0SendBuff[0]=current_out_temp;
-//        Uart0SendBuff[1]=ex_flag;
-//        crc = CalCrc(0x00, Uart0SendBuff, 2);//计算得到的16位CRC校验码
-//        Uart0SendBuff[2] = (char)(crc >> 8);//取校验码的高八位
-//        Uart0SendBuff[3] = (char)crc;//取校验码的低八位
-//			
-//				UART_SendChar(Uart0SendBuff[0]);
-//				UART_SendChar(Uart0SendBuff[1]);
-//				UART_SendChar(Uart0SendBuff[2]);
-//				UART_SendChar(Uart0SendBuff[3]);
-//    }
-
-    if(Uart0RecvBuffNum==UART0_BUFF_LENGTH-1)				//接收计数
+    if(ex_flag!=Ex_Normal)
     {
-        result = CalCrc(0x00, Uart0RecvBuff, UART0_BUFF_LENGTH-1);
+        //停止热水器
+        stop_heater();
+
+        //发送异常协议给上位机  当前温度值+故障字+CSC校验
+        Uart0SendBuff[0]=current_out_temp;
+        Uart0SendBuff[1]=ex_flag;
+        crc = CalCrc(0x00, Uart0SendBuff, 2);//计算得到的16位CRC校验码
+        Uart0SendBuff[2] = (char)(crc >> 8);//取校验码的高八位
+        Uart0SendBuff[3] = (char)crc;//取校验码的低八位
+			
+				UART_SendChar(Uart0SendBuff[0]);
+				UART_SendChar(Uart0SendBuff[1]);
+				UART_SendChar(Uart0SendBuff[2]);
+				UART_SendChar(Uart0SendBuff[3]);
+    }
+
+    if(Uart0RecvBuffNum==UART0_BUFF_LENGTH)				//接收计数
+    {
+        result = CalCrc(0x00, Uart0RecvBuff, UART0_BUFF_LENGTH);
         if(result==0)//CRC验证通过
         {
 					switch(Uart0RecvBuff[0])
@@ -303,7 +303,4 @@ void stop_heater()
     //关闭出水温度采集ADC转换中断
     EADC=0; //ADC中断不使能
     ADCCON &= 0x08;//关闭ADC模块电源
-
-    //热水器初始化
-    init_heater();
 }

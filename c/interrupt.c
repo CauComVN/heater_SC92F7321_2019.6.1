@@ -9,7 +9,7 @@ void EX0_Interrupt() interrupt	0
 {
     if(OS == 1)
     {
-        Leakage_EX0_Handle();
+//        Leakage_EX0_Handle();
     }
 
     if(RX1==0 || TX1==0)
