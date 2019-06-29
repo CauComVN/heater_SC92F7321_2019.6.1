@@ -267,9 +267,6 @@ void start_heater()
         heater_relay_on=1;
         Scr_Driver_Control_Heat_RLY(heater_relay_on);
 
-				//∑¿∂∂∂Ø
-				soft_delay(50000); // (1+1+(1+2)*50000)*0.5us=75001us =75ms
-
         //π˝¡„ºÏ≤‚÷–∂œ
         Zero_Crossing_EX_Init();
 
